@@ -1,0 +1,114 @@
+.register-box-container{
+
+    position:relative;
+    display:flex;
+    width: 342px;
+    height: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+
+    margin-bottom: 55px;
+
+    border: 1px solid #3D348B;
+    border-radius: 15px;
+}
+
+.register-box-font{
+    position:absolute;
+    width: 28%;
+    top: -60%;
+    left: 00%;
+    font-family: 'Roboto';
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: left;
+    color: #000000;
+}
+
+.overlapping-button{
+    position:absolute;
+    left: 80%;
+    top: 25%;
+
+    background-color: #3D348B;
+    border-radius: 10px;
+    border: none;
+    color:#fff;
+
+    width: clamp(60px, 18vw, 40px);
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; 
+    line-height: 1; 
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    font-family: 'Roboto';
+    font-size: 12px; 
+    flex-grow: 0;
+}
+
+.register-box-input{
+    position: absolute;
+    width: 60%;
+    height: 35%;
+    top:33%;
+    left: 6%;
+    border: none;
+    background: none;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #000;
+
+    outline: none;
+}
+
+.overlapping-status{
+    position: absolute;
+    margin-top: 8px;
+    left: 6%;
+    width: 40%;
+
+    margin-top: 16%;
+    margin-bottom: 10px;
+
+    font-size: 12px;
+}
+
+.overlapping-status h4{
+    font-size: 12px;
+    color: #ff0000;
+    opacity: 0.6;
+}
+
+.register-box-eye{
+    position: absolute;
+    width: 13%;
+    height: 13%;
+    left: 90%;
+    top: 38%;
+    cursor: pointer;
+}
+
+.same-pw-status{
+    position: absolute;
+    margin-top: 8px;
+    left: 6%;
+    width: 46%;
+
+    margin-top: 16%;
+    margin-bottom: 10px;
+
+    font-size: 12px;
+}
+
+.same-pw-status h4{
+    font-size: 12px;
+    color: #ff0000;
+    opacity: 0.6;
+}
