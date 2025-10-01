@@ -1,4 +1,4 @@
-import './profile/profile.css';
+import './../profile/profile.css';
 import './Login.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -26,6 +26,8 @@ function Login(){
     let [showPw, setShowPw] = useState(false);
     let [token, setToken] = useState(null);
 
+    let [Ann, setAnn] = useState({});
+
     let checkEmpty=()=>{
         return(
             !id ||
@@ -39,10 +41,23 @@ function Login(){
                 loginId : `${id}`,
                 password: `${pw}` 
             },{withCredentials: true});
+            res.data.title;
     } catch(err){
         console.log(err);
     }
     }
+
+    async function temp(){
+        try{
+            let res = await axios.get(`http://3.39.81.234:8080/api/stuids/${studyid}/announcements`,{
+                withCredentials: true
+            })
+            setAnn(res.data);
+        } catch(err){
+            console.log(err);
+        }
+    }
+
 
     useEffect(()=>{
         if(token){

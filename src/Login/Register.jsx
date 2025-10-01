@@ -62,7 +62,7 @@ function Register(){
                 withCredentials: true
             });
             setCheck(res.data.available);
-            // console.log(res.data.available);
+            console.log(res.data.available);
         }
         catch(err){
             console.log(err);
@@ -75,7 +75,7 @@ function Register(){
                 loginId : `${id}`,
                 password: `${pw}` 
             },{withCredentials: true});
-            navigate('/profile');
+            navigate('/');
             //console.log(res.data);
     } catch(err){
         console.log(err);
@@ -179,14 +179,16 @@ function Register(){
                     </div>
                 </>
 
+            <div className='register-button-container'>
                 <button className='login-button' 
                 disabled={checkNext()}
                 onClick={()=>{
                     RegisterFun();
                 }}
                 >
-                    다음
+                    완료
                 </button>
+            </div>
         </div>
     )
 }

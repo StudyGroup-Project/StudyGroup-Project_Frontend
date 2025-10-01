@@ -1,0 +1,360 @@
+/* 웹 전체화면일 때 배치 생각해서 다시하기 */
+
+.address-text{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 0;
+    line-height: 1.2;
+    color: #000;
+
+    opacity: 0.5;
+
+    top: 33%;
+}
+
+.address-image{
+    width: 18px;
+    height: 18px;
+    margin-top: -5px;
+}
+
+.user-container{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
+    height: 80px;
+
+    left: 50%; 
+    transform: translateX(-50%);
+}
+
+.user-image{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+
+    left: 5px;
+    top: 15px;
+}
+
+.user-text--nickname{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 800;
+    color: #000;
+
+    left: 60px;
+    top: 38px;
+}
+
+.user-text--greeting{
+    position: absolute;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 16px;
+    color: #000;
+
+    left: 60px;
+    top: 19px;
+}
+
+.plus-button{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+
+    left: 318px;
+    top: 22px;
+
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search-container{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: var(--purple);
+
+    width: 380px;
+    height: 60px;
+
+    margin-top: 10px;
+    border-radius: 15px;
+}
+
+.search-icon{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 7%;
+    top: 33%;
+}
+
+.search-input{
+    position: absolute;
+    width: 380px;
+    height: 60px;
+    border: none;
+    background: none;
+    outline: none;
+
+    width: 300px;
+    height: 40px;
+
+    left: 15%;
+
+    border-radius: 15px;
+
+    color: #fff;
+}
+
+.search-input::placeholder{
+    color: #fff;
+}
+
+.active-group-text-container{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+    width: 380px;
+    height: 20px;
+
+    left: 50%;
+    transform: translateX(-50%);
+
+    margin-top: 25px;
+    margin-bottom: -40px;
+}
+
+.active-group-text{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+
+    color: #000;
+}
+
+.active-group-container{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+
+    width: 380px;
+    height: 100px;
+    background: #fff;
+    border-radius: 15px;
+
+    left: 50%;
+    transform: translateX(-50%);
+    top: 50px;
+
+    margin-bottom: 15px;
+
+    box-shadow: 0px 4px 10px 2px rgba(0,0,0,0.25);
+}
+
+.active-group-title{
+    position: absolute;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+
+    color: #000;
+
+    left: 5%;
+    top: 10%;
+}
+
+.active-group-category{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    left: 5%;
+    top: 32%;
+
+    margin-top: 5px;
+    margin-right: 5px;
+
+    width: 60px;
+    height: 20px;
+
+    border: 1px solid #000;
+    border-radius: 30px;
+    box-shadow: 0px 4px 4px rgba(0,0,0,0.25);
+}
+
+.active-group-category h4{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+
+    color: #000;
+
+    top: 3%;
+}
+
+.active-group-bio{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 11px;
+
+    color: #000;
+    opacity: 0.55;
+
+    left: 5%;
+    top: 65%;
+
+    width: 200px;
+}
+
+.active-group-Curmember-container{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 16px;
+
+    color: #000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
+    left: 80%;
+    top: 65%;
+
+    width: 35px;
+    height: 30px;
+
+}
+
+.active-group-Maxmember-container{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 16px;
+
+    color: #000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+
+    left: 88%;
+    top: 65%;
+
+    width: 35px;
+    height: 30px;
+}
+
+.active-group-member-bar{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 15px;
+
+    color: #000;
+
+    left: 88%;
+    top: 66%;
+}
+
+.active-group-member-count{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 15px;
+}
+
+.active-group-member-text{
+    position: absolute;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 7px;
+
+    top: 65%;
+}
+
+.active-group-bookmark-button{
+    position: absolute;
+    background: none;
+    border: none;
+    cursor: pointer;
+    left: 89%;
+    top: 17%;
+}
+
+.active-group-heart{
+    position: absolute;
+    width: 25px;
+    height: 23px;
+
+    transform: translate(-3px, 0px);
+}
+
+.active-group-emptyHeart{
+    position: absolute;
+    width: 19px;
+    height: 16.92px;
+}
+
+.under-bar-container{
+    position: fixed;   /* 화면 기준 고정 */
+    bottom: 0;         /* 화면 하단 */
+    left: 0;
+    width: 100%;
+    height: 50px;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+
+    background: #fff; /* 바탕색 필요 */ 
+}
+
+/* @media (max-width: 480px) {
+    .address-text{
+        left: 40%;
+    }
+    .address-image{
+        left: 35%;
+    }
+}*/
+
+/* 모바일 (가로) */
+/* @media (max-width: 768px) and (orientation: landscape) {
+    .address-text{
+        left: 45%;
+    }
+    .address-image{
+        left: 42%;
+    }
+}  */
