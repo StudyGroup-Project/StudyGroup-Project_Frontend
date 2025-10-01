@@ -112,3 +112,13 @@
     color: #ff0000;
     opacity: 0.6;
 }
+
+.register-button-container {
+    position: relative;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    top: 20%;
+  }

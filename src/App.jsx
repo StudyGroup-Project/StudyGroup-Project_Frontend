@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
 import './index.css'
 import './App.css'
-import Initial from './Initial.jsx';
+import Initial from './Login/Initial.jsx';
 import Profile from './profile/profile.jsx';
-import Login from './Login.jsx';
+import Login from './Login/Login.jsx';
 import Register from './Login/Register.jsx';
 import ProfileImage from './profile/profile_image.jsx';
 import { Routes, Route } from 'react-router-dom';
 import Kakao from './OAuth/Kakao.jsx';
 import Google from './OAuth/Google.jsx';
-import Naver from './OAuth/Naver.jsx';
+import Naver from './OAuth/Naver.jsx';  
+import Home from './home/home.jsx';
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
           }
           </div>}
         />
+        <Route path='home' element={<Home/>}/>
         <Route path='oauth/kakao' element={<Kakao/>}/>
         <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/>

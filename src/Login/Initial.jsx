@@ -78,7 +78,7 @@ function LoginButton(props){
     }
 
     let google = () =>{
-        let link = "http://3.39.81.234:8080/oauth2/authorization/google"
+        let link = "http://ec2-3-39-81-234.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google"
         window.location.href = link;
     }
 

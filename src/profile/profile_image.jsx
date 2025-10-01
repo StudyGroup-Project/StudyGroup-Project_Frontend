@@ -41,7 +41,7 @@ function ProfileImage(){
                         onClick={()=>{
                             //다음 누르면 프로필 이미지 서버에 전송
                             //다시 로그인으로 이동
-                            navigate('/login');
+                            navigate('/home');
                         }}
                         >{profileImg ? '다음' : '건너뛰기'}
                     </button>

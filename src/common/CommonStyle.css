@@ -1,0 +1,12 @@
+.home-background{
+    box-sizing: border-box;
+    position: relative;
+    width: 100vw;
+    min-height: 100vh;
+    background: #fff;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    padding-bottom: 120px; /* 고정 하단바(50px)와 겹침 방지 */
+  }

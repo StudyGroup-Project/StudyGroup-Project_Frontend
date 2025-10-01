@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './profile.css';
-import CustomSelect from './../CustomSelect.jsx'
+import CustomSelect from './../common/CustomSelect.jsx'
 
 function Profile(){
     let [userData, setUserData] = useState({
