@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './profile.css';
 import CustomSelect from './../common/CustomSelect.jsx'
+import { useCookies } from 'react-cookie';
 
 function Profile(){
     let [userData, setUserData] = useState({
@@ -20,6 +21,12 @@ function Profile(){
         date: '',
         year: ''
     })
+
+    useEffect(()=>{
+        let link = window.location.href;
+        let token = link.split('=')[1];
+        localStorage.setItem('accessToken', token);
+    }, []);
 
     let checkEmpty=()=>{
         return(
@@ -48,6 +55,19 @@ function ProfileInput(props){
     ]
 
     let navigate = useNavigate();
+    let [cookies, setCookies] = useCookies(['refreshToken']);
+
+    async function getRefreshToken(){
+        try{
+            let res = await axios.post('http://3.39.81.234:8080/api/auth/token', {
+                refreshToken: cookies.refreshToken
+            },{withCredentials: true});
+            localStorage.setItem('accessToken', res.data.accessToken);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
 
     async function postUserData(){
         try{
@@ -57,7 +77,7 @@ function ProfileInput(props){
             district: props.userData.address.district,
             birth: props.userBirth.year + '-' + props.userBirth.month + '-' + props.userBirth.date,
             job: props.userData.job,
-            category: props.userData.category
+            preferredCategory: props.userData.category
         },{withCredentials: true});
         navigate('/profileImage');
         }
@@ -178,6 +198,7 @@ function ProfileInput(props){
                     onClick={()=>{
                         console.log(props.userData);
                         console.log(props.userBirth);
+                        getRefreshToken();
                         postUserData();
                     }}
                     >다음

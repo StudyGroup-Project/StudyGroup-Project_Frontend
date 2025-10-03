@@ -2,108 +2,112 @@ import { useEffect, useState } from "react";
 import './home.css';
 import '../common/CommonStyle.css';
 import { HomeIcon, FileText, Heart, Users } from 'lucide-react';
+import axios from 'axios';
 
 
 function Home(){
-    let userData = {
-        nickname: "홍길동",
-        profileImage: "/img/main-assets/default_profile.png",
-        province: "경상북도",
-        district: "경산시",
-    }
+    // let userData = {
+    //     nickname: "홍길동",
+    //     profileImage: "/img/main-assets/default_profile.png",
+    //     province: "경상북도",
+    //     district: "경산시",
+    // }
 
-    let [groupData, setGroupData] = useState(
-        [
-            {
-                id: 1,
-                title: '백엔드 스터디',
-                maxMemberCount: 10,
-                memberCount: 5,
-                bookmarkCount: 31,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: true
-            },
-            {
-                id: 2,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: false
-            },
-            {
-                id: 3,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: false
-            },
-            {
-                id: 4,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: false
-            },
-            {
-                id: 5,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: false
-            },
-            {
-                id: 6,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: false
-            }
-        ]
-    );
+    // let [groupData, setGroupData] = useState(
+    //     [
+    //         {
+    //             id: 1,
+    //             title: '백엔드 스터디',
+    //             maxMemberCount: 10,
+    //             memberCount: 5,
+    //             bookmarkCount: 31,
+    //             bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
+    //             category: ['디자인', 'IT'],
+    //             trustScore: 82,
+    //             bookmarked: true
+    //         },
+    //         {
+    //             id: 2,
+    //             title: '프론트엔드 스터디',
+    //             maxMemberCount: 6,
+    //             memberCount: 3,
+    //             bookmarkCount: 23,
+    //             bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
+    //             category: ['디자인', 'IT'],
+    //             trustScore: 82,
+    //             bookmarked: false
+    //         },
+    //         {
+    //             id: 3,
+    //             title: '프론트엔드 스터디',
+    //             maxMemberCount: 6,
+    //             memberCount: 3,
+    //             bookmarkCount: 23,
+    //             bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
+    //             category: ['디자인', 'IT'],
+    //             trustScore: 82,
+    //             bookmarked: false
+    //         },
+    //         {
+    //             id: 4,
+    //             title: '프론트엔드 스터디',
+    //             maxMemberCount: 6,
+    //             memberCount: 3,
+    //             bookmarkCount: 23,
+    //             bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
+    //             category: ['디자인', 'IT'],
+    //             trustScore: 82,
+    //             bookmarked: false
+    //         },
+    //         {
+    //             id: 5,
+    //             title: '프론트엔드 스터디',
+    //             maxMemberCount: 6,
+    //             memberCount: 3,
+    //             bookmarkCount: 23,
+    //             bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
+    //             category: ['디자인', 'IT'],
+    //             trustScore: 82,
+    //             bookmarked: false
+    //         },
+    //         {
+    //             id: 6,
+    //             title: '프론트엔드 스터디',
+    //             maxMemberCount: 6,
+    //             memberCount: 3,
+    //             bookmarkCount: 23,
+    //             bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
+    //             category: ['디자인', 'IT'],
+    //             trustScore: 82,
+    //             bookmarked: false
+    //         }
+    //     ]
+    // );
 
     let [search, setSearch] = useState('그룹을 검색해보세요!');
 
-    // let [userData, setUserData] = useState({});
+    let [userData, setUserData] = useState({});
+    let [groupData, setGroupData] = useState([]);
 
-    // async function getUserData(){
-    //     try{
-    //         let res = await axios.get('http://3.39.81.234:8080/api/home', {
-    //             withCredentials: true
-    //         });
-    //         setUserData(res.data.user);
-    //     }
-    //     catch(err){
-    //         console.log(err);
-    //     }
-    // }
+
+    async function getUserData(){
+        try{
+            let res = await axios.get('http://3.39.81.234:8080/api/home', {
+                withCredentials: true
+            });
+            setUserData(res.data.user);
+            setGroupData(res.data.topStudies);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
     // 서버랑 APi 연결해볼때 사용 할 것
     // 사용자 정보, 그룹 리스트 가져와야함.
     
-    // useEffect(()=>{
-    //     getUserData();
-    // }, []);
+    useEffect(()=>{
+        getUserData();
+    }, []);
 
     return(
         <div className='home-background'>
@@ -196,18 +200,20 @@ function Home(){
                             : "/img/main-assets/empty_heart.png"}/>
                     </button>
                 </div>
-            ))
-        }
-        <div className="under-bar-container">
-            <HomeIcon size={24} />
-            <h4>홈</h4>
-            <FileText size={24} />
+                ))
+            }
+            <div className="under-bar-container">
+                <button className="under-bar-icon">
+                        <HomeIcon size={24} />
+                        <h4>홈</h4>
+                </button>
+            {/* <FileText className="under-bar-icon" size={24} />
             <h4>내 그룹</h4>
-            <Heart size={24} />
+            <Heart className="under-bar-icon" size={24} />
             <h4>찜 목록</h4>
-            <Users size={24} />
-            <h4>내 정보</h4>
-        </div>
+            <Users className="under-bar-icon" size={24} />
+            <h4>내 정보</h4> */}
+            </div>
         </div>
     )
 }
