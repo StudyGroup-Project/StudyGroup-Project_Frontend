@@ -59,6 +59,7 @@ function App() {
         <Route path='profileimage' element={<ProfileImage/>}/>
         <Route path='login' element={<Login/>}/>
         <Route path='register' element={<Register/>}/>
+        <Route path='notice' element={<Notice/>}/>
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
       </Routes>
