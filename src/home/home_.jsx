@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import './home.css';
+import { useLocation } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import './home_.css';
 import '../common/CommonStyle.css';
 import { HomeIcon, FileText, Heart, Users } from 'lucide-react';
 import axios from 'axios';
@@ -84,11 +86,15 @@ function Home(){
     //     ]
     // );
 
+    let navigate = useNavigate();
+
     let [search, setSearch] = useState('그룹을 검색해보세요!');
 
     let [userData, setUserData] = useState({});
     let [groupData, setGroupData] = useState([]);
 
+    let location = useLocation();
+    let page = location.pathname.split('/')[1];
 
     async function getUserData(){
         try{
@@ -153,6 +159,7 @@ function Home(){
             </div>
 
             {/* 그룹 리스트 서버에서 가져와야함. */}
+            {/* 신뢰점수 추가해야함 */}
             {
             groupData.map((group, i) => (
                 //group -> 받아온 groupData의 각 그룹객체 하나하나
@@ -203,16 +210,46 @@ function Home(){
                 ))
             }
             <div className="under-bar-container">
-                <button className="under-bar-icon">
+                <button className={
+                    page === 'home' ? 'under-bar-icon' : 'under-bar-icon-disabled'
+                }
+                onClick={()=>{
+                    navigate('/home');
+                }}
+                >
                         <HomeIcon size={24} />
                         <h4>홈</h4>
                 </button>
-            {/* <FileText className="under-bar-icon" size={24} />
-            <h4>내 그룹</h4>
-            <Heart className="under-bar-icon" size={24} />
-            <h4>찜 목록</h4>
-            <Users className="under-bar-icon" size={24} />
-            <h4>내 정보</h4> */}
+                <button className={
+                    page === 'mygroup' ? 'under-bar-icon' : 'under-bar-icon-disabled'
+                }
+                onClick={()=>{
+                    navigate('/mygroup');
+                }}
+                >
+                        <FileText size={24} />
+                        <h4>내 그룹</h4>
+                </button>
+                <button className={
+                    page === 'bookmarked' ? 'under-bar-icon' : 'under-bar-icon-disabled'
+                }
+                onClick={()=>{
+                    navigate('/bookmarked');
+                }}
+                >
+                        <Heart size={24} />
+                        <h4>찜 목록</h4>
+                </button>
+                <button className={
+                    page === 'profile' ? 'under-bar-icon' : 'under-bar-icon-disabled'
+                }
+                onClick={()=>{
+                    navigate('/myprofile');
+                }}
+                >
+                        <Users size={24} />
+                        <h4>내 정보</h4>
+                </button>
             </div>
         </div>
     )

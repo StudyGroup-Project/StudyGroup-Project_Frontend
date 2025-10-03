@@ -10,7 +10,10 @@ import { Routes, Route } from 'react-router-dom';
 import Kakao from './OAuth/Kakao.jsx';
 import Google from './OAuth/Google.jsx';
 import Naver from './OAuth/Naver.jsx';  
-import Home from './home/home.jsx';
+import Home from './home/home_.jsx';
+import Bookmarked from './Bookmarked/bookmarked_.jsx';
+import MyGroup from './MyGroup/my_group.jsx';
+import MyProfile from './profile/my_profile.jsx';
 
 
 function App() {
@@ -59,7 +62,9 @@ function App() {
         <Route path='profileimage' element={<ProfileImage/>}/>
         <Route path='login' element={<Login/>}/>
         <Route path='register' element={<Register/>}/>
-        <Route path='notice' element={<Notice/>}/>
+        <Route path='bookmarked' element={<Bookmarked/>}/>
+        <Route path='mygroup' element={<MyGroup/>}/>
+        <Route path='myprofile' element={<MyProfile/>}/>
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
       </Routes>

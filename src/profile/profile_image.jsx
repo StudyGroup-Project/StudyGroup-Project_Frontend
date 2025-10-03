@@ -39,8 +39,8 @@ function ProfileImage(){
                     <button
                         className='profileimage-next-button'
                         onClick={()=>{
-                            //다음 누르면 프로필 이미지 서버에 전송
-                            //다시 로그인으로 이동
+                            //profileImg가 null이면 기본 사진 보내고,
+                            //null이 아니면 등록된 사진 보내기.
                             navigate('/home');
                         }}
                         >{profileImg ? '다음' : '건너뛰기'}
