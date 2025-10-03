@@ -138,4 +138,4 @@ const Option = styled.li`
   }
 `;
 
-export default CustomSelect;
+export default {CustomSelect, Category};
