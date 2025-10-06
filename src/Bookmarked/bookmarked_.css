@@ -2,7 +2,7 @@
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 600;
-    font-size: clamp(20px, 4vw, 24px);
+    font-size: clamp(24px, 4vw, 24px);
     color: #000;
     margin: 0;
     text-align: center;

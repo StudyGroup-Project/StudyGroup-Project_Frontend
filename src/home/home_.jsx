@@ -143,6 +143,7 @@ function Home(){
                 placeholder={search}
                 onFocus={()=>{
                     setSearch('');
+                    navigate('/search');
                 }}
                 onBlur={()=>{
                     setSearch('그룹을 검색해보세요!');
