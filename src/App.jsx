@@ -14,6 +14,8 @@ import Home from './home/home_.jsx';
 import Bookmarked from './Bookmarked/bookmarked_.jsx';
 import MyGroup from './MyGroup/my_group.jsx';
 import MyProfile from './profile/my_profile.jsx';
+import {ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory} from './profile/my_profile_settings.jsx';
+import Search from './home/search_.jsx';
 
 
 function App() {
@@ -65,6 +67,11 @@ function App() {
         <Route path='bookmarked' element={<Bookmarked/>}/>
         <Route path='mygroup' element={<MyGroup/>}/>
         <Route path='myprofile' element={<MyProfile/>}/>
+        <Route path='newnickname' element={<ChangeNickname/>}/>
+        <Route path='newaddress' element={<ChangeAddress/>}/>
+        <Route path='newjob' element={<ChangeJob/>}/>
+        <Route path='newcategory' element={<ChangeCategory/>}/>
+        <Route path='search' element={<Search/>}/>
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
       </Routes>
