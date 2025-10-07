@@ -11,6 +11,9 @@ import Kakao from './OAuth/Kakao.jsx';
 import Google from './OAuth/Google.jsx';
 import Naver from './OAuth/Naver.jsx';  
 import Home from './home/home.jsx';
+import Notification from './notification/notification.jsx';
+
+
 
 
 function App() {
@@ -61,6 +64,7 @@ function App() {
         <Route path='register' element={<Register/>}/>
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
+        <Route path='notification' element={<Notification/>}/>
       </Routes>
     </>
   )
