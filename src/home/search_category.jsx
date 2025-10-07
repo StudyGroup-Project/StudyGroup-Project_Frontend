@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import {useState} from 'react'
 
+
 function SearchCategory(props){
     let category = props.category;
     let setNewCategory = props.setNewCategory;
@@ -36,7 +37,7 @@ function SearchCategory(props){
     display:flex;
     align-items:center;
     width: 20%;
-    border-radius: 12px;
+    border-radius: 15px;
     height: 40px;
     padding: 8px;
     background-color: #fff;
@@ -53,6 +54,7 @@ function SearchCategory(props){
 `;
 const Label = styled.label`
   font-size: 12px;
+  cursor: pointer;
 `;
 const SelectOptions = styled.ul`
   position: absolute;
@@ -67,7 +69,7 @@ const SelectOptions = styled.ul`
   border-radius: 8px;
   background-color: #fff;
   color: #000;
-  z-index:1;
+  z-index:1000;
 
   &::-webkit-scrollbar{
     width:8px;
