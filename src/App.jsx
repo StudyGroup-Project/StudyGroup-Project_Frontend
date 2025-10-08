@@ -10,6 +10,8 @@ import { Routes, Route } from 'react-router-dom';
 import Kakao from './OAuth/Kakao.jsx';
 import Google from './OAuth/Google.jsx';
 import Naver from './OAuth/Naver.jsx';  
+import Home from './home/home.jsx';
+import Notification from './notification/notification.jsx';
 import Home from './home/home_.jsx';
 import Bookmarked from './Bookmarked/bookmarked_.jsx';
 import MyGroup from './MyGroup/my_group.jsx';
@@ -74,6 +76,7 @@ function App() {
         <Route path='search' element={<Search/>}/>
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
+        <Route path='notification' element={<Notification/>}/>
       </Routes>
     </>
   )

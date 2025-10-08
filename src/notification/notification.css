@@ -1,0 +1,156 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: white;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.headerCloseButton {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.notificationList {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.notificationItem {
+  background-color: #3d348b;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.notificationItem:hover {
+  opacity: 0.9;
+  transform: scale(1.01);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: #32cd32;
+  stroke: #32cd32;
+  margin-right: 8px;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modalCard {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 60%;       
+  max-width: 400px; 
+  height: 100%;       
+  min-height: 500px; 
+  position: relative;
+  padding-top: 60px; /* 상단 여백 추가 */
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #333;
+  font-size: 15px; /* 아이콘 크게 변경 */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.modalDate {
+  font-size: 14px;
+  color: #444;
+  margin: 7px 10;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.modalSender {
+  font-size: 14px;
+  color: #444;
+  margin: 7px 10;
+  font-weight: bold;
+}
+
+.divider {
+  margin: 16px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.modalContent p {
+  font-size: 15px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.tabbar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #ddd;
+  background-color: #3d348b;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.tabItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+}
