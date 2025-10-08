@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // 추가
 import {
   ArrowLeft,
   Home,
@@ -8,7 +9,9 @@ import {
 } from "lucide-react";
 import "./resourcescreate.css";
 
-export default function Resources() {
+export default function ResourcesCreate() { // 파일명 맞춤
+  const navigate = useNavigate(); // 추가
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
@@ -22,7 +25,6 @@ export default function Resources() {
 
     if (!storedToken) {
       alert("로그인이 필요합니다.");
-      // 라우팅 이동은 app.jsx에서 처리됨
     }
 
     setLoading(false);
@@ -64,6 +66,8 @@ export default function Resources() {
       const result = await response.json();
       console.log("📢 자료 생성 성공:", result);
       alert("자료 생성 완료!");
+
+      navigate("/resources"); // ✅ 생성 후 자료 목록 페이지로 이동
     } catch (error) {
       console.error("❌ 오류 발생:", error);
       alert("자료 생성 실패!");
@@ -71,14 +75,13 @@ export default function Resources() {
   };
 
   if (loading) return <p>로딩 중...</p>;
-
-  if (!token) return null; // 토큰 없으면 화면 표시 안 함
+  if (!token) return null;
 
   return (
     <div className="resources-container">
       {/* 상단 헤더 */}
       <header className="resources-header">
-        <button className="header-back">
+        <button className="header-back" onClick={() => navigate(-1)}> {/* 뒤로가기 */}
           <ArrowLeft size={20} />
         </button>
         <h1 className="header-title">자료실</h1>
@@ -130,3 +133,4 @@ export default function Resources() {
     </div>
   );
 }
+
