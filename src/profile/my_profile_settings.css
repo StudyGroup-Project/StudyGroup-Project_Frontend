@@ -1,0 +1,105 @@
+.change-your-nickname{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+    width: 390px;
+
+    left: 50%;
+    transform: translateX(-50%);
+    top: 150px;
+}
+
+.change-your-nickname h1{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 24px;
+    color: #000;
+    margin: 0;
+    text-align: center;
+}
+
+.change-nickname-input-container{
+    position: relative;
+    display: flex;  
+    flex-direction: column;
+    justify-content: left;
+
+    gap: 5px;
+    width: 390px;
+    max-width: 390px;
+    margin: 30px auto 0;
+
+    top: 150px;
+}
+
+.change-nickname-input-container h4{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 13px;
+    color: #000;
+    margin: 0;
+    opacity: 0.5;
+    text-align: left;
+}
+
+.change-nickname-input-box{
+    font-family: 'Roboto';
+    font-style: normal;
+    font-size: 16px;
+    color: #000;
+    margin: 0;
+    text-align: left;
+
+    border: none;
+    outline: none;
+}
+
+.change-nickname-input-line{
+    position: absolute;
+    width: 100%;
+    height: 0px;
+    border: 1px solid #000;
+    opacity: 0.45;
+    top: 100%;
+}
+
+.change-nickname-button-container{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 390px;
+    max-width: 390px;
+    margin: 30px auto 0;
+
+    top: 150px;
+}
+
+.change-nickname-button{
+    width: 100%;
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 390px;
+    height: 35px;
+}   
+
+.change-nickname-button:disabled{
+    background: #aaa;
+    transition: none;
+}
+
+.change-nickname-button:hover:not(:disabled){
+    background: #2a2a7a;
+}
+
+.change-address-container{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}

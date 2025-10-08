@@ -47,18 +47,6 @@ function Login(){
     }
     }
 
-    async function temp(){
-        try{
-            let res = await axios.get(`http://3.39.81.234:8080/api/stuids/${studyid}/announcements`,{
-                withCredentials: true
-            })
-            setAnn(res.data);
-        } catch(err){
-            console.log(err);
-        }
-    }
-
-
     useEffect(()=>{
         if(token){
             console.log(token);

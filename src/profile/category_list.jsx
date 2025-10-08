@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import './CustomSelect.css'
+import './category_list.css'
 import {useState} from 'react'
 
-function CustomSelect(props){
+function CategoryList(props){
     let list = props.list;
     let setUserData = props.setUserData;
     let [open, setOpen] = useState(false);
@@ -24,10 +24,7 @@ function CustomSelect(props){
                                 if(check==-1){
                                     let copy = [...selected, list[i]];
                                     setSelected(copy);
-                                    setUserData(prev=>({
-                                        ...prev,
-                                        category : [...prev.category, list[i]]
-                                    }))
+                                    setUserData(copy);
                                 }
                                 setCurValue(list[i]);
                             }}>{list[i]}</Option>
@@ -36,6 +33,8 @@ function CustomSelect(props){
                 }
                 </SelectOptions>
             </SelectBox>
+
+            <span className='change-category-line'></span>
 
             <div className>
                 <Category selected={selected} setSelected={setSelected}
@@ -77,15 +76,15 @@ function Category(props){
     )
 }
 
-  const SelectBox = styled.div`
+const SelectBox = styled.div`
     position: relative;
     display:flex;
-    align-items:center;
+    align-items:right;
     width: 100%;
-    padding: 10px 24px;
+    padding: 10px 0px;
     border-radius: 12px;
-    height: 61px;
-    background-color: #E6E6E6;
+    height: 40px;
+    background-color: #fff;
     align-self: center;
     cursor: pointer;
     &::before {
@@ -111,7 +110,7 @@ const SelectOptions = styled.ul`
   max-height: ${(props) => (props.show ? "none" : "0")};
   padding: 0;
   border-radius: 8px;
-  background-color: #E6E6E6;
+  background-color: #fff;
   color: #000;
   z-index:1;
 
@@ -120,22 +119,26 @@ const SelectOptions = styled.ul`
   }
 
   &::-webkit-scrollbar-thumb {
-    height: 30%; /* 스크롤바의 길이 */
-    background: #c6c6c6; /* 스크롤바의 색상 */
+    height: 20%; /* 스크롤바의 길이 */
+    background: #000; /* 스크롤바의 색상 */
     border-radius: 8px;
   }
 
   &::-webkit-scrollbar-track {
-    background: #E6E6E6;  /* 스크롤바 뒷 배경 색상 */
+    background: #fff;  /* 스크롤바 뒷 배경 색상 */
   }
 `;
 const Option = styled.li`
   font-size: 14px;
   padding: 6px 8px;
   transition: background-color 0.2s ease-in;
+  border-bottom: 1px solid #E6E6E6;
+  &:last-child {
+    border-bottom: none;
+  }
   &:hover {
-    background-color: #595959;
+    background-color: #E6E6E6;
   }
 `;
 
-export { CustomSelect, Category };
+export { CategoryList, Category };

@@ -26,26 +26,27 @@ function ProfileImage(){
 
             <h1 className='title-text'>프로필 설정</h1>
             <img className='profileImg' src={profileImg ? profileImg : '/img/main-assets/default_profile.png'} />
-              <label className="profileImg-label" htmlFor="profileImg">프로필 이미지 추가</label>
-                <input
+            <label className="profileImg-label" htmlFor="profileImg">프로필 이미지 추가</label>
+            <input
                 className="profileImg-input"
                 type="file"
                 accept="image/*"
                 id="profileImg"
                 ref={imgRef}
                 onChange={saveImgFile}
-                />
-                <div className='profileimage-button-container'>
-                    <button
-                        className='profileimage-next-button'
-                        onClick={()=>{
-                            //다음 누르면 프로필 이미지 서버에 전송
-                            //다시 로그인으로 이동
-                            navigate('/home');
-                        }}
-                        >{profileImg ? '다음' : '건너뛰기'}
-                    </button>
-                </div>
+            />
+                
+            <div className='profileimage-button-container'>
+                <button
+                    className='profileimage-next-button'
+                    onClick={()=>{
+                        //profileImg가 null이면 기본 사진 보내고,
+                        //null이 아니면 등록된 사진 보내기.
+                        navigate('/home');
+                    }}
+                    >{profileImg ? '다음' : '건너뛰기'}
+                </button>
+            </div>
         </div>
     )    
 }
