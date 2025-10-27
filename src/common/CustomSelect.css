@@ -4,6 +4,7 @@
   flex-direction: row;
   gap: 8px;
   flex-wrap: wrap;
+  max-width: 310px;
 }
 
 .categories {

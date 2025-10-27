@@ -17,7 +17,7 @@
 }
 
 .web-header {
-  background: #fff;
+  background: transparent;
   padding: 20px;
   display: flex;
   align-items: center;
