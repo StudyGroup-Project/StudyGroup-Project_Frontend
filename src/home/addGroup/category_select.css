@@ -1,0 +1,19 @@
+.addGroup-category-card{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    flex-wrap: wrap;
+    width: 380px;
+  }
+  
+  .addGroup-categories { 
+    padding: 10px 19px;
+    border: none;
+    background: #3D348B;
+    border-radius: 15px;
+    margin-top: 5px;
+    color: #ffffff;
+    font-size: 15px;
+    gap: 5px; 
+  }

@@ -63,7 +63,10 @@ function Initial(){
 
                 <div className='signup-container'>
                     <p style={signupFontStyle({color: '#fff', fontWeight: '300'})}>회원이 아니신가요?</p>
-                    <p style={signupFontStyle({color: '#F35b04', fontWeight: '500'})}>회원가입</p>
+                    <button className='register-button' style={signupFontStyle({color: '#F35b04', fontWeight: '500'})}
+                    onClick={()=>{
+                        navigate('/register');
+                    }}>회원가입</button>
                 </div>
             </div>
         </>

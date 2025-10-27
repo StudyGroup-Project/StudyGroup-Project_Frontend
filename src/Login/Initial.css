@@ -1,6 +1,6 @@
-.login-container{
+.login-container {
   position: static;
-  transform: none;    
+  transform: none;
   width: 90%;
   max-width: 400px;
   gap: 10px;
@@ -10,7 +10,7 @@
   justify-content: center;
 }
 
-.id-password{
+.id-password {
   background-color: #fff;
   border: none;
   border-radius: 15px;
@@ -23,13 +23,14 @@
   margin-bottom: 20px;
 }
 
-.signup-container{
+.signup-container {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
 
-  gap: 50px; 
+  gap: 50px;
+
 }
 
 /* .login-button-container{
@@ -42,7 +43,8 @@
 .login-button-container {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap; /* 좁은 화면에서 겹치지 않게 */
+  flex-wrap: wrap;
+  /* 좁은 화면에서 겹치지 않게 */
   justify-content: center;
   align-items: center;
 }
@@ -60,4 +62,12 @@
   justify-content: center;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
+}
+
+.register-button {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
 }

@@ -21,8 +21,8 @@ function Login(){
 
     let [id, setId] = useState('');
     let [pw, setPw] = useState('');
-    let [id_ph, setId_ph] = useState('enter_your_id_here');
-    let [pw_ph, setPw_ph] = useState('enter_your_password_here');
+    let [id_ph, setId_ph] = useState('아이디를 입력해 주세요.');
+    let [pw_ph, setPw_ph] = useState('비밀번호를 입력해 주세요.');
     let [showPw, setShowPw] = useState(false);
     let [token, setToken] = useState(null);
 
@@ -80,7 +80,7 @@ function Login(){
                         setId_ph('');
                     }}
                     onBlur={()=>{
-                        id=='' && setId_ph('enter_your_id_here');
+                        id=='' && setId_ph('아이디를 입력해 주세요.');
                     }}
                     ></input>
                     <span className='login-box-line'></span>
@@ -102,7 +102,7 @@ function Login(){
                         setPw_ph('');
                     }}
                     onBlur={()=>{
-                        pw=='' && setPw_ph('enter_your_password_here');
+                        pw=='' && setPw_ph('비밀번호를 입력해 주세요.');
                     }}
                     ></input>
                     <img src={showPw ? '/img/login/login_eyeOpen.png' : '/img/login/login_Closed.png'} 
