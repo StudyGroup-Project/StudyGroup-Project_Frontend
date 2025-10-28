@@ -163,12 +163,12 @@ function Register(){
                                 pw_check=='' && setPw_check_ph('비밀번호를 다시 입력해주세요.');
                             }}
                             ></input>
-                        <img src={showPw ? '/img/login/login_eyeOpen.png' : '/img/login/login_Closed.png'} 
+                        <img src={showPw_check ? '/img/login/login_eyeOpen.png' : '/img/login/login_Closed.png'} 
                         onClick={()=>{
                             setShowPw_check(!showPw_check);   
                         }}  
                         className='register-box-eye'
-                        style={showPw ? eyeOpen_style : eye_style}
+                        style={showPw_check ? eyeOpen_style : eye_style}
                         ></img>
                         <div className='same-pw-status'>
                             {

@@ -42,10 +42,6 @@
   display: block;
 }
 
-.back-button:hover {
-  background-color: #f0f0f0;
-}
-
 .web-title {
   font-family: 'Roboto', Arial, sans-serif;
   font-style: normal;
