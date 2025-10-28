@@ -164,6 +164,8 @@ function Home(){
             {
             groupData.map((group, i) => (
                 //group -> 받아온 groupData의 각 그룹객체 하나하나
+                //onClick 해서 만약 가입 중인 스터디라면, 그룹 페이지로 이동,
+                // 가입 중이지 않으면 그룹 소개 페이지로 이동.
                 <div className='active-group-container' key={group.id}>
                     <h4 className='active-group-title'>{group.title}</h4>
                     {group.category.map((cat, j) => (

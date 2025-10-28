@@ -18,6 +18,7 @@ import MyProfile from './profile/my_profile.jsx';
 import {ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory} from './profile/my_profile_settings.jsx';
 import Search from './home/search_.jsx';
 import AddGroup from './home/addGroup/addGroup_.jsx';
+import GroupProfile from './Group/group_profile.jsx';
 
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
         <Route path='oauth/naver' element={<Naver/>}/> */}
         <Route path='notification' element={<Notification/>}/>
         <Route path='addGroup' element = {<AddGroup/>}/>
+        <Route path='groupprofile/:id' element = {<GroupProfile/>}/>
       </Routes>
     </>
   )

@@ -1,6 +1,5 @@
 .addGroup-web-header {
     background: transparent;
-    padding: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -29,7 +28,6 @@
     font-size: clamp(14px, 3vw, 16px);
     line-height: 1.2;
     color: #000;
-    margin-top: 10px;
 }
 
 .addGroup-info-secondary {

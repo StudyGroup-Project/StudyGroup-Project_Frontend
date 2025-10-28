@@ -1,0 +1,231 @@
+.group-profile-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 90%;
+    margin: 40px auto 0;
+    padding: 0 20px;
+
+    gap: 20px;
+}
+
+.group-profile-top-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    width: 350px;
+    height: 76px;
+
+    border-radius: 15px;
+    background: var(--purple);
+}
+
+.group-profile-title-image {
+    position: absolute;
+    width: 123px;
+    height: 76px;
+    left: -1px;
+    top: -3px;
+
+    background: transparent;
+    mix-blend-mode: soft-light;
+    opacity: 0.8;
+}
+
+.group-profile-title-text {
+    position: absolute;
+    left: 20px;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 23px;
+    text-align: center;
+
+    color: #fff;
+}
+
+.group-profile-host-image {
+    position: absolute;
+    left: 140px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.group-profile-host-name-container {
+    position: absolute;
+    left: 190px;
+    top: 2px;
+    height: 76px;
+    width: 80px;
+}
+
+.group-profile-host-name-text {
+    position: absolute;
+    top: 14px;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 23px;
+    color: #fff;
+}
+
+.group-profile-host-name {
+    position: absolute;
+    top: 34px;
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 450;
+    font-size: 15px;
+    line-height: 23px;
+    color: #fff;
+}
+
+.group-profile-Curmember-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto';
+    font-style: normal;
+    color: #fff;
+
+    left: 140px;
+
+    width: 35px;
+    height: 25px;
+}
+
+.group-profile-member-count {
+    position: absolute;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.group-profile-member-text {
+    position: absolute;
+    top: 16px;
+    font-weight: 300;
+    font-size: 8px;
+}
+
+.group-profile-Maxmember-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto';
+    font-style: normal;
+    color: #fff;
+
+    left: 134px;
+
+    width: 35px;
+    height: 25px;
+}
+
+.group-profile-member-bar {
+    position: relative;
+    font-size: 18px;
+    font-weight: 0;
+    color: #fff;
+    left: 138px;
+    top: 2px;
+}
+
+.group-profile-bottom-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: auto;
+    padding-bottom: 20px;
+    background: var(--purple);
+    border-radius: 15px;
+    
+}   
+
+.group-profile-catalog-introduction {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.group-profile-text {
+    width: 310px;
+    font-size: 15px;
+    font-weight: 300;
+    color: #fff;
+    padding-left: 20px;
+}
+
+.group-profile-catalog-category {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    padding-left: 20px;
+    margin-top: 20px;
+}
+
+.group-profile-catalog-address {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    padding-left: 20px;
+    margin-top: 20px;
+}
+
+.group-profile-category-card {
+    width: 310px;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.group-profile-categories {
+    padding: 10px 19px;
+    border: none;
+    background: #7A71C8;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+    gap: 5px;
+}
+
+.group-profile-button {
+    width: 100px;
+    height: 40px;
+    border: none;
+    background: #1DA324;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.group-profile-button:disabled {
+    background: #DB5123;
+}
+
+.group-profile-waiting-button {
+    width: 100px;
+    height: 40px;
+    border: none;
+    background: #FFD000;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 15px;
+}
