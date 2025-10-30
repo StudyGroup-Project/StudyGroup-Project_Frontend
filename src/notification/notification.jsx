@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bell, Home, FileText, Heart, Users, X } from "lucide-react";
+import "./notification.css";
 
 
 const NotificationPage = () => {
@@ -17,7 +18,7 @@ const NotificationPage = () => {
         const token = localStorage.getItem("token");
         if (!token) {
           alert("로그인이 필요합니다.");
-          return;
+          navigate("/login"); // 토큰 없으면 로그인 페이지 이동
         }
 
         const res = await fetch(`${baseUrl}/${studyId}/notifications`, {

@@ -5,9 +5,9 @@ import {
   Home,
   FileText,
   Heart,
-  Users
+  Users, PlusCircle
 } from "lucide-react";
-import "./resourcescreate.css";
+import "./resourcesCreate.css";
 
 export default function ResourcesCreate() { // 파일명 맞춤
   const navigate = useNavigate(); // 추가
@@ -25,6 +25,10 @@ export default function ResourcesCreate() { // 파일명 맞춤
 
     if (!storedToken) {
       alert("로그인이 필요합니다.");
+<<<<<<< Updated upstream
+=======
+      navigate("/login"); // 토큰 없으면 로그인 페이지 이동
+>>>>>>> Stashed changes
     }
 
     setLoading(false);
@@ -105,6 +109,7 @@ export default function ResourcesCreate() { // 파일명 맞춤
       {/* 첨부 파일 */}
       <label>첨부 파일</label>
       <input type="file" onChange={handleFileChange} />
+      <PlusCircle size={20} />
 
       {/* 생성 버튼 */}
       <div style={{ marginTop: "10px" }}>

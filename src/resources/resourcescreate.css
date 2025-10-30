@@ -75,7 +75,7 @@
   display: flex;
   justify-content: flex-end;
   margin-top: auto;
-  margin-bottom: 50px;
+  margin-bottom: 80px;
 }
 
 .submitButton {
@@ -85,7 +85,7 @@
   border-radius: 9999px;
   padding: 8px 16px;
   cursor: pointer;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 /* 하단 탭바 */

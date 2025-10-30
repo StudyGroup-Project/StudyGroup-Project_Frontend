@@ -12,6 +12,9 @@ import Google from './OAuth/Google.jsx';
 import Naver from './OAuth/Naver.jsx';  
 import Home from './home/home.jsx';
 import Notification from './notification/notification.jsx';
+import ResourcesCreate from './resources/resourcescreate.jsx';
+import Resources from './resources/resources.jsx';
+import ResourceDetail from './resources/resourcesdetail.jsx';
 
 
 
@@ -65,6 +68,9 @@ function App() {
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
         <Route path='notification' element={<Notification/>}/>
+        <Route path='resourcescreate' element={<ResourcesCreate/>}/>
+        <Route path='resources' element= {<Resources/>}/>
+        <Route path='resourcesdetail' element={<ResourceDetail/>}/>
       </Routes>
     </>
   )
