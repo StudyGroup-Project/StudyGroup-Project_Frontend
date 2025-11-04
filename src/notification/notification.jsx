@@ -12,7 +12,7 @@ const NotificationPage = () => {
   const studyId = 1;
   const baseUrl = "http://3.39.81.234:8080/api/studies";
 
-  // ✅ access token 갱신 함수
+  // access token 재발급 함수
   const getRefreshToken = async () => {
     try {
       const cookies = document.cookie
@@ -38,7 +38,7 @@ const NotificationPage = () => {
     }
   };
 
-  // ✅ 공통 fetch 함수 (토큰 만료 시 자동 갱신)
+  // 공통 fetch 함수 (토큰 만료 시 자동 갱신)
   const authorizedFetch = async (url, options = {}) => {
     let token = localStorage.getItem("accessToken");
     if (!token) token = await getRefreshToken();
@@ -71,7 +71,7 @@ const NotificationPage = () => {
     return res;
   };
 
-  // ✅ 알림 목록 불러오기
+  // 알림 목록 불러오기
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -92,7 +92,7 @@ const NotificationPage = () => {
     fetchNotifications();
   }, []);
 
-  // ✅ 알림 상세
+  // 알림 상세
   const fetchNotificationDetail = async (notificationId) => {
     try {
       const res = await authorizedFetch(
@@ -109,7 +109,7 @@ const NotificationPage = () => {
     }
   };
 
-  // ✅ 바깥 클릭 시 닫기
+  // 바깥 클릭 시 닫기
   useEffect(() => {
     if (!selectedNotification) return;
 
