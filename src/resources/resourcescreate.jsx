@@ -9,13 +9,13 @@ export default function ResourcesCreate() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [files, setFiles] = useState([]); // ✅ 여러 파일 업로드 지원
+  const [files, setFiles] = useState([]); // 여러 파일 업로드 지원
   const [loading, setLoading] = useState(true);
 
   const studyId = 1;
   const baseUrl = `http://3.39.81.234:8080/api/studies/${studyId}/resources`;
 
-  // ✅ access token 재발급 함수
+  // access token 재발급 함수
   const getRefreshToken = async () => {
     try {
       const cookies = document.cookie
@@ -41,7 +41,7 @@ export default function ResourcesCreate() {
     }
   };
 
-  // ✅ 인증 요청 공통 함수
+  // 인증 요청 공통 함수
   const authorizedFetch = async (url, options = {}) => {
     let token = localStorage.getItem("accessToken");
     if (!token) token = await getRefreshToken();
@@ -88,7 +88,7 @@ export default function ResourcesCreate() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    files.forEach((f) => formData.append("files", f)); // ✅ files로 append
+    files.forEach((f) => formData.append("files", f)); //  files로 append
 
     try {
       const res = await authorizedFetch(baseUrl, {
@@ -137,7 +137,7 @@ export default function ResourcesCreate() {
       />
 
       <label>첨부 파일</label>
-      <input type="file" multiple onChange={handleFileChange} /> {/* ✅ 여러 파일 가능 */}
+      <input type="file" multiple onChange={handleFileChange} /> {/* 여러 파일 가능 */}
 
       <div style={{ marginTop: "10px" }}>
         <button onClick={handleSubmit}>생성</button>
