@@ -15,6 +15,7 @@ export default function ResourcesCreate() {
   const studyId = 1;
   const baseUrl = `http://3.39.81.234:8080/api/studies/${studyId}/resources`;
 
+
   // access token 재발급 함수
   const getRefreshToken = async () => {
     try {
@@ -40,6 +41,7 @@ export default function ResourcesCreate() {
       return null;
     }
   };
+
 
   // 인증 요청 공통 함수
   const authorizedFetch = async (url, options = {}) => {
@@ -67,6 +69,11 @@ export default function ResourcesCreate() {
           ...options.headers,
         },
       });
+
+
+      navigate("/login"); // 토큰 없으면 로그인 페이지 이동
+
+
     }
 
     return res;
