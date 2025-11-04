@@ -6,6 +6,10 @@
     gap: 5px;
     width: 90%;
     margin: 90px auto 0;
+<<<<<<< Updated upstream
+=======
+    padding: 0 20px;
+>>>>>>> Stashed changes
   }
 
 .myprofileImg{
@@ -13,6 +17,7 @@
     height: 150px;
     border-radius: 50%;
 
+<<<<<<< Updated upstream
     margin-top: 30px;
     margin-bottom: 20px;
 }
@@ -29,6 +34,11 @@
 .myprofileImg-input {
     display: none;
   }
+=======
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+>>>>>>> Stashed changes
   
 .myprofile-info{
     position: static;
@@ -71,6 +81,7 @@
     color: #000;
 }
 
+<<<<<<< Updated upstream
 .myprofile-button{
     position: static;
     top: 30%;
@@ -92,6 +103,8 @@
     
 }
 
+=======
+>>>>>>> Stashed changes
 .myprofile-address-container{
     display: flex;
     align-items:center;
@@ -179,8 +192,11 @@
     flex-wrap: wrap;
 
     width: 380px;
+<<<<<<< Updated upstream
 
     margin-top: -5px;
+=======
+>>>>>>> Stashed changes
   }
   
 .myprofile-categories {
