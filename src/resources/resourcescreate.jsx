@@ -37,7 +37,6 @@ export default function ResourcesCreate() {
     } catch (err) {
       console.error("토큰 갱신 실패:", err);
       alert("로그인이 필요합니다.");
-<<<<<<< Updated upstream
       return null;
     }
   };
@@ -68,11 +67,11 @@ export default function ResourcesCreate() {
           ...options.headers,
         },
       });
-=======
+
 
       navigate("/login"); // 토큰 없으면 로그인 페이지 이동
 
->>>>>>> Stashed changes
+
     }
 
     return res;
