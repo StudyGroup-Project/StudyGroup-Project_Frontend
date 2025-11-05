@@ -82,6 +82,7 @@ function ProfileImage() {
                 id="profileImg"
                 ref={imgRef}
                 onChange={saveImgFile}
+<<<<<<< Updated upstream
             />
 
             <div className='profileimage-button-container'>
@@ -95,6 +96,20 @@ function ProfileImage() {
                 >{profileImg ? '다음' : '건너뛰기'}
                 </button>
             </div>
+=======
+                />
+                <div className='profileimage-button-container'>
+                    <button
+                        className='profileimage-next-button'
+                        onClick={()=>{
+                            //profileImg가 null이면 기본 사진 보내고,
+                            //null이 아니면 등록된 사진 보내기.
+                            navigate('/home');
+                        }}
+                        >{profileImg ? '다음' : '건너뛰기'}
+                    </button>
+                </div>
+>>>>>>> Stashed changes
         </div>
     )
 }
