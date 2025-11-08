@@ -6,18 +6,12 @@
     gap: 5px;
     width: 90%;
     margin: 90px auto 0;
-<<<<<<< Updated upstream
-=======
-    padding: 0 20px;
->>>>>>> Stashed changes
   }
 
 .myprofileImg{
     width: 150px;
     height: 150px;
     border-radius: 50%;
-
-<<<<<<< Updated upstream
     margin-top: 30px;
     margin-bottom: 20px;
 }
@@ -34,11 +28,7 @@
 .myprofileImg-input {
     display: none;
   }
-=======
-    margin-top: 15px;
-    margin-bottom: 20px;
-}
->>>>>>> Stashed changes
+
   
 .myprofile-info{
     position: static;
@@ -72,7 +62,6 @@
     top: 52%;
     left: 5%;
     transform: translate(0, -50%);
-
     font-family: 'Roboto', Arial, sans-serif;
     font-style: normal;
     font-weight: 400;
@@ -81,7 +70,6 @@
     color: #000;
 }
 
-<<<<<<< Updated upstream
 .myprofile-button{
     position: static;
     top: 30%;
@@ -99,12 +87,8 @@
 
     width: 10px;
     height: 12px;
-
-    
 }
 
-=======
->>>>>>> Stashed changes
 .myprofile-address-container{
     display: flex;
     align-items:center;
@@ -125,7 +109,6 @@
     font-size: 16px;
     text-align: left;
     padding-left: 24px;
-
     outline: none;
 }
 
@@ -134,7 +117,6 @@
     top: 52%;
     left: 10%;
     transform: translate(0, -50%);
-
     font-family: 'Roboto', Arial, sans-serif;
     font-style: normal;
     font-weight: 400;
@@ -160,7 +142,6 @@
     top: 52%;
     left: 20%;
     transform: translate(0, -50%);
-
     font-family: 'Roboto', Arial, sans-serif;
     font-style: normal;
     font-weight: 400;
@@ -190,13 +171,9 @@
     flex-direction: row;
     gap: 8px;
     flex-wrap: wrap;
-
     width: 380px;
-<<<<<<< Updated upstream
-
     margin-top: -5px;
-=======
->>>>>>> Stashed changes
+
   }
   
 .myprofile-categories {
