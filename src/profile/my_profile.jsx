@@ -1,20 +1,12 @@
 import './my_profile.css';
 import './../home/home_.css';
 import './../common/CommonStyle.css';
-<<<<<<< Updated upstream
 import { useState, useRef } from 'react';
-=======
-import { useState } from 'react';
->>>>>>> Stashed changes
 import { HomeIcon, FileText, Heart, Users } from 'lucide-react';
 import { useNavigate} from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-<<<<<<< Updated upstream
 // 신뢰점수 추가하기
-
-=======
->>>>>>> Stashed changes
 
 function myProfile(props){
 
@@ -25,7 +17,6 @@ function myProfile(props){
         "district": "경산시",
         "birthDate": "1999-07-15",
         "job": "STUDENT",
-<<<<<<< Updated upstream
         "preferredCategory": ["IT"],
         "profileImageUrl": "/img/main-assets/default_profile.png",
         "trustScore": 82
@@ -46,12 +37,6 @@ function myProfile(props){
         }
         //서버에 변경된 사진 보내기 추가해야함.
     }
-=======
-        "preferredCategory": "IT",
-    })
-    //서버로부터 받아오는 데이터
-
->>>>>>> Stashed changes
 
     let navigate = useNavigate();
     let location = useLocation();
@@ -70,7 +55,6 @@ function myProfile(props){
             </div>
 
             <div className='myprofile-container'>
-<<<<<<< Updated upstream
                 <img className='myprofileImg' src={newProfileImg ? newProfileImg : profileImg}/>
                 <label className="myprofileImg-label" htmlFor="myprofileImg">프로필 이미지 변경</label>
                 <input
@@ -89,17 +73,6 @@ function myProfile(props){
                             className='myprofile-button'>
                         </button>
                     </h4>
-=======
-                <img className='myprofileImg' src='/img/main-assets/default_profile.png'/>
-                <>
-                    <h4 className='myprofile-info'>닉네임</h4>
->>>>>>> Stashed changes
-                    <div className='myprofile-box' >
-                        <h5>{userData.nickname}</h5>
-                    </div>
-                </>
-                <>
-<<<<<<< Updated upstream
                     <h4 className='myprofile-info'>주소
                         <button onClick={()=>{
                             navigate('/newaddress', {state: {address: userData.province + ' ' + userData.district}})
@@ -127,54 +100,17 @@ function myProfile(props){
                         }}
                         className='myprofile-button'></button>
                     </h4>
-=======
-                    <h4 className='myprofile-info'>주소 </h4>
-                    <div className='myprofile-address-container'>
-                        <div className='myprofile-address-box'>
-                            <h5>{userData.province}</h5>
-                        </div>
-                        <div className='myprofile-address-box'>
-                            <h5>{userData.district}</h5>
-                        </div>
-                    </div>
-                </>
-                <>
-                    <h4 className='myprofile-info'>생년월일</h4>
-                    <div className='myprofile-birth-wrapper'>    
-                        <div className='myprofile-birth-box'>
-                            <h5>{userData.birthDate.split('-')[0]}</h5>
-                        </div>
-                        <span>년</span>
-
-                        <div className='myprofile-birth-box'>
-                            <h5>{userData.birthDate.split('-')[1]}</h5>
-                        </div>
-                        <span>월</span>
-
-                        <div className='myprofile-birth-box'>
-                            <h5>{userData.birthDate.split('-')[2]}</h5>
-                        </div>
-                        <span>일</span>
-                    </div>
-                </>
-                <>
-                    <h4 className='myprofile-info'>직업</h4>
->>>>>>> Stashed changes
                     <div className='myprofile-box'>
                         <h5>{userData.job}</h5>
                     </div>
                 </>
                 <>
-<<<<<<< Updated upstream
                     <h4 className='myprofile-info'>선호 카테고리
                         <button onClick={()=>{
                             navigate('/newcategory')
                         }}
                         className='myprofile-button'></button>
                     </h4>
-=======
-                    <h4 className='myprofile-info'>선호 카테고리</h4>
->>>>>>> Stashed changes
                     <Category category={category}></Category>
                 </>
             </div>
