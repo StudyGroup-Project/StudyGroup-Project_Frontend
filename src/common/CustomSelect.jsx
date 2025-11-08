@@ -138,8 +138,5 @@ const Option = styled.li`
   }
 `;
 
-<<<<<<< Updated upstream
 export { CustomSelect, Category };
-=======
-export default {CustomSelect, Category};
->>>>>>> Stashed changes
+
