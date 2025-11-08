@@ -1,7 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./AssignmentsHost.css";
-import { ArrowLeft, PlusCircle, Home, FileText, Heart, Users, User } from "lucide-react";
+import "./Assignments.css";
+import { ArrowLeft, Home, FileText, Heart, Users, User } from "lucide-react";
+
+// access token 갱신
+async function getRefreshToken() {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) return;
+
+    const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!res.ok) throw new Error("토큰 갱신 실패");
+
+    const data = await res.json();
+    localStorage.setItem("token", data.accessToken);
+    console.log("Access token 갱신 완료");
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// 사용자 데이터 POST
+async function postUserData() {
+  try {
+    const token = localStorage.getItem("token");
+    const userData = { /* 필요한 사용자 데이터 */ };
+
+    const res = await fetch("http://3.39.81.234:8080/api/users/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!res.ok) throw new Error("유저 데이터 전송 실패");
+    console.log("유저 데이터 전송 완료");
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 export default function Assignments() {
   const [assignments, setAssignments] = useState([]);
@@ -11,12 +55,13 @@ export default function Assignments() {
   const studyId = 1; // 실제 스터디 ID로 변경 필요
   const baseUrl = "http://3.39.81.234:8080/api/studies";
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchAssignments = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
           alert("로그인이 필요합니다.");
+          setLoading(false);
           return;
         }
 
@@ -43,17 +88,20 @@ export default function Assignments() {
   }, []);
 
   if (loading) return <p>로딩 중...</p>;
-*/
 
   return (
     <div className="assignments-container">
       {/* Header */}
       <div className="assignments-header">
-        <button className="header-back">
+        <button className="header-back" onClick={async () => {
+          await getRefreshToken();
+          await postUserData();
+          navigate(-1);
+        }}>
           <ArrowLeft size={20} />
         </button>
         <span className="header-title">그룹명</span>
-        <div className="header-spacer"></div> {/* 오른쪽 공간 */}
+        <div className="header-spacer"></div> {/* 오른쪽 공간 유지 */}
       </div>
 
       {/* 과제 리스트 */}
@@ -66,7 +114,7 @@ export default function Assignments() {
               <span className="assignment-title">{assignment.title}</span>
               <div className="assignment-author">
                 <User size={16} />
-                <span>{assignment.author}</span>
+                <span>{assignment.author || "작성자 없음"}</span>
               </div>
             </div>
           ))
