@@ -10,7 +10,6 @@ import { Routes, Route } from 'react-router-dom';
 import Kakao from './OAuth/Kakao.jsx';
 import Google from './OAuth/Google.jsx';
 import Naver from './OAuth/Naver.jsx';  
-<<<<<<< Updated upstream
 import Home from './home/home_.jsx';
 import Notification from './notification/notification.jsx';
 import Bookmarked from './Bookmarked/bookmarked_.jsx';
@@ -20,18 +19,10 @@ import {ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory} from './profil
 import Search from './home/search_.jsx';
 import AddGroup from './home/addGroup/addGroup_.jsx';
 import GroupProfile from './Group/group_profile.jsx';
-=======
-
-import Home from './home/home.jsx';
-import Notification from './notification/notification.jsx';
 import ResourcesCreate from './resources/resourcescreate.jsx';
 import Resources from './resources/resources.jsx';
 import ResourceDetail from './resources/resourcesdetail.jsx';
-import Home from './home/home_.jsx';
-import Bookmarked from './Bookmarked/bookmarked_.jsx';
-import MyGroup from './MyGroup/my_group.jsx';
-import MyProfile from './profile/my_profile.jsx';
->>>>>>> Stashed changes
+
 
 
 function App() {
@@ -83,19 +74,19 @@ function App() {
         <Route path='bookmarked' element={<Bookmarked/>}/>
         <Route path='mygroup' element={<MyGroup/>}/>
         <Route path='myprofile' element={<MyProfile/>}/>
-<<<<<<< Updated upstream
         <Route path='newnickname' element={<ChangeNickname/>}/>
         <Route path='newaddress' element={<ChangeAddress/>}/>
         <Route path='newjob' element={<ChangeJob/>}/>
         <Route path='newcategory' element={<ChangeCategory/>}/>
         <Route path='search' element={<Search/>}/>
-=======
->>>>>>> Stashed changes
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
         <Route path='notification' element={<Notification/>}/>
         <Route path='addGroup' element = {<AddGroup/>}/>
         <Route path='groupprofile/:id' element = {<GroupProfile/>}/>
+        <Route path='resources' element={<Resources/>}/>
+        <Route path='resourcesdetail' element={<ResourceDetail/>}/>
+        <Route path='resourcescreate' element={<ResourcesCreate/>}/>
       </Routes>
     </>
   )
