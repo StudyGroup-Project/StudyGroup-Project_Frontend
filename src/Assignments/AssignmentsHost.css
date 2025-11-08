@@ -10,26 +10,22 @@
 .assignments-header {
   display: flex;
   align-items: center;
-  position: relative;   /* 중요! */
-  height: 50px;         /* 필수 */
+  justify-content: space-between;
+  margin-bottom: 5px;
   border-bottom: 2px solid #3d348b;
-  padding: 0 10px;
 }
 
 .header-back {
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 2;
 }
 
 .header-title {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
   font-weight: bold;
   font-size: 18px;
+  padding: 15px;
+  margin-bottom: 10px;
 }
 
 .add-button {

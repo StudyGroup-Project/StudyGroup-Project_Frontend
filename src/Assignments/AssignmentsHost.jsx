@@ -53,7 +53,14 @@ export default function Assignments() {
           <ArrowLeft size={20} />
         </button>
         <span className="header-title">그룹명</span>
-        <div className="header-spacer"></div> {/* 오른쪽 공간 */}
+
+        {/* Plus 버튼 클릭 시 assignmentscreate 페이지로 이동 */}
+        <button
+          className="add-button"
+          onClick={() => navigate("/assignmentscreate")}
+        >
+          <PlusCircle size={20} />
+        </button>
       </div>
 
       {/* 과제 리스트 */}
@@ -83,3 +90,4 @@ export default function Assignments() {
     </div>
   );
 }
+
