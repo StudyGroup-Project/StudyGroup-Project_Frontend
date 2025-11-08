@@ -22,6 +22,7 @@ import GroupProfile from './Group/group_profile.jsx';
 import ResourcesCreate from './resources/resourcescreate.jsx';
 import Resources from './resources/resources.jsx';
 import ResourceDetail from './resources/resourcesdetail.jsx';
+import Assignments from './Assignments/Assignments.jsx';
 
 
 
@@ -87,6 +88,7 @@ function App() {
         <Route path='resources' element={<Resources/>}/>
         <Route path='resourcesdetail' element={<ResourceDetail/>}/>
         <Route path='resourcescreate' element={<ResourcesCreate/>}/>
+        <Route path='assignments' element={<Assignments/>}/>
       </Routes>
     </>
   )
