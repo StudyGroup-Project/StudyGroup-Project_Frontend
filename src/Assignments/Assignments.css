@@ -10,8 +10,8 @@
 .assignments-header {
   display: flex;
   align-items: center;
-  position: relative;   /* 중요! */
-  height: 50px;         /* 필수 */
+  justify-content: space-between; /* 버튼 좌우 균형 */
+  height: 50px;
   border-bottom: 2px solid #3d348b;
   padding: 0 10px;
 }
@@ -20,17 +20,19 @@
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 2;
 }
 
 .header-title {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  text-align: center;
+  flex: 1;             /* 중앙 영역 차지 */
   font-weight: bold;
   font-size: 18px;
 }
+
+.header-spacer {
+  width: 40px;         /* 왼쪽 버튼과 같은 크기, 중앙 정렬 유지 */
+}
+
 
 .add-button {
   background: none;
