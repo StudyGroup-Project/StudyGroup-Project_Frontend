@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
-/* ✅ 토큰 갱신 함수 */
+/* 토큰 갱신 함수 */
 async function getRefreshToken() {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -26,9 +26,9 @@ async function getRefreshToken() {
     if (!res.ok) throw new Error("토큰 갱신 실패");
     const data = await res.json();
     localStorage.setItem("accessToken", data.accessToken);
-    console.log("✅ Access token 갱신 완료");
+    console.log("Access token 갱신 완료");
   } catch (err) {
-    console.error("❌ 토큰 갱신 실패:", err);
+    console.error("토큰 갱신 실패:", err);
   }
 }
 
@@ -44,7 +44,7 @@ const AssignmentsCreate = () => {
   const [startDate, setStartDate] = useState({ year: "", month: "", day: "" });
   const [endDate, setEndDate] = useState({ year: "", month: "", day: "" });
 
-  /* ✅ 로그인 확인 + 토큰 갱신 */
+  /* 로그인 확인 + 토큰 갱신 */
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -75,61 +75,63 @@ const AssignmentsCreate = () => {
     }
   };
 
-  /* ✅ 과제 생성 함수 */
-  const handleCreateAssignment = async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        alert("로그인이 필요합니다.");
-        navigate("/login");
-        return;
-      }
-      
-      // 백엔드 통신용 코드
-      const formData = new FormData();
-      formData.append("title", assignmentTitle);
-      formData.append("content", assignmentContent);
-      formData.append(
-        "startDate",
-        `${startDate.year}-${startDate.month}-${startDate.day}`
-      );
-      formData.append(
-        "endDate",
-        `${endDate.year}-${endDate.month}-${endDate.day}`
-      );
-      if (attachedFile) {
-        formData.append("file", attachedFile);
-      }
-
-      const res = await fetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}/assignments`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-          navigate("/login");
-        } else {
-          const errText = await res.text();
-          alert("과제 생성 실패: " + errText);
-        }
-        return;
-      }
-
-      alert("과제가 성공적으로 생성되었습니다!");
-      navigate(`/studies/${studyId}/assignments`); // 과제 목록 페이지로 이동
-    } catch (err) {
-      console.error("과제 생성 오류:", err);
-      alert("과제 생성 중 문제가 발생했습니다.");
+/* 과제 생성 함수 */
+const handleCreateAssignment = async () => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
     }
-  };
+
+    const formData = new FormData();
+    formData.append("title", assignmentTitle);
+    formData.append("description", assignmentContent); 
+    formData.append(
+      "startAt",
+      `${startDate.year}-${startDate.month}-${startDate.day}`
+    ); 
+    formData.append(
+      "dueAt",
+      `${endDate.year}-${endDate.month}-${endDate.day}`
+    ); 
+    if (attachedFile) {
+      formData.append("files", attachedFile); 
+    }
+
+    const res = await fetch(
+      `http://3.39.81.234:8080/api/studies/${studyId}/assignments`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+        navigate("/login");
+      } else {
+        const errText = await res.text();
+        alert("과제 생성 실패: " + errText);
+      }
+      return;
+    }
+
+    if (res.status === 201) {
+      alert("과제가 성공적으로 생성되었습니다!");
+      navigate(`/studies/${studyId}/assignments`);
+    }
+  } catch (err) {
+    console.error("과제 생성 오류:", err);
+    alert("과제 생성 중 문제가 발생했습니다.");
+  }
+};
+
 
   return (
     <div className="assignments-detail">
