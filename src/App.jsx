@@ -28,6 +28,8 @@ import AssignmentsDetail from './Assignments/AssignmentsDetail.jsx';
 import AssignmentsDetailHost from './Assignments/AssignmentsDetailHost.jsx';
 import AssignmentsCreate from './Assignments/AssignmentsCreate.jsx';
 import AssignmentsModify from './Assignments/AssignmentsModify.jsx';
+import AssignmentsTest from './Assignments/AssignmentsTest.jsx';
+import AssignmentsTestList from './Assignments/AssignmentsTestList.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -97,6 +99,8 @@ function App() {
         <Route path='assignmentsdetailhost' element={<AssignmentsDetailHost/>}/>
         <Route path='assignmentscreate' element={<AssignmentsCreate/>}/>
         <Route path='assignmentsmodify' element={<AssignmentsModify/>}/>
+        <Route path='assignmentstest' element={<AssignmentsTest/>}/>
+        <Route path='assignmentstestlist' element={<AssignmentsTestList/>}/>
 
       </Routes>
     </>
