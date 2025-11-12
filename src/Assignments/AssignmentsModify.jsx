@@ -10,7 +10,50 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getRefreshToken, postUserData } from "../api/auth";
+
+/* ✅ Access token 갱신 */
+async function getRefreshToken() {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) return;
+
+    const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!res.ok) throw new Error("토큰 갱신 실패");
+
+    const data = await res.json();
+    localStorage.setItem("token", data.accessToken);
+    console.log("Access token 갱신 완료");
+  } catch (err) {
+    console.error("토큰 갱신 오류:", err);
+  }
+}
+
+/* ✅ 사용자 데이터 POST */
+async function postUserData() {
+  try {
+    const token = localStorage.getItem("token");
+    const userData = { /* 필요시 유저 데이터 */ };
+
+    const res = await fetch("http://3.39.81.234:8080/api/users/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!res.ok) throw new Error("유저 데이터 전송 실패");
+    console.log("유저 데이터 전송 완료");
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 const AssignmentsModify = () => {
   const navigate = useNavigate();
@@ -33,40 +76,34 @@ const AssignmentsModify = () => {
     day: "",
   });
 
-  // 기존 과제 데이터 불러오기
+  /* ✅ 기존 과제 데이터 불러오기 */
   useEffect(() => {
     const fetchAssignmentDetail = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("token");
         if (!token) {
           alert("로그인이 필요합니다.");
           navigate("/login");
           return;
         }
 
+        await getRefreshToken();
+        await postUserData();
+
         const res = await fetch(
-          `/api/studies/${studyId}/assignments/${assignmentId}`,
+          `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
           {
             method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
           }
         );
 
-        if (res.status === 401) {
-          const newToken = await getRefreshToken();
-          if (newToken) {
-            localStorage.setItem("accessToken", newToken);
-            return fetchAssignmentDetail(); // 재시도
-          } else {
-            alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-            navigate("/login");
-            return;
-          }
-        }
+        if (!res.ok) throw new Error("과제 상세 불러오기 실패");
 
         const data = await res.json();
         setModifiedTitle(data.title || "");
-        setModifiedContent(data.content || "");
+        setModifiedContent(data.description || "");
+
         if (data.startAt) {
           const start = new Date(data.startAt);
           setModifiedStartDate({
@@ -75,6 +112,7 @@ const AssignmentsModify = () => {
             day: String(start.getDate()).padStart(2, "0"),
           });
         }
+
         if (data.dueAt) {
           const end = new Date(data.dueAt);
           setModifiedEndDate({
@@ -84,7 +122,7 @@ const AssignmentsModify = () => {
           });
         }
       } catch (err) {
-        console.error("과제 상세 불러오기 실패:", err);
+        console.error(err);
       }
     };
 
@@ -95,74 +133,54 @@ const AssignmentsModify = () => {
     setModifiedFile(e.target.files[0]);
   };
 
-  // 파일 Base64 인코딩 함수 (api 명세서에 따라)
-  const convertFileToBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-
-  // 과제 수정 API
+  /* ✅ 과제 수정 (multipart) */
   const handleModifyAssignment = async () => {
     try {
-      let token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("token");
       if (!token) {
         alert("로그인이 필요합니다.");
         navigate("/login");
         return;
       }
 
-      let filesArray = [];
+      const formData = new FormData();
+      formData.append("title", modifiedTitle);
+      formData.append("description", modifiedContent);
+      formData.append(
+        "startAt",
+        `${modifiedStartDate.year}-${modifiedStartDate.month}-${modifiedStartDate.day}`
+      );
+      formData.append(
+        "dueAt",
+        `${modifiedEndDate.year}-${modifiedEndDate.month}-${modifiedEndDate.day}`
+      );
       if (modifiedFile) {
-        const base64Data = await convertFileToBase64(modifiedFile);
-        filesArray.push({
-          fileName: modifiedFile.name,
-          fileData: base64Data,
-        });
+        formData.append("files", modifiedFile);
       }
 
-      const bodyData = {
-        title: modifiedTitle,
-        content: modifiedContent,
-        startAt: `${modifiedStartDate.year}-${modifiedStartDate.month}-${modifiedStartDate.day}`,
-        dueAt: `${modifiedEndDate.year}-${modifiedEndDate.month}-${modifiedEndDate.day}`,
-        files: filesArray,
-      };
-
       const res = await fetch(
-        `/api/studies/${studyId}/assignments/${assignmentId}`,
+        `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(bodyData),
+          body: formData,
         }
       );
 
       if (res.status === 401) {
-        // 토큰 만료 시 refreshToken 갱신
-        const newToken = await getRefreshToken();
-        if (newToken) {
-          localStorage.setItem("accessToken", newToken);
-          return handleModifyAssignment(); // 재시도
-        } else {
-          alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-          navigate("/login");
-          return;
-        }
+        await getRefreshToken();
+        return handleModifyAssignment(); // 재시도
       }
 
-      if (res.status === 201) {
+      if (res.status === 201 || res.status === 200) {
         alert("과제가 성공적으로 수정되었습니다!");
-        navigate(`/studies/${studyId}/assignments/${assignmentId}`); // ✅ 상세페이지로 이동
+        navigate(`/studies/${studyId}/assignments/${assignmentId}`);
       } else {
-        const data = await res.json();
-        console.error("수정 실패:", data);
-        alert("과제 수정에 실패했습니다.");
+        const errText = await res.text();
+        console.error("수정 실패:", errText);
+        alert("과제 수정 실패: " + errText);
       }
     } catch (err) {
       console.error("서버 오류:", err);
@@ -170,7 +188,7 @@ const AssignmentsModify = () => {
     }
   };
 
-  // 날짜 선택 핸들러
+  /* ✅ 날짜 선택 */
   const handleDateSelect = (type, value) => {
     const d = new Date(value);
     const formatted = {
@@ -191,14 +209,13 @@ const AssignmentsModify = () => {
     <div className="assignments-detail">
       {/* 상단 */}
       <div className="top-bar">
-        <div className="back-btn" onClick={() => window.history.back()}>
+        <div className="back-btn" onClick={() => navigate(-1)}>
           <ArrowLeft size={24} />
         </div>
       </div>
 
-      {/* 스크롤 영역 */}
+      {/* 메인 영역 */}
       <div className="scroll-container">
-        {/* 과제 제목 */}
         <div className="info-row">
           <p>• 과제 제목</p>
           <input
@@ -210,7 +227,7 @@ const AssignmentsModify = () => {
         </div>
         <hr />
 
-        {/* 시작 일시 설정 */}
+        {/* 시작 일시 */}
         <div className="info-row date-section">
           <p>• 시작 일시 설정</p>
           <div className="date-inputs">
@@ -219,10 +236,7 @@ const AssignmentsModify = () => {
               placeholder="YYYY"
               value={modifiedStartDate.year}
               onChange={(e) =>
-                setModifiedStartDate({
-                  ...modifiedStartDate,
-                  year: e.target.value,
-                })
+                setModifiedStartDate({ ...modifiedStartDate, year: e.target.value })
               }
             />
             <span>년</span>
@@ -231,10 +245,7 @@ const AssignmentsModify = () => {
               placeholder="MM"
               value={modifiedStartDate.month}
               onChange={(e) =>
-                setModifiedStartDate({
-                  ...modifiedStartDate,
-                  month: e.target.value,
-                })
+                setModifiedStartDate({ ...modifiedStartDate, month: e.target.value })
               }
             />
             <span>월</span>
@@ -243,10 +254,7 @@ const AssignmentsModify = () => {
               placeholder="DD"
               value={modifiedStartDate.day}
               onChange={(e) =>
-                setModifiedStartDate({
-                  ...modifiedStartDate,
-                  day: e.target.value,
-                })
+                setModifiedStartDate({ ...modifiedStartDate, day: e.target.value })
               }
             />
             <span>일</span>
@@ -267,7 +275,7 @@ const AssignmentsModify = () => {
 
         <hr />
 
-        {/* 마감 일시 설정 */}
+        {/* 마감 일시 */}
         <div className="info-row date-section">
           <p>• 마감 일시 설정</p>
           <div className="date-inputs">
@@ -276,10 +284,7 @@ const AssignmentsModify = () => {
               placeholder="YYYY"
               value={modifiedEndDate.year}
               onChange={(e) =>
-                setModifiedEndDate({
-                  ...modifiedEndDate,
-                  year: e.target.value,
-                })
+                setModifiedEndDate({ ...modifiedEndDate, year: e.target.value })
               }
             />
             <span>년</span>
@@ -288,10 +293,7 @@ const AssignmentsModify = () => {
               placeholder="MM"
               value={modifiedEndDate.month}
               onChange={(e) =>
-                setModifiedEndDate({
-                  ...modifiedEndDate,
-                  month: e.target.value,
-                })
+                setModifiedEndDate({ ...modifiedEndDate, month: e.target.value })
               }
             />
             <span>월</span>
@@ -300,10 +302,7 @@ const AssignmentsModify = () => {
               placeholder="DD"
               value={modifiedEndDate.day}
               onChange={(e) =>
-                setModifiedEndDate({
-                  ...modifiedEndDate,
-                  day: e.target.value,
-                })
+                setModifiedEndDate({ ...modifiedEndDate, day: e.target.value })
               }
             />
             <span>일</span>
@@ -324,7 +323,7 @@ const AssignmentsModify = () => {
 
         <hr />
 
-        {/* 과제 내용 */}
+        {/* 내용 */}
         <div className="submission-section">
           <p>• 과제 내용</p>
           <textarea
@@ -334,7 +333,7 @@ const AssignmentsModify = () => {
           />
         </div>
 
-        {/* 첨부 파일 */}
+        {/* 파일 */}
         <div className="section">
           <p className="section-title">• 첨부 파일란</p>
           <div className="file-input-wrapper">
@@ -361,8 +360,6 @@ const AssignmentsModify = () => {
             </button>
           </div>
         </div>
-
-        <hr />
       </div>
 
       {/* 하단 탭바 */}
