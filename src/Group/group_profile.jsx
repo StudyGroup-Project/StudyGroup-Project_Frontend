@@ -1,32 +1,13 @@
 import './group_profile.css';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
 function GroupProfile() {
     let { id } = useParams();
+    let location = useLocation();
 
     // 서버로부터 받아와야할 정보
-    let [groupData, setGroupData] = useState({
-        title: '그룹 이름',
-        maxMemberCount: 6,
-        memberCount: 6,
-        bio: 'UI/UX, 그래픽 디자인에 관심 있는 사람들과 실제 프로젝트나 모의 과제를 함께 풀며 디자인 감각을 키우는 스터디입니다.\n'
-            + '🎨 디자인 툴을 막 배우기 시작했는데, 꾸준히 연습하고 싶은 분\n'
-            + '🖌️ UI/UX나 그래픽 포트폴리오를 준비하는 분\n'
-            + '✍️ 혼자 공부하기 지치고, 피드백이 필요한 분\n',
-        category: ['IT'],
-        province: '경상북도',
-        district: '경산시',
-        recruitStatus: 'OPEN',
-        trustScore: 0,
-        applicationStatus: 'SUBMITTED',
-        canApply: '',
-        leader: {
-            id: 0,
-            nickname: '홍길동',
-            profileImageUrl: '/img/main-assets/default_profile.png',
-        }
-    });
+    let [groupData, setGroupData] = useState(location.state?.groupProfileData || {});
     return (
         <div className='home-background'>
             <div className='web-header'>
