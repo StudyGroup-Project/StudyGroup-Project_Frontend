@@ -84,6 +84,7 @@ hr {
 
 /* 제출 버튼 */
 .submit-btn {
+  width: 10%;
   background-color: #3d348b;
   color: #fff;
   border: none;
