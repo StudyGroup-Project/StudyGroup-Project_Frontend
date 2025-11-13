@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Bell, Home, FileText, Heart, Users, X } from "lucide-react";
 import axios from "axios"; // axios 추가
-import styles from "./NotificationPage.module.css";
+import "./notification.css";
 
 const NotificationPage = () => {
   const [selectedNotification, setSelectedNotification] = useState(null);

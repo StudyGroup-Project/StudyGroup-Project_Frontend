@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Assignments.css";
-import { ArrowLeft, Home, FileText, Heart, Users, User } from "lucide-react";
+import "./AssignmentsHost.css";
+import { ArrowLeft, PlusCircle, Home, FileText, Heart, Users, User } from "lucide-react";
 
 // access token 갱신
 async function getRefreshToken() {
@@ -29,7 +29,7 @@ async function getRefreshToken() {
 async function postUserData() {
   try {
     const token = localStorage.getItem("token");
-    const userData = { /* 필요한 사용자 데이터 */ };
+    const userData = { /* 실제 필요한 사용자 데이터 */ };
 
     const res = await fetch("http://3.39.81.234:8080/api/users/data", {
       method: "POST",
@@ -89,19 +89,24 @@ export default function Assignments() {
 
   if (loading) return <p>로딩 중...</p>;
 
+  // 버튼 클릭 핸들러 (async/await 적용)
+  const handleAddClick = async () => {
+    await getRefreshToken();
+    await postUserData();
+    navigate("/assignmentscreate");
+  };
+
   return (
     <div className="assignments-container">
       {/* Header */}
       <div className="assignments-header">
-        <button className="header-back" onClick={async () => {
-          await getRefreshToken();
-          await postUserData();
-          navigate(-1);
-        }}>
+        <button className="header-back" onClick={() => navigate(-1)}>
           <ArrowLeft size={20} />
         </button>
         <span className="header-title">그룹명</span>
-        <div className="header-spacer"></div> {/* 오른쪽 공간 유지 */}
+        <button className="add-button" onClick={handleAddClick}>
+          <PlusCircle size={20} />
+        </button>
       </div>
 
       {/* 과제 리스트 */}
@@ -131,3 +136,5 @@ export default function Assignments() {
     </div>
   );
 }
+
+
