@@ -22,65 +22,9 @@ function Bookmarked(){
                 category: ['디자인', 'IT'],
                 trustScore: 82,
                 bookmarked: true
-            },
-            {
-                id: 2,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: true
-            },
-            {
-                id: 3,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: true
-            },
-            {
-                id: 4,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: true
-            },
-            {
-                id: 5,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: true
-            },
-            {
-                id: 6,
-                title: '프론트엔드 스터디',
-                maxMemberCount: 6,
-                memberCount: 3,
-                bookmarkCount: 23,
-                bio: '동해물과 백두산이 마르고 닳도록, 하느님이 보우하사 우리나라 만세',
-                category: ['디자인', 'IT'],
-                trustScore: 82,
-                bookmarked: true
             }
         ]
     );
-    //서버에서 받오와야할 그룹 목록들
 
     return(
         <div className='home-background'>
