@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./AssignmentsTestList.css";
-import { Home, FileText, Heart, Users, ArrowLeft } from "lucide-react"; // ✅ ArrowLeft 추가!
+import { Home, FileText, Heart, Users, ArrowLeft } from "lucide-react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 
 const AssignmentsTestList = () => {
   const [feedbackList, setFeedbackList] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const { studyId, assignmentId } = useParams();
+  const { studyId, assignmentId, submissionsId } = useParams();
 
   // 토큰 갱신
   const getRefreshToken = async () => {
@@ -61,8 +61,6 @@ const AssignmentsTestList = () => {
     return res;
   };
 
-
-  
   // 서버에서 평가 목록 불러오기
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -71,11 +69,11 @@ const AssignmentsTestList = () => {
       navigate("/login");
       return;
     }
-    
+
     const fetchFeedbackList = async () => {
       try {
         const res = await fetchWithAuth(
-          `/api/studies/${studyId}/assignments/${assignmentId}/feedbacks`
+          `/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionsId}/feedbacks`
         );
         if (!res.ok) throw new Error("피드백 목록 불러오기 실패");
 
@@ -88,7 +86,7 @@ const AssignmentsTestList = () => {
     };
 
     fetchFeedbackList();
-  }, [studyId, assignmentId]);
+  }, [studyId, assignmentId, submissionsId]);
 
   // 평가하기 화면에서 navigate()로 전달된 데이터 반영
   useEffect(() => {
@@ -102,7 +100,7 @@ const AssignmentsTestList = () => {
       {/* 상단 */}
       <div className="top-bar">
         <button className="back-btn" onClick={() => navigate(-1)}>
-          <ArrowLeft size={24} color="#000" /> 
+          <ArrowLeft size={24} color="#000" />
         </button>
         <span className="title">평가목록</span>
       </div>
@@ -112,28 +110,25 @@ const AssignmentsTestList = () => {
         {feedbackList.length === 0 ? (
           <p className="empty-text">아직 평가가 없습니다.</p>
         ) : (
-          feedbackList.map((item, idx) => (
-            <div key={idx} className="feedback-item">
+          feedbackList.map((item) => (
+            <div key={item.id} className="feedback-item">
               <div className="left">
                 <img
-                  src="/img/Group 115.png"
+                  src={item.evaluatorProfileUrl || "/img/Group 115.png"}
                   alt="profile"
                   className="profile-img"
                 />
                 <div>
-                  <div className="name">{item.name || item.userName}</div>
+                  <div className="name">{item.evaluatorName}</div>
                   <div className="time">
-                    {item.date ||
-                      (item.createdAt
-                        ? new Date(item.createdAt).toLocaleString()
-                        : "날짜 없음")}
+                    {item.evaluatedAt
+                      ? new Date(item.evaluatedAt).toLocaleString()
+                      : "날짜 없음"}
                   </div>
-                  <div className="comment">
-                    {item.comments?.[0] || item.content || "-"}
-                  </div>
+                  <div className="comment">{item.feedback || "-"}</div>
                 </div>
               </div>
-              <div className="score">{item.score || 0}점</div>
+              <div className="score">{item.score >= 0 ? item.score : 0}점</div>
             </div>
           ))
         )}

@@ -82,8 +82,8 @@ function ProfileInput(props) {
                 district: props.userData.address.district,
                 birthDate: props.userBirth.year + '-' + props.userBirth.month + '-' + props.userBirth.date,
                 job: props.userData.job,
-                // preferredCategory: props.userData.category
-                preferredCategory: category[0]
+                preferredCategory: props.userData.category
+                // preferredCategory: category
             },
                 {
                     // 2. headers 객체에 Authorization 추가
