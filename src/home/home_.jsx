@@ -124,6 +124,7 @@ function Home() {
             console.log(err);
         }
     }
+
     // 서버랑 APi 연결해볼때 사용 할 것
     // 사용자 정보, 그룹 리스트 가져와야함.
 
