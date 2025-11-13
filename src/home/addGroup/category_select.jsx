@@ -4,7 +4,7 @@ import {useState} from 'react'
 
 function CustomSelect(props){
     let list = props.list;
-    let setUserData = props.setUserData;
+    let setUserData = props.setGroupData;
     let [open, setOpen] = useState(false);
     let [selected, setSelected] = useState([]);
     let [curValue, setCurValue] = useState(list[0]);
