@@ -24,6 +24,10 @@ import Resources from './resources/resources.jsx';
 import ResourcesDetail from './resources/resourcesDetail.jsx';
 import AssignmentsHost from './Assignments/AssignmentsHost.jsx';
 import Assignments from './Assignments/Assignments.jsx';
+import AssignmentsDetail from './Assignments/AssignmentsDetail.jsx';
+import AssignmentsDetailHost from './Assignments/AssignmentsDetailHost.jsx';
+import AssignmentsCreate from './Assignments/AssignmentsCreate.jsx';
+import AssignmentsModify from './Assignments/AssignmentsModify.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -89,6 +93,10 @@ function App() {
         <Route path ='resourcescreate' element={<ResourcesCreate/>}/>
         <Route path ='assignmentshost' element={<AssignmentsHost/>}/>
         <Route path ='assignments' element={<Assignments/>}/>
+        <Route path='assignmentsdetail' element={<AssignmentsDetail/>}/>
+        <Route path='assignmentsdetailhost' element={<AssignmentsDetailHost/>}/>
+        <Route path='assignmentscreate' element={<AssignmentsCreate/>}/>
+        <Route path='assignmentsmodify' element={<AssignmentsModify/>}/>
 
       </Routes>
     </>

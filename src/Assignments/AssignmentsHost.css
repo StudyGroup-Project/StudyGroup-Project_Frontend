@@ -80,3 +80,73 @@
   font-size: 12px;
   gap: 2px;
 }
+
+
+/* 모달 오버레이 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 검정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* 모달 박스 */
+.modal {
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  max-width: 90%;
+  width: 320px;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+/* 모달 내용 */
+.modal p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 버튼 그룹 */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* 버튼 스타일 */
+.modal-buttons button {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.modal-buttons button:first-child {
+  background-color: #e0e0e0; /* 취소 버튼 */
+  color: #333;
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #d5d5d5;
+}
+
+.modal-buttons button:last-child {
+  background-color: #ff4d4f; /* 삭제 버튼 */
+  color: #fff;
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #e04344;
+}
