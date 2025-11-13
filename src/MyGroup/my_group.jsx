@@ -36,7 +36,6 @@ function MyGroup() {
                 withCredentials: true
             });
             setGroupData(res.data.studies || []);
-            console.log(res.data.studies);
         } catch (err) {
             console.error('내 그룹 스터디 가져오기 실패:', err.response?.data || err.message);
         }
