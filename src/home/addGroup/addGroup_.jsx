@@ -34,6 +34,41 @@ function addGroup() {
         }));
     }, [province, district]);
 
+    async function getAccessToken() {
+        try {
+            let res = await axios.post('http://3.39.81.234:8080/api/auth/token', {
+                refreshToken: localStorage.getItem("refreshToken")
+            }, { withCredentials: true });
+            localStorage.setItem('accessToken', res.data.accessToken);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function createGroup(data) {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+
+            const res = await axios.post(
+                'http://3.39.81.234:8080/api/studies',
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`, // 액세스 토큰 인증
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true, // 쿠키 인증을 쓴다면 유지
+                }
+            );
+            console.log(data);
+            return res.data;
+        } catch (err) {
+            console.error('그룹 생성 실패:', err.response?.data || err.message);
+        }
+    }
+
+
     return (
         <div className="home-background">
             <div className='addGroup-web-header'>
@@ -102,8 +137,9 @@ function addGroup() {
 
                 <div className='addGroup-button-container'>
                     <button className='addGroup-button'
-                        onClick={() => {
-                            //서버에 보내기
+                        onClick={async () => {
+                            await getAccessToken();
+                            await createGroup(groupData);
                             navigate('/home');
                         }}
                     >생성</button>
