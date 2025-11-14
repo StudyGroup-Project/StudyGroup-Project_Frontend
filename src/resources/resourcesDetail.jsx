@@ -133,40 +133,60 @@ export default function ResourceDetail() {
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
   // 자료 수정 (PUT)
-  const handleSaveClick = async () => {
-    getRefreshToken();
-    postUserData();
+const handleSaveClick = async () => {
+  // 토큰 확인 및 갱신
+  let token = localStorage.getItem("token");
+  if (!token) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
 
-    if (!token) return alert("로그인이 필요합니다.");
+  // 자동 갱신 시도
+  await getRefreshToken();
+  token = localStorage.getItem("token");
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
+  // formData 구성
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("content", content);
 
-    // 파일 첨부 시 추가
-    if (file) formData.append("file", file);
+  //  새 파일 업로드(files 배열)
+  // files: input에서 선택한 새로운 파일 목록
+  if (files && files.length > 0) {
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+  }
 
-    // 서버 요구사항에 따라 fileIds 필드 포함
-    const fileIds = files.map((f) => f.fileId);
-    formData.append("fileIds", JSON.stringify(fileIds));
+  // 기존 파일 중 삭제할 파일 ID들(deleteFileIds 배열)
+  // deleteFileIds: [1, 2, 3]
+  if (deleteFileIds && deleteFileIds.length > 0) {
+    deleteFileIds.forEach((id) => {
+      formData.append("deleteFileIds", id);
+    });
+  }
 
-    try {
-      const res = await postUserData(
-        `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
+  try {
+    const res = await fetch(
+      `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+        body: formData,
+      }
+    );
 
-      if (!res.ok) throw new Error(res.status);
-      alert("자료 수정 완료!");
-      setIsEditing(false);
-    } catch (err) {
-      console.error("자료 수정 실패:", err);
-      alert("자료 수정 실패!");
-    }
-  };
+    if (!res.ok) throw new Error(res.status);
+
+    alert("자료 수정 완료!");
+    setIsEditing(false);
+  } catch (err) {
+    console.error("자료 수정 실패:", err);
+    alert("자료 수정 실패!");
+  }
+};
 
   // 자료 삭제 (DELETE)
   const handleDelete = async () => {

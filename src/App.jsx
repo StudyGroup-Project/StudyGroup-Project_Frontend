@@ -19,6 +19,8 @@ import {ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory} from './profil
 import Search from './home/search_.jsx';
 import AddGroup from './home/addGroup/addGroup_.jsx';
 import GroupProfile from './Group/group_profile.jsx';
+import GroupScreen from './Group/groupScreen.jsx';
+import GroupScreenHost from './Group/groupScreenHost.jsx';
 import ResourcesCreate from './resources/resourcescreate.jsx';
 import Resources from './resources/resources.jsx';
 import ResourcesDetail from './resources/resourcesDetail.jsx';
@@ -90,6 +92,8 @@ function App() {
         <Route path='notification' element={<Notification/>}/>
         <Route path='addGroup' element = {<AddGroup/>}/>
         <Route path='groupprofile/:id' element = {<GroupProfile/>}/>
+        <Route path='groupscreen' element={<GroupScreen/>}/>
+        <Route path='groupscreenhost' element={<GroupScreenHost/>}/>
         <Route path ='resources' element={<Resources/>}/>
         <Route path ='resourcesdetail' element={<ResourcesDetail/>}/>
         <Route path ='resourcescreate' element={<ResourcesCreate/>}/>
