@@ -20,7 +20,7 @@ export default function GroupScreenHost() {
   const currentUserIsOwner = true;
 
   /* ---------------------------
-      🔐 1. Access Token 자동 갱신 함수
+    1. Access Token 자동 갱신 함수
   ---------------------------- */
   async function getRefreshToken() {
     try {
@@ -46,7 +46,7 @@ export default function GroupScreenHost() {
   }
 
   /* ---------------------------
-      🔐 2. Access Token 자동 포함 + 만료 시 refresh 재시도
+    Access Token 자동 포함 + 만료 시 refresh 재시도
   ---------------------------- */
   async function authFetch(url, options = {}) {
     let token = localStorage.getItem("token");
@@ -75,7 +75,7 @@ export default function GroupScreenHost() {
   }
 
   /* ---------------------------
-      📌 3. 그룹 정보 & 멤버 목록 불러오기
+      그룹 정보 & 멤버 목록 불러오기
   ---------------------------- */
   const [groupInfo, setGroupInfo] = useState(null);
   const [members, setMembers] = useState([]);
@@ -169,9 +169,6 @@ export default function GroupScreenHost() {
     navigate(`/group_profile/${studyId}`);
   }
 
-  /* ---------------------------
-      네비게이션 버튼들
-  ---------------------------- */
   const goNotice = () => navigate(`/notice/${studyId}`);
   const goAlarm = () => navigate(`/notification/${studyId}`);
   const goAssignments = () => navigate(`/assignments/${studyId}`);
