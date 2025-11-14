@@ -4,6 +4,64 @@ import { ArrowLeft, MoreHorizontal, Home, Users, Heart } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./resourcesDetail.css";
 
+// AccessToken 만료 시 refresh 토큰으로 재발급 요청
+async function getRefreshToken() {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) throw new Error("리프레시 토큰 없음");
+
+    const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (!res.ok) throw new Error("토큰 재발급 실패");
+    const data = await res.json();
+    if (data.accessToken) {
+      localStorage.setItem("token", data.accessToken);
+      return data.accessToken;
+    }
+  } catch (err) {
+    console.error("getRefreshToken 실패:", err);
+    alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+}
+
+// API 요청 공통 함수 (토큰 자동 갱신 포함)
+async function postUserData(url, options = {}) {
+  let token = localStorage.getItem("token");
+
+  const defaultOptions = {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  let res = await fetch(url, defaultOptions);
+
+  // 토큰 만료 시 재발급 후 재요청
+  if (res.status === 401) {
+    token = await getRefreshToken();
+    if (!token) return null;
+
+    const retryOptions = {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    res = await fetch(url, retryOptions);
+  }
+
+  return res;
+}
+
 export default function ResourceDetail() {
   const navigate = useNavigate();
   const { studyId, resourceId } = useParams();
@@ -11,15 +69,18 @@ export default function ResourceDetail() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
-  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const [token, setToken] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [author, setAuthor] = useState("");
+  const [profileUrl, setProfileUrl] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
+  const [files, setFiles] = useState([]);
   const [file, setFile] = useState(null);
 
-  // ✅ 페이지 로드 시 로그인 체크 + 자료 상세 데이터 가져오기
+  // 자료 상세 GET
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken);
@@ -32,18 +93,22 @@ export default function ResourceDetail() {
 
     const fetchResource = async () => {
       try {
-        const res = await fetch(
+        const res = await postUserData(
           `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
-          {
-            headers: { Authorization: `Bearer ${storedToken}` },
-          }
+          { method: "GET" }
         );
+
         if (!res.ok) throw new Error(res.status);
         const data = await res.json();
 
-        // 서버에서 가져온 자료 데이터 세팅
-        setTitle(data.title);
-        setContent(data.content);
+        // 존재 여부 확인 후 상태 세팅
+        if (data.title) setTitle(data.title);
+        if (data.content) setContent(data.content);
+        if (data.author) setAuthor(data.author);
+        if (data.profileUrl) setProfileUrl(data.profileUrl);
+        if (data.createdAt) setCreatedAt(data.createdAt);
+        if (Array.isArray(data.files)) setFiles(data.files);
+
       } catch (err) {
         console.error("자료 조회 실패:", err);
         alert("자료를 불러오지 못했습니다.");
@@ -67,48 +132,81 @@ export default function ResourceDetail() {
 
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
-  // ✅ 자료 수정
-  const handleSaveClick = async () => {
-    if (!token) return alert("로그인이 필요합니다.");
+  // 자료 수정 (PUT)
+const handleSaveClick = async () => {
+  // 토큰 확인 및 갱신
+  let token = localStorage.getItem("token");
+  if (!token) {
+    alert("로그인이 필요합니다.");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("content", content);
-    if (file) formData.append("file", file);
+  // 자동 갱신 시도
+  await getRefreshToken();
+  token = localStorage.getItem("token");
 
-    try {
-      const res = await fetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        }
-      );
-      if (!res.ok) throw new Error(res.status);
-      alert("자료 수정 완료!");
-      setIsEditing(false);
-    } catch (err) {
-      console.error("자료 수정 실패:", err);
-      alert("자료 수정 실패!");
-    }
-  };
+  // formData 구성
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("content", content);
 
-  // ✅ 자료 삭제
+  //  새 파일 업로드(files 배열)
+  // files: input에서 선택한 새로운 파일 목록
+  if (files && files.length > 0) {
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+  }
+
+  // 기존 파일 중 삭제할 파일 ID들(deleteFileIds 배열)
+  // deleteFileIds: [1, 2, 3]
+  if (deleteFileIds && deleteFileIds.length > 0) {
+    deleteFileIds.forEach((id) => {
+      formData.append("deleteFileIds", id);
+    });
+  }
+
+  try {
+    const res = await fetch(
+      `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`, 
+        },
+        body: formData,
+      }
+    );
+
+    if (!res.ok) throw new Error(res.status);
+
+    alert("자료 수정 완료!");
+    setIsEditing(false);
+  } catch (err) {
+    console.error("자료 수정 실패:", err);
+    alert("자료 수정 실패!");
+  }
+};
+
+  // 자료 삭제 (DELETE)
   const handleDelete = async () => {
+    getRefreshToken();
+    postUserData();
+
     if (!token) return alert("로그인이 필요합니다.");
     try {
-      const res = await fetch(
+      const res = await postUserData(
         `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { method: "DELETE" }
       );
-      if (!res.ok) throw new Error(res.status);
-      setModalVisible(false);
-      alert("자료 삭제 완료!");
-      navigate(-1);
+
+      if (res.status === 204) {
+        setModalVisible(false);
+        alert("자료 삭제 완료!");
+        navigate(-1);
+      } else {
+        throw new Error(res.status);
+      }
     } catch (err) {
       console.error("자료 삭제 실패:", err);
       alert("자료 삭제 실패!");
@@ -177,18 +275,38 @@ export default function ResourceDetail() {
               <div className="author-info">
                 <div className="user-icon">
                   <img
-                    src="/img/user/Group115.png"
+                    src={profileUrl || "/img/user/Group115.png"}
                     alt="작성자 프로필"
                     className="profile-img"
                   />
                 </div>
                 <div className="author-text">
-                  <p className="author-name">작성자</p>
-                  <p className="author-date">8월 28일 오후 4:23</p>
+                  <p className="author-name">{author || "작성자"}</p>
+                  <p className="author-date">
+                    {createdAt
+                      ? new Date(createdAt).toLocaleString("ko-KR")
+                      : ""}
+                  </p>
                 </div>
               </div>
               <div className="divider" />
               <p className="body-text">{content}</p>
+
+              {/* 파일 목록 */}
+              {files.length > 0 && (
+                <div className="file-list">
+                  <h4>첨부파일</h4>
+                  <ul>
+                    {files.map((f) => (
+                      <li key={f.fileId}>
+                        <a href={f.fileUrl} target="_blank" rel="noreferrer">
+                          {f.fileName}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <div className="divider" />
             </>
           )}
@@ -232,6 +350,4 @@ export default function ResourceDetail() {
     </div>
   );
 }
-
-
 
