@@ -95,6 +95,13 @@ function Home() {
     }
 
     useEffect(() => {
+        const params = new URLSearchParams(window.location.href);
+        if (localStorage.getItem("refreshToken") === null) {
+            const accessToken = params.get('accessToken');
+            const refreshToken = params.get('refreshToken');
+            localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+        }
         const fetchData = async () => {
             await getAccessToken();
             await getUserData();

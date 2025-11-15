@@ -49,7 +49,7 @@ function GroupProfile() {
                     <h4 className='group-profile-catalog-category'>카테고리</h4>
                     <Category selected={groupData.category} setUserData={setGroupData} />
                 </div>
-                {
+                {/* {  {
                     (groupData.recruitStatus === 'CLOSED' || groupData.canApply === false || groupData.applicationStatus === 'REJECTED') ?
                         <button className='group-profile-button' disabled={true}>
                             모집 마감
@@ -63,7 +63,17 @@ function GroupProfile() {
                             : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
                                 지원하기
                             </button>
-                }
+
+                }} */}
+
+                {(groupData.applicationStatus === 'SUBMITTED') ?
+                            <button className='group-profile-waiting-button'>
+                                승인 대기
+                            </button>
+
+                            : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
+                                지원하기
+                            </button>}
 
                 {isModalOpen && (
                     <ApplicationModal

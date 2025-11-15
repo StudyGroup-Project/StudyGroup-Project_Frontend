@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./resources.css";
 import {
   ArrowLeft,
-  Plus,
+  PlusCircle,
   Home,
   FileText,
   Heart,
@@ -116,7 +116,7 @@ export default function Resources() {
             navigate("/resourcescreate");
           }}
         >
-          <Plus size={20} />
+          <PlusCircle size={20} />
         </button>
       </div>
 
