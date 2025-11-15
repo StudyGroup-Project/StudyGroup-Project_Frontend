@@ -20,7 +20,7 @@ export default function GroupScreenHost() {
   const currentUserIsOwner = true;
 
   /* ---------------------------
-    1. Access Token 자동 갱신 함수
+      Access Token 자동 갱신 함수
   ---------------------------- */
   async function getRefreshToken() {
     try {
@@ -75,7 +75,7 @@ export default function GroupScreenHost() {
   }
 
   /* ---------------------------
-      그룹 정보 & 멤버 목록 불러오기
+    그룹 정보 & 멤버 목록 불러오기
   ---------------------------- */
   const [groupInfo, setGroupInfo] = useState(null);
   const [members, setMembers] = useState([]);
@@ -117,7 +117,6 @@ export default function GroupScreenHost() {
 
   /* ---------------------------
       그룹 삭제 기능
-      DELETE /api/studies/{studyId}
   ---------------------------- */
   async function deleteGroup() {
     if (!window.confirm("정말 그룹을 삭제하시겠습니까?")) return;
@@ -141,7 +140,6 @@ export default function GroupScreenHost() {
 
   /* ---------------------------
       멤버 추방 (방장만)
-      DELETE /api/studies/{studyId}/members/{userId}
   ---------------------------- */
   async function removeMember(id) {
     if (!window.confirm("해당 멤버를 추방하시겠습니까?")) return;

@@ -189,8 +189,10 @@
   object-fit: cover;
 }
 
+
 .menu-card,
 .menu-card * {
   outline: none !important;
   background: #3D348B!important;
 }
+
