@@ -1,4 +1,4 @@
-.myprofile-container{
+.myprofile-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -6,9 +6,9 @@
     gap: 5px;
     width: 90%;
     margin: 90px auto 0;
-  }
+}
 
-.myprofileImg{
+.myprofileImg {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -23,14 +23,14 @@
     color: #0095f6;
     display: inline-block;
     cursor: pointer;
-  }
+}
 
 .myprofileImg-input {
     display: none;
-  }
+}
 
-  
-.myprofile-info{
+
+.myprofile-info {
     position: static;
     width: 380px;
     height: auto;
@@ -42,7 +42,7 @@
     color: #000;
 }
 
-.myprofile-box{
+.myprofile-box {
     position: relative;
 
     padding: 10px 24px;
@@ -57,7 +57,7 @@
     outline: none;
 }
 
-.myprofile-box h5{
+.myprofile-box h5 {
     position: absolute;
     top: 52%;
     left: 5%;
@@ -70,7 +70,7 @@
     color: #000;
 }
 
-.myprofile-button{
+.myprofile-button {
     position: static;
     top: 30%;
     margin-left: 5px;
@@ -89,19 +89,19 @@
     height: 12px;
 }
 
-.myprofile-address-container{
+.myprofile-address-container {
     display: flex;
-    align-items:center;
-    flex-direction: row; 
+    align-items: center;
+    flex-direction: row;
     gap: 10px;
     width: 380px;
     margin-bottom: 16px;
 }
 
-.myprofile-address-box{ 
+.myprofile-address-box {
     position: relative;
-    flex:1;
-    width: 70px;    
+    flex: 1;
+    width: 70px;
     height: 61px;
     border: none;
     background: #E6E6E6;
@@ -112,7 +112,7 @@
     outline: none;
 }
 
-.myprofile-address-box h5{
+.myprofile-address-box h5 {
     position: absolute;
     top: 52%;
     left: 10%;
@@ -137,7 +137,7 @@
     outline: none;
 }
 
-.myprofile-birth-box h5{
+.myprofile-birth-box h5 {
     position: absolute;
     top: 52%;
     left: 20%;
@@ -152,8 +152,8 @@
 
 .myprofile-birth-wrapper {
     display: flex;
-    align-items:center;
-    flex-direction: row; 
+    align-items: center;
+    flex-direction: row;
     gap: 10px;
     width: 380px;
     margin-bottom: 16px;
@@ -165,7 +165,7 @@
     color: #555;
 }
 
-.myprofile-category-card{
+.myprofile-category-card {
     position: relative;
     display: flex;
     flex-direction: row;
@@ -174,12 +174,12 @@
     width: 380px;
     margin-top: -5px;
 
-  }
-  
+}
+
 .myprofile-categories {
     display: flex;
-    align-items: center;   
-    justify-content: center; 
+    align-items: center;
+    justify-content: center;
     padding: 10px 19px;
     border: none;
     background: #3D348B;
@@ -187,5 +187,28 @@
     margin-top: 16px;
     color: #ffffff;
     font-size: 15px;
-    gap: 8px; 
+    gap: 8px;
+}
+
+
+.myprofile-gauge-box {
+    width: 380px;
+    background: transparent;
+    border-radius: 15px;
+    padding: 15px 24px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+.myprofile-gauge-box .trust-score-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.myprofile-gauge-box .score-value {
+    font-weight: 800;
 }

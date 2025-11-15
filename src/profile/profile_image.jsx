@@ -37,7 +37,6 @@ function ProfileImage() {
         let file = imgRef.current?.files[0];
 
         if (!file) {
-            // 파일이 없으면 기본 이미지 URL을 fetch해서 Blob으로 변환
             const defaultImgUrl = '/img/main-assets/default_profile.png';
             const response = await fetch(defaultImgUrl);
             const blob = await response.blob();
