@@ -33,10 +33,12 @@ import AssignmentsModify from './Assignments/AssignmentsModify.jsx';
 import AssignmentsTest from './Assignments/AssignmentsTest.jsx';
 import AssignmentsTestList from './Assignments/AssignmentsTestList.jsx';
 import NoticeScreen from './notice/notice.jsx';
-import GroupScreenHost from './Group/groupScreenHost.jsx';
 import NoticeDetail from './notice/noticedetail.jsx';
-import NoticeDetailHost from './notice/noticedetailhost.jsx'
-import NoticeHost from './notice/noticehost.jsx'
+import NoticeDetailHost from './notice/noticedetailhost.jsx';
+import NoticeHost from './notice/noticehost.jsx';
+import Notice from './notice/notice.jsx';
+import NoticeCreate from './notice/noticecreate.jsx';
+import NoticeModify from './notice/noticemodify.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -111,10 +113,12 @@ function App() {
         <Route path='assignmentstest' element={<AssignmentsTest/>}/>
         <Route path='assignmentstestlist' element={<AssignmentsTestList/>}/>
         <Route path='notice' element={<NoticeScreen/>}/>
-        <Route path='groupScreenhost' element={<GroupScreenHost/>}/>
         <Route path='noticedetail' element={<NoticeDetail/>}/>
         <Route path='noticedetailhost' element={<NoticeDetailHost/>}/>
         <Route path='noticehost' element={<NoticeHost/>}/>
+        <Route path='notice' element={<Notice/>}/>
+        <Route path='noticecreate' element={<NoticeCreate/>}/>
+        <Route path='noticemodify' element={<NoticeModify/>}/>
       </Routes>
     </>
   )
