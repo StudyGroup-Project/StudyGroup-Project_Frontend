@@ -1,58 +1,161 @@
-import React from 'react';
-import {
-  ArrowLeft,
-  MoreHorizontal,
-  Send,
-  Home,
-  FileText,
-  Heart,
-  Users
-} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft, Send, Home, FileText, Heart, Users } from 'lucide-react';
 import './noticedetail.css';
 
 export default function NoticeDetail() {
-  const comments = [
-    { id: 1, name: '지민', date: '8월 28일 오후 4:23', text: '참석 가능합니다!' },
-    { id: 2, name: '수현', date: '8월 28일 오후 4:23', text: '7시 참여 가능해요 :)' },
-    { id: 3, name: '다연', date: '8월 28일 오후 4:23', text: '참석 O' },
-  ];
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { studyId, announcementId } = location.state || {};
+
+  const [noticeData, setNoticeData] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState("");
+
+  /* ---------------------------
+      Access Token 자동 갱신
+  ---------------------------- */
+  async function getRefreshToken() {
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) return null;
+
+      const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      if (!res.ok) throw new Error("refresh 실패");
+
+      const data = await res.json();
+      localStorage.setItem("token", data.accessToken);
+
+      return data.accessToken;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
+  async function authFetch(url, options = {}) {
+    let token = localStorage.getItem("token");
+    const newOptions = {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    let res = await fetch(url, newOptions);
+    if (res.status === 401) {
+      const newToken = await getRefreshToken();
+      if (!newToken) return res;
+
+      newOptions.headers.Authorization = `Bearer ${newToken}`;
+      res = await fetch(url, newOptions);
+    }
+    return res;
+  }
+
+  /* ---------------------------
+      로그인 체크
+  ---------------------------- */
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("로그인 후 이용해주세요.");
+      navigate("/login");
+    }
+  }, []);
+
+  /* ---------------------------
+      공지 상세 가져오기
+  ---------------------------- */
+  const fetchNoticeDetail = async () => {
+    if (!studyId || !announcementId) return;
+
+    try {
+      const res = await authFetch(`http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}`, {
+        method: "GET",
+      });
+
+      if (!res.ok) throw new Error(`공지 상세 불러오기 실패: ${res.status}`);
+
+      const data = await res.json();
+      setNoticeData(data);
+      setComments(data.comments || []);
+    } catch (err) {
+      console.error(err);
+      alert("공지 상세 불러오기 실패!");
+    }
+  };
+
+  useEffect(() => {
+    fetchNoticeDetail();
+  }, [studyId, announcementId]);
+
+  /* ---------------------------
+      댓글 작성
+  ---------------------------- */
+  const handleCommentSubmit = async () => {
+    if (!commentInput.trim()) return;
+    try {
+      const res = await authFetch(
+        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}/comments`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: commentInput }),
+        }
+      );
+      if (res.status !== 201) throw new Error(`댓글 작성 실패: ${res.status}`);
+      setCommentInput("");
+      fetchNoticeDetail(); // 댓글 리스트 갱신
+    } catch (err) {
+      console.error(err);
+      alert("댓글 작성 실패!");
+    }
+  };
+
+  if (!noticeData) return <div style={{ textAlign: 'center', marginTop: 50 }}>로딩중...</div>;
 
   return (
     <div className='container'>
       {/* 상단 헤더 */}
       <div className='header'>
-        <ArrowLeft size={24} className='icon' />
+        <ArrowLeft size={24} className='icon' onClick={() => navigate(-1)} style={{ cursor: 'pointer' }} />
         <h1 className='headerTitle'>상세보기</h1>
-        
       </div>
 
       {/* 공지 내용 */}
       <div className='noticeContent'>
-        <h2 className='noticeTitle'>9월 7일 UI 피드백 세션 안내</h2>
-        
+        <h2 className='noticeTitle'>{noticeData.title}</h2>
         <div className='noticeMeta'>
           <div className='tabItem'>
-            <img src="/Group115.png" className='tabIcon' />
+            <img src={noticeData.userProfileImageUrl} className='tabIcon' />
           </div>
           <div className='noticeContainer'>
-            <span className='noticeAuthor'>홍길동</span>
-            <span className='noticeDate'>8월 28일 오후 4:23</span>
+            <span className='noticeAuthor'>{noticeData.userName}</span>
+            <span className='noticeDate'>{new Date(noticeData.updatedAt).toLocaleString()}</span>
           </div>
         </div>
 
-        {/* 굵은 구분선 */}
         <hr className='noticeDivider' />
 
-        <ul className='noticePoints'>
-          <li>오후 7시 Zoom 진행</li>
-          <li>참석 여부 댓글 필수</li>
-        </ul>
+        <p className='noticeText'>{noticeData.content}</p>
 
-        <p className='noticeText'>
-          안녕하세요, 운영진입니다. <br />
-          이번 주 UI 피드백 세션은 9월 7일(화) 오후 7시, Zoom에서 진행됩니다. <br />
-          참석 여부는 9월 6일(월) 자정까지 댓글로 알려주세요.
-        </p>
+        {noticeData.files && noticeData.files.length > 0 && (
+          <ul>
+            {noticeData.files.map(file => (
+              <li key={file.fileId}>
+                <a href={file.fileUrl} target="_blank" rel="noreferrer">{file.fileName}</a>
+              </li>
+            ))}
+          </ul>
+        )}
 
         <hr className='noticeDivider' />
       </div>
@@ -60,16 +163,16 @@ export default function NoticeDetail() {
       {/* 댓글 리스트 */}
       <div className='commentList'>
         {comments.map(c => (
-          <div key={c.id} className='commentItem'>
+          <div key={c.commentId} className='commentItem'>
             <div className='tabItem'>
-              <img src="/Group115.png" className='tabIcon' />
+              <img src={c.userProfileImageUrl} className='tabIcon' />
             </div>
             <div className='commentBody'>
               <div className='commentMeta'>
-                <span className='commentName'>{c.name}</span>
-                <span className='commentDate'>{c.date}</span>
+                <span className='commentName'>{c.userName}</span>
+                <span className='commentDate'>{new Date(c.createdAt).toLocaleString()}</span>
               </div>
-              <p className='commentText'>{c.text}</p>
+              <p className='commentText'>{c.content}</p>
             </div>
           </div>
         ))}
@@ -80,29 +183,20 @@ export default function NoticeDetail() {
         <input
           type="text"
           className='commentInput'
-          placeholder="댓글,,,"
+          placeholder="댓글을 입력하세요..."
+          value={commentInput}
+          onChange={(e) => setCommentInput(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && handleCommentSubmit()}
         />
-        <Send size={20} className='sendIcon' />
+        <Send size={20} className='sendIcon' onClick={handleCommentSubmit} />
       </div>
 
       {/* 하단 탭바 */}
       <div className='tabbar'>
-        <div className='tabItem'>
-          <Home size={24} />
-          <span>홈</span>
-        </div>
-        <div className='tabItem'>
-          <FileText size={24} />
-          <span>내 그룹</span>
-        </div>
-        <div className='tabItem'>
-          <Heart size={24} />
-          <span>찜 목록</span>
-        </div>
-        <div className='tabItem'>
-          <Users size={24} />
-          <span>내 정보</span>
-        </div>
+        <div className='tabItem'><Home size={24} /><span>홈</span></div>
+        <div className='tabItem'><FileText size={24} /><span>내 그룹</span></div>
+        <div className='tabItem'><Heart size={24} /><span>찜 목록</span></div>
+        <div className='tabItem'><Users size={24} /><span>내 정보</span></div>
       </div>
     </div>
   );
