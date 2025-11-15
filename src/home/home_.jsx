@@ -79,21 +79,14 @@ function Home() {
             });
 
             setGroupProfileData(res.data);
-            console.log("FULL:", res.data);
-            console.log(res.data.isLeader);
-            console.log(res.data.applicationStatus);
-            // 가져온 그룹 프로필의 리더 아이디와 유저아이디와 같으면 방장이니까 방장 전용 그룹 홈페이지로이 동
-            // 그 외에 ACCEPTED가 아니면 일단 그룹 프로필 상태로 넘어가서 SUBMITTED, NULL, REJETCTED 처리
-            // ACCEPTED면 바로 그룹원 전용 그룹페이지로 이동
-            // 백엔드에서 isLeader 속성 추가해주기로 함.
-
-            if (res.data.isLeader === true) {
+            console.log(res.data);
+            if (res.data.leaderCheck === true) {
                 navigate(`/groupscreenhost/${studyId}`)
             }
             else if (res.data.applicationStatus !== 'ACCEPTED') {
                 navigate(`/groupprofile/${studyId}`, { state: { groupProfileData: res.data } });
             } else {
-                navigate(`/groupprofile/${studyId}/profile`);
+                // navigate(각자 그룹화면으로 이동);
             }
 
         } catch (err) {

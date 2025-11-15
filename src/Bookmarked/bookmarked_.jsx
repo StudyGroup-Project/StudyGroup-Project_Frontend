@@ -12,6 +12,17 @@ function Bookmarked() {
 
     let navigate = useNavigate();
     let [groupData, setGroupData] = useState([]);
+    const [groupProfileData, setGroupProfileData] = useState({});
+
+    function getGaugeColorClass(score) {
+        if (score >= 70) {
+            return 'gauge-high'; // 70점 이상: 초록색
+        }
+        if (score >= 30) {
+            return 'gauge-medium'; // 30점 ~ 69점: 주황색
+        }
+        return 'gauge-low'; // 30점 미만: 빨간색
+    }
 
     async function getAccessToken() {
         try {
@@ -39,6 +50,29 @@ function Bookmarked() {
         }
     }
 
+    async function handleGroupClick(studyId) {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const res = await axios.get(`http://3.39.81.234:8080/api/studies/${studyId}?t=${Date.now()}`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                withCredentials: true,
+            });
+
+            setGroupProfileData(res.data);
+            if (res.data.leaderCheck === true) {
+                navigate(`/groupscreenhost/${studyId}`)
+            }
+            else if (res.data.applicationStatus !== 'ACCEPTED') {
+                navigate(`/groupprofile/${studyId}`, { state: { groupProfileData: res.data } });
+            } else {
+                // navigate(각자 그룹화면으로 이동);
+            }
+
+        } catch (err) {
+            console.error('그룹 상세 데이터 가져오기 실패:', err.response?.data || err.message);
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             await getAccessToken();
@@ -59,7 +93,11 @@ function Bookmarked() {
             {
                 groupData.map((group, i) => (
                     //group -> 받아온 groupData의 각 그룹객체 하나하나
-                    <div className='bookmarked-group-container' key={group.id}>
+                    <div className='bookmarked-group-container' key={group.id}
+                        onClick={async () => {
+                            await getAccessToken();
+                            await handleGroupClick(group.id);
+                        }}>
                         <h4 className='bookmarked-group-title'>{group.title}</h4>
                         {group.category.map((cat, j) => (
                             <div className='bookmarked-group-category' key={j}>
@@ -75,6 +113,15 @@ function Bookmarked() {
                         <div className='bookmarked-group-Maxmember-container'>
                             <h4 className='bookmarked-group-member-count'>{group.maxMemberCount}</h4>
                             <h4 className='bookmarked-group-member-text'>{'전체인원'}</h4>
+                        </div>
+                        <div className="trust-score-container">
+                            <div className="gauge-background">
+                                <div
+                                    className={`gauge-bar ${getGaugeColorClass(group.trustScore)}`}
+                                    style={{ width: `${group.trustScore}%` }}
+                                >
+                                </div>
+                            </div>
                         </div>
                         <button className='bookmarked-group-bookmark-button'
                             onClick={() => {

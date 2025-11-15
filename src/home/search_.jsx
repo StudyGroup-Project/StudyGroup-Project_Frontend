@@ -26,6 +26,8 @@ function Search() {
     let [sortType, setSortType] = useState('');
     let sortList = ['최신순', '신뢰도순'];
 
+    const [groupProfileData, setGroupProfileData] = useState({});
+
     let navigate = useNavigate();
 
     async function handleSearch() {
@@ -88,10 +90,63 @@ function Search() {
         fetchData();
     }, [searchText, newCategory, newProvince, newDistrict, sortType, currentPage]);
 
-    // 페이지 넘기기
     const handlePageClick = (pageNum) => {
         setCurrentPage(pageNum);
     };
+
+    function getGaugeColorClass(score) {
+        if (score >= 70) {
+            return 'gauge-high'; // 70점 이상: 초록색
+        }
+        if (score >= 30) {
+            return 'gauge-medium'; // 30점 ~ 69점: 주황색
+        }
+        return 'gauge-low'; // 30점 미만: 빨간색
+    }
+
+    async function handleGroupClick(studyId) {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const res = await axios.get(`http://3.39.81.234:8080/api/studies/${studyId}?t=${Date.now()}`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                withCredentials: true,
+            });
+
+            setGroupProfileData(res.data);
+            console.log(res.data);
+            if (res.data.leaderCheck === true) {
+                navigate(`/groupscreenhost/${studyId}`)
+            }
+            else if (res.data.applicationStatus !== 'ACCEPTED') {
+                navigate(`/groupprofile/${studyId}`, { state: { groupProfileData: res.data } });
+            } else {
+                // navigate(각자 그룹화면으로 이동);
+            }
+
+        } catch (err) {
+            console.error('그룹 상세 데이터 가져오기 실패:', err.response?.data || err.message);
+        }
+    }
+
+    async function toggleBookmark(studyId, currentlyBookmarked) {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            if (currentlyBookmarked) {
+                await axios.delete(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
+            } else {
+                await axios.post(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {}, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
+            }
+        } catch (err) {
+            console.error('북마크 토글 실패:', err.response?.data || err.message);
+            throw err;
+        }
+    }
 
     return (
         <div className='home-background'>
@@ -138,7 +193,11 @@ function Search() {
                 {isSuccess != null &&
                     (isSuccess ? (
                         searchResult.map((group) => (
-                            <div className='active-group-container' key={group.id}>
+                            <div className='active-group-container' key={group.id}
+                                onClick={async () => {
+                                    await getAccessToken();
+                                    await handleGroupClick(group.id);
+                                }}>
                                 <h4 className='active-group-title'>{group.title}</h4>
 
                                 {/* category는 문자열 */}
@@ -159,6 +218,33 @@ function Search() {
                                     <h4 className='active-group-member-count'>{group.maxMemberCount}</h4>
                                     <h4 className='active-group-member-text'>전체인원</h4>
                                 </div>
+
+                                <div className="trust-score-container">
+                                    <div className="gauge-background">
+                                        <div
+                                            className={`gauge-bar ${getGaugeColorClass(group.trustScore)}`}
+                                            style={{ width: `${group.trustScore}%` }}
+                                        >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    className='active-group-bookmark-button'
+                                    onClick={async (e) => {
+                                        e.stopPropagation();
+                                        setSearchResult(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
+                                        try {
+                                            await toggleBookmark(group.id, group.bookmarked);
+                                        } catch (err) {
+                                            setSearchResult(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
+                                        }
+                                    }}
+                                >
+                                    <img
+                                        className={group.bookmarked ? 'active-group-heart' : 'active-group-emptyHeart'}
+                                        src={group.bookmarked ? "/img/main-assets/heart.png" : "/img/main-assets/empty_heart.png"} />
+                                </button>
                             </div>
                         ))
                     ) : (

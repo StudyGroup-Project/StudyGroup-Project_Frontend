@@ -14,6 +14,7 @@ function MyGroup() {
     let navigate = useNavigate();
 
     let [groupData, setGroupData] = useState([]);
+    const [groupProfileData, setGroupProfileData] = useState({});
 
     async function getAccessToken() {
         try {
@@ -28,7 +29,7 @@ function MyGroup() {
 
     async function getMyStudies() {
         try {
-            const accessToken = localStorage.getItem('accessToken'); 
+            const accessToken = localStorage.getItem('accessToken');
             const res = await axios.get('http://3.39.81.234:8080/api/studies/mine', {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
@@ -41,9 +42,40 @@ function MyGroup() {
         }
     }
 
+    async function handleGroupClick(studyId) {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const res = await axios.get(`http://3.39.81.234:8080/api/studies/${studyId}?t=${Date.now()}`, {
+                headers: { Authorization: `Bearer ${accessToken}` },
+                withCredentials: true,
+            });
+
+            setGroupProfileData(res.data);
+            if (res.data.leaderCheck === true) {
+                navigate(`/groupscreenhost/${studyId}`)
+            }
+            else {
+                // navigate 그냥 해당 그룹의 화면으로 이동하기
+            }
+
+        } catch (err) {
+            console.error('그룹 상세 데이터 가져오기 실패:', err.response?.data || err.message);
+        }
+    }
+
+    function getGaugeColorClass(score) {
+        if (score >= 70) {
+            return 'gauge-high'; // 70점 이상: 초록색
+        }
+        if (score >= 30) {
+            return 'gauge-medium'; // 30점 ~ 69점: 주황색
+        }
+        return 'gauge-low'; // 30점 미만: 빨간색
+    }
+
     useEffect(() => {
         const fetchData = async () => {
-            await getAccessToken(); 
+            await getAccessToken();
             await getMyStudies();
         };
         fetchData();
@@ -59,7 +91,11 @@ function MyGroup() {
 
             {
                 groupData.map((group, i) => (
-                    <div className='bookmarked-group-container' key={group.id}>
+                    <div className='bookmarked-group-container' key={group.id}
+                        onClick={async () => {
+                            await getAccessToken();
+                            await handleGroupClick(group.id);
+                        }}>
                         <h4 className='bookmarked-group-title'>{group.title}</h4>
                         {group.category.map((cat, j) => (
                             <div className='bookmarked-group-category' key={j}>
@@ -76,6 +112,17 @@ function MyGroup() {
                             <h4 className='bookmarked-group-member-count'>{group.maxMemberCount}</h4>
                             <h4 className='bookmarked-group-member-text'>{'전체인원'}</h4>
                         </div>
+
+                        <div className="trust-score-container">
+                            <div className="gauge-background">
+                                <div
+                                    className={`gauge-bar ${getGaugeColorClass(group.trustScore)}`}
+                                    style={{ width: `${group.trustScore}%` }}
+                                >
+                                </div>
+                            </div>
+                        </div>
+
                         <button className='bookmarked-group-bookmark-button'
                             onClick={() => {
                                 setGroupData(prev =>
