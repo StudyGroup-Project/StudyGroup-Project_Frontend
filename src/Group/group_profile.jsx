@@ -6,7 +6,6 @@ function GroupProfile() {
     let { id } = useParams();
     let location = useLocation();
 
-    // 서버로부터 받아와야할 정보
     let [groupData, setGroupData] = useState(location.state?.groupProfileData || {});
     return (
         <div className='home-background'>
