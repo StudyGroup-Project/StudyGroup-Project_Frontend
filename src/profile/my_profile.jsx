@@ -32,8 +32,6 @@ function myProfile(props) {
                 withCredentials: true,
             });
             setUserData(res.data);
-            console.log(res.data);
-            console.log("안녕");
         } catch (err) {
             console.log(err);
         }
@@ -47,18 +45,61 @@ function myProfile(props) {
         fetchData();
     }, []);
 
-    let [profileImg, setProfileImg] = useState(userData.profileImageUrl);
     let [newProfileImg, setNewProfileImg] = useState(null);
     let imgRef = useRef(null);
 
-    function saveImgFile() {
+    async function uploadProfileImage(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            const res = await axios.post(
+                'http://3.39.81.234:8080/api/users/me/profile/image',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    withCredentials: true
+                }
+            );
+            console.log('이미지 업로드 성공:', res.data);
+
+
+        } catch (err) {
+            console.error('이미지 업로드 실패:', err.response?.data || err);
+        }
+    }
+
+
+    async function saveImgFile() {
         let file = imgRef.current.files[0];
+        if (!file) return;
+
         let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
             setNewProfileImg(reader.result);
         }
-        //서버에 변경된 사진 보내기 추가해야함.
+
+        try {
+            await getAccessToken();
+            await uploadProfileImage(file);
+        } catch (err) {
+            console.log("업로드 과정 중 에러", err);
+        }
+    }
+
+    function getGaugeColorClass(score) {
+        if (score >= 70) {
+            return 'gauge-high'; // 70점 이상: 초록색
+        }
+        if (score >= 30) {
+            return 'gauge-medium'; // 30점 ~ 69점: 주황색
+        }
+        return 'gauge-low'; // 30점 미만: 빨간색
     }
 
     let navigate = useNavigate();
@@ -78,7 +119,11 @@ function myProfile(props) {
             </div>
 
             <div className='myprofile-container'>
-                <img className='myprofileImg' src={newProfileImg ? newProfileImg : profileImg} />
+                <img className='myprofileImg'
+                    src={newProfileImg ? newProfileImg : userData?.profileImageUrl}
+                    alt="프로필 이미지"
+                />
+
                 <label className="myprofileImg-label" htmlFor="myprofileImg">프로필 이미지 변경</label>
                 <input
                     className="myprofileImg-input"
@@ -107,7 +152,7 @@ function myProfile(props) {
                         </button>
                     </h4>
                     <div className='myprofile-box'>
-                        <h5>{userData.province + ' ' + userData.district}</h5>
+                        <h5>{userData.province} {userData.district}</h5>
                     </div>
                 </>
                 <>
@@ -137,7 +182,22 @@ function myProfile(props) {
                         }}
                             className='myprofile-button'></button>
                     </h4>
-                    <Category category={category}></Category>
+                    <Category category={userData.preferredCategory || []}></Category>
+                </>
+                <>
+                    <h4 className='myprofile-info' style={{ marginTop: '20px' }}>신뢰점수</h4>
+                    <div className='myprofile-gauge-box'>
+                        <div className="trust-score-label">
+                            <span className="score-value">{userData.trustScore || 0}점</span>
+                        </div>
+                        <div className="gauge-background">
+                            <div
+                                className={`gauge-bar ${getGaugeColorClass(userData.trustScore || 0)}`}
+                                style={{ width: `${userData.trustScore || 0}%` }}
+                            >
+                            </div>
+                        </div>
+                    </div>
                 </>
             </div>
 
@@ -196,7 +256,7 @@ function Category(props) {
                 category.map(function (a, i) {
                     return (
                         <div key={i} className='myprofile-categories'>
-                            <span>{category[i]}</span>
+                            <span>{a}</span>
                         </div>
                     )
                 })
