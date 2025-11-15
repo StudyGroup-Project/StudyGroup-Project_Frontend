@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Bell, Megaphone, FileText, Image, Users, Settings, ArrowLeft, 
+import { useParams } from 'react-router-dom';
+import {
+  Bell, Megaphone, FileText, Image, Users, Settings, ArrowLeft,
   Home, Heart, MessageCircle, X, Crown, Archive
 } from 'lucide-react';
 import './groupScreenHost.css';
@@ -8,6 +9,7 @@ import './groupScreenHost.css';
 const PURPLE = '#3D348B';
 
 export default function GroupScreen() {
+  let { id } = useParams();
   const [open, setOpen] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const dropdownRef = useRef(null);
@@ -65,17 +67,17 @@ export default function GroupScreen() {
           <div className='menu-item'>
             <span>공지</span>
             <Megaphone size={16} color="#FF3B30" fill="#FF3B30" />
-            
+
           </div>
           <div className='menu-item'>
             <span>알림함</span>
             <Bell size={16} color="#23D238" fill="#23D238" />
-            
+
           </div>
           <div className='menu-item'>
             <span>과제</span>
             <FileText size={16} color="#04A3FF" />
-            
+
           </div>
         </div>
 
@@ -91,7 +93,7 @@ export default function GroupScreen() {
           <div className='menu-item'>
             <span>그룹원</span>
             <Users size={16} color="#000" fill="#000" />
-            
+
           </div>
         </div>
 
@@ -100,7 +102,7 @@ export default function GroupScreen() {
           <div className='menu-item'>
             <span>신청함</span>
             <Archive size={16} color="#E3C12D" fill={PURPLE} />
-            
+
           </div>
         </div>
       </div>
@@ -134,9 +136,9 @@ export default function GroupScreen() {
                 <div className='member-info'>
                   <div className='avatar'>
                     {member.avatar ? (
-                       <img src={member.avatar} alt="프로필" className='avatarImg' />
-                      ) : (
-                   <img src="/Group115.png" alt="기본 프로필" className='avatarImg' />
+                      <img src={member.avatar} alt="프로필" className='avatarImg' />
+                    ) : (
+                      <img src="/Group115.png" alt="기본 프로필" className='avatarImg' />
                     )}
                   </div>
                   <span>

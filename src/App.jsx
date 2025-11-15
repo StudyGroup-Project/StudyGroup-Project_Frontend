@@ -107,7 +107,7 @@ function App() {
         <Route path='assignmentstest' element={<AssignmentsTest/>}/>
         <Route path='assignmentstestlist' element={<AssignmentsTestList/>}/>
         <Route path='notice' element={<NoticeScreen/>}/>
-        <Route path='groupScreenhost' element={<GroupScreenHost/>}/>
+        <Route path='groupScreenhost/:id' element={<GroupScreenHost/>}/>
         <Route path='noticedetail' element={<NoticeDetail/>}/>
         <Route path='noticedetailhost' element={<NoticeDetailHost/>}/>
         <Route path='noticehost' element={<NoticeHost/>}/>
