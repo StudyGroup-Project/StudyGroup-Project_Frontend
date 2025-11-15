@@ -113,10 +113,7 @@ function App() {
         <Route path='assignmentstest' element={<AssignmentsTest/>}/>
         <Route path='assignmentstestlist' element={<AssignmentsTestList/>}/>
         <Route path='notice' element={<NoticeScreen/>}/>
-<<<<<<< HEAD
-=======
         <Route path='groupScreenhost/:id' element={<GroupScreenHost/>}/>
->>>>>>> upstream/main
         <Route path='noticedetail' element={<NoticeDetail/>}/>
         <Route path='noticedetailhost' element={<NoticeDetailHost/>}/>
         <Route path='noticehost' element={<NoticeHost/>}/>
