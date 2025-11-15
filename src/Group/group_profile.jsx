@@ -1,13 +1,15 @@
 import './group_profile.css';
 import { useParams, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import ApplicationModal from '../common/GroupRegisterForm.jsx';
 
 function GroupProfile() {
     let { id } = useParams();
     let location = useLocation();
 
-    // 서버로부터 받아와야할 정보
     let [groupData, setGroupData] = useState(location.state?.groupProfileData || {});
+    let [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <div className='home-background'>
             <div className='web-header'>
@@ -48,21 +50,35 @@ function GroupProfile() {
                     <Category selected={groupData.category} setUserData={setGroupData} />
                 </div>
                 {
-                    groupData.recruitStatus === 'OPEN' ?
-                        (groupData.applicationStatus === 'SUBMITTED' ?
+                    (groupData.recruitStatus === 'CLOSED' || groupData.canApply === false || groupData.applicationStatus === 'REJECTED') ?
+                        <button className='group-profile-button' disabled={true}>
+                            모집 마감
+                        </button>
+
+                        : (groupData.applicationStatus === 'SUBMITTED') ?
                             <button className='group-profile-waiting-button'>
                                 승인 대기
                             </button>
-                            :
-                            <button className='group-profile-button'>
+
+                            : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
                                 지원하기
-                            </button>)
-                        :
-                        <button className='group-profile-button'
-                            disabled={true}>
-                            모집 마감
-                        </button>
+                            </button>
                 }
+
+                {isModalOpen && (
+                    <ApplicationModal
+                        studyId={id}
+                        onClose={() => setIsModalOpen(false)}
+                        onSubmitSuccess={() => {
+                            setIsModalOpen(false);
+                            setGroupData(prev => ({
+                                ...prev,
+                                applicationStatus: 'SUBMITTED',
+                                canApply: false
+                            }));
+                        }}
+                    />
+                )}
             </div>
         </div>
     )

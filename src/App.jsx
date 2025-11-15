@@ -30,6 +30,11 @@ import AssignmentsCreate from './Assignments/AssignmentsCreate.jsx';
 import AssignmentsModify from './Assignments/AssignmentsModify.jsx';
 import AssignmentsTest from './Assignments/AssignmentsTest.jsx';
 import AssignmentsTestList from './Assignments/AssignmentsTestList.jsx';
+import NoticeScreen from './notice/notice.jsx';
+import GroupScreenHost from './Group/groupScreenHost.jsx';
+import NoticeDetail from './notice/noticedetail.jsx';
+import NoticeDetailHost from './notice/noticedetailhost.jsx'
+import NoticeHost from './notice/noticehost.jsx'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -101,7 +106,11 @@ function App() {
         <Route path='assignmentsmodify' element={<AssignmentsModify/>}/>
         <Route path='assignmentstest' element={<AssignmentsTest/>}/>
         <Route path='assignmentstestlist' element={<AssignmentsTestList/>}/>
-
+        <Route path='notice' element={<NoticeScreen/>}/>
+        <Route path='groupScreenhost/:id' element={<GroupScreenHost/>}/>
+        <Route path='noticedetail' element={<NoticeDetail/>}/>
+        <Route path='noticedetailhost' element={<NoticeDetailHost/>}/>
+        <Route path='noticehost' element={<NoticeHost/>}/>
       </Routes>
     </>
   )
