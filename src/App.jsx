@@ -19,6 +19,8 @@ import {ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory} from './profil
 import Search from './home/search_.jsx';
 import AddGroup from './home/addGroup/addGroup_.jsx';
 import GroupProfile from './Group/group_profile.jsx';
+import GroupScreen from './Group/groupScreen.jsx';
+import GroupScreenHost from './Group/groupScreenHost.jsx';
 import ResourcesCreate from './resources/resourcescreate.jsx';
 import Resources from './resources/resources.jsx';
 import ResourcesDetail from './resources/resourcesDetail.jsx';
@@ -31,10 +33,12 @@ import AssignmentsModify from './Assignments/AssignmentsModify.jsx';
 import AssignmentsTest from './Assignments/AssignmentsTest.jsx';
 import AssignmentsTestList from './Assignments/AssignmentsTestList.jsx';
 import NoticeScreen from './notice/notice.jsx';
-import GroupScreenHost from './Group/groupScreenHost.jsx';
 import NoticeDetail from './notice/noticedetail.jsx';
-import NoticeDetailHost from './notice/noticedetailhost.jsx'
-import NoticeHost from './notice/noticehost.jsx'
+import NoticeDetailHost from './notice/noticedetailhost.jsx';
+import NoticeHost from './notice/noticehost.jsx';
+import Notice from './notice/notice.jsx';
+import NoticeCreate from './notice/noticecreate.jsx';
+import NoticeModify from './notice/noticemodify.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -92,25 +96,29 @@ function App() {
         <Route path='search' element={<Search/>}/>
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
-        <Route path='notification' element={<Notification/>}/>
+        <Route path='notification/:studyId' element={<Notification/>}/>
         <Route path='addGroup' element = {<AddGroup/>}/>
-        <Route path='groupprofile/:id' element = {<GroupProfile/>}/>
-        <Route path ='resources' element={<Resources/>}/>
-        <Route path ='resourcesdetail' element={<ResourcesDetail/>}/>
+        <Route path='groupprofile/:studyId' element = {<GroupProfile/>}/>
+        <Route path='groupscreen/:studyId' element={<GroupScreen/>}/>
+        <Route path ='resources/:studyId' element={<Resources/>}/>
+        <Route path ='resourcesdetail/:studyId' element={<ResourcesDetail/>}/>
         <Route path ='resourcescreate' element={<ResourcesCreate/>}/>
-        <Route path ='assignmentshost' element={<AssignmentsHost/>}/>
-        <Route path ='assignments' element={<Assignments/>}/>
-        <Route path='assignmentsdetail' element={<AssignmentsDetail/>}/>
-        <Route path='assignmentsdetailhost' element={<AssignmentsDetailHost/>}/>
-        <Route path='assignmentscreate' element={<AssignmentsCreate/>}/>
-        <Route path='assignmentsmodify' element={<AssignmentsModify/>}/>
-        <Route path='assignmentstest' element={<AssignmentsTest/>}/>
-        <Route path='assignmentstestlist' element={<AssignmentsTestList/>}/>
-        <Route path='notice' element={<NoticeScreen/>}/>
-        <Route path='groupScreenhost/:id' element={<GroupScreenHost/>}/>
-        <Route path='noticedetail' element={<NoticeDetail/>}/>
-        <Route path='noticedetailhost' element={<NoticeDetailHost/>}/>
-        <Route path='noticehost' element={<NoticeHost/>}/>
+        <Route path ='assignmentshost/:studyId' element={<AssignmentsHost/>}/>
+        <Route path ='assignments/:studyId' element={<Assignments/>}/>
+        <Route path='assignmentsdetail/:studyId' element={<AssignmentsDetail/>}/>
+        <Route path='assignmentsdetailhost/:studyId' element={<AssignmentsDetailHost/>}/>
+        <Route path='assignmentscreate/:studyId' element={<AssignmentsCreate/>}/>
+        <Route path='assignmentsmodify/:studyId' element={<AssignmentsModify/>}/>
+        <Route path='assignmentstest/:studyId' element={<AssignmentsTest/>}/>
+        <Route path='assignmentstestlist/:studyId' element={<AssignmentsTestList/>}/>
+        <Route path='notice/:studyId' element={<NoticeScreen/>}/>
+        <Route path='groupScreenhost/:studyId' element={<GroupScreenHost/>}/>
+        <Route path='noticedetail/:studyId' element={<NoticeDetail/>}/>
+        <Route path='noticedetailhost/:studyId' element={<NoticeDetailHost/>}/>
+        <Route path='noticehost/:studyId' element={<NoticeHost/>}/>
+        <Route path='notice/:studyId' element={<Notice/>}/>
+        <Route path='noticecreate/:studyId' element={<NoticeCreate/>}/>
+        <Route path='noticemodify/:studyId' element={<NoticeModify/>}/>
       </Routes>
     </>
   )

@@ -6,7 +6,7 @@
   background: #fff;
 }
 
-/* 상단 바 */
+
 .top-bar {
   display: flex;
   align-items: center;
@@ -57,7 +57,7 @@
   margin: 0;
 }
 
-/* 그룹 메뉴 */
+
 .group-menu {
   padding: 16px;
   display: flex;
@@ -74,7 +74,18 @@
   flex-direction: column;
   gap: 30px;
   font-weight: bold;
+  transition: none !important;
 }
+
+.menu-card:hover {
+  background: #3D348B !important; 
+}
+
+
+.menu-card.clickable {
+  cursor: pointer;
+}
+
 
 .menu-card .menu-item {
   display: flex;
@@ -82,11 +93,6 @@
   font-weight: bold;
 }
 
-.menu-card.clickable {
-  cursor: pointer;
-}
-
-/* 하단 탭바 */
 .tab-bar {
   margin-top: auto;
   display: flex;
@@ -108,10 +114,12 @@
   font-weight: bold;
 }
 
-/* 그룹원 오버레이 */
 .overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0,0,0,0.6);
   display: flex;
   justify-content: center;
@@ -142,21 +150,18 @@
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: #ddd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-  color: #888;
   overflow: hidden;
+  background-color: white;
 }
 
+.avatarImg,
 .avatar img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   border-radius: 50%;
 }
 
@@ -175,24 +180,9 @@
   cursor: pointer;
 }
 
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: white;
-}
-
-.avatarImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 
 .menu-card,
 .menu-card * {
   outline: none !important;
-  background: #3D348B!important;
+  background: #3D348B !important;
 }
-
