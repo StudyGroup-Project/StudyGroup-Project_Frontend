@@ -19,6 +19,8 @@ import {ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory} from './profil
 import Search from './home/search_.jsx';
 import AddGroup from './home/addGroup/addGroup_.jsx';
 import GroupProfile from './Group/group_profile.jsx';
+import GroupScreen from './Group/groupScreen.jsx';
+import GroupScreenHost from './Group/groupScreenHost.jsx';
 import ResourcesCreate from './resources/resourcescreate.jsx';
 import Resources from './resources/resources.jsx';
 import ResourcesDetail from './resources/resourcesDetail.jsx';
@@ -31,10 +33,12 @@ import AssignmentsModify from './Assignments/AssignmentsModify.jsx';
 import AssignmentsTest from './Assignments/AssignmentsTest.jsx';
 import AssignmentsTestList from './Assignments/AssignmentsTestList.jsx';
 import NoticeScreen from './notice/notice.jsx';
-import GroupScreenHost from './Group/groupScreenHost.jsx';
 import NoticeDetail from './notice/noticedetail.jsx';
-import NoticeDetailHost from './notice/noticedetailhost.jsx'
-import NoticeHost from './notice/noticehost.jsx'
+import NoticeDetailHost from './notice/noticedetailhost.jsx';
+import NoticeHost from './notice/noticehost.jsx';
+import Notice from './notice/notice.jsx';
+import NoticeCreate from './notice/noticecreate.jsx';
+import NoticeModify from './notice/noticemodify.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -95,6 +99,8 @@ function App() {
         <Route path='notification' element={<Notification/>}/>
         <Route path='addGroup' element = {<AddGroup/>}/>
         <Route path='groupprofile/:id' element = {<GroupProfile/>}/>
+        <Route path='groupscreen' element={<GroupScreen/>}/>
+        <Route path='groupscreenhost' element={<GroupScreenHost/>}/>
         <Route path ='resources' element={<Resources/>}/>
         <Route path ='resourcesdetail' element={<ResourcesDetail/>}/>
         <Route path ='resourcescreate' element={<ResourcesCreate/>}/>
@@ -107,10 +113,16 @@ function App() {
         <Route path='assignmentstest' element={<AssignmentsTest/>}/>
         <Route path='assignmentstestlist' element={<AssignmentsTestList/>}/>
         <Route path='notice' element={<NoticeScreen/>}/>
+<<<<<<< HEAD
+=======
         <Route path='groupScreenhost/:id' element={<GroupScreenHost/>}/>
+>>>>>>> upstream/main
         <Route path='noticedetail' element={<NoticeDetail/>}/>
         <Route path='noticedetailhost' element={<NoticeDetailHost/>}/>
         <Route path='noticehost' element={<NoticeHost/>}/>
+        <Route path='notice' element={<Notice/>}/>
+        <Route path='noticecreate' element={<NoticeCreate/>}/>
+        <Route path='noticemodify' element={<NoticeModify/>}/>
       </Routes>
     </>
   )
