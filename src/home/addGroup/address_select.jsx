@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 function AddressSelect(props){
     let provinceList = props.provinceList;
@@ -7,12 +7,24 @@ function AddressSelect(props){
     let setProvince = props.setProvince;
     let setDistrict = props.setDistrict;
 
+    let initialProvince = props.province || provinceList[0];
+    let initialDistrict = props.district || districtList[initialProvince][0];
+
     let [open, setOpen] = useState(false);
     let [secOpen, setSecOpen] = useState(false);
-    let [curValue, setCurValue] = useState(provinceList[0]);
-    let [secCurValue, setSecCurValue] = useState(districtList[provinceList[0]][0]);
-    let [specList, setSpecList] = useState(districtList[provinceList[0]]);
+    let [curValue, setCurValue] = useState(initialProvince);
+    let [secCurValue, setSecCurValue] = useState(initialDistrict);
+    let [specList, setSpecList] = useState(districtList[initialProvince]);
 
+    useEffect(() => {
+        // props.province가 유효한 값일 때만 내부 state들을 업데이트
+        if (props.province && props.district) {
+            setCurValue(props.province);
+            setSecCurValue(props.district);
+            setSpecList(districtList[props.province]);
+        }
+    }, [props.province, props.district, districtList]);
+    
     return(
         <>
             <SelectBox onClick={()=>{

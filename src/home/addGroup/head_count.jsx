@@ -1,11 +1,15 @@
 import styled from 'styled-components'
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 function HeadCount(props){
     let headCount = props.headCount;
     let setHeadCount = props.setHeadCount;
     let [open, setOpen] = useState(false);
     let [curValue, setCurValue] = useState(headCount);
+    
+    useEffect(() => {
+        setCurValue(headCount);
+    }, [headCount]);
 
     return(
         <>

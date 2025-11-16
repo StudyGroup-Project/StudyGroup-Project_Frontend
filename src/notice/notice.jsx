@@ -69,6 +69,7 @@ export default function NoticeScreen() {
       공지 목록 가져오기
   ---------------------------- */
   async function fetchNotices() {
+    console.log(" NoticeScreen 렌더링됨");
     try {
       if (!studyId) {
         console.error("studyId 없음:", studyId);
@@ -76,9 +77,10 @@ export default function NoticeScreen() {
       }
 
       const res = await authFetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}/announcements`,
-        { method: "GET" }
-      );
+  `http://3.39.81.234:8080/api/studies/${studyId}/announcements`,
+  { method: "GET" }
+);
+
 
       if (!res.ok) {
         throw new Error(`공지 목록 불러오기 실패: ${res.status}`);

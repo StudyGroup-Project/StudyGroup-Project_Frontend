@@ -144,6 +144,30 @@ export default function GroupScreen() {
     }
   }
 
+  /* ---------------------------
+      그룹 탈퇴 (일반 유저)
+  ---------------------------- */
+  async function leaveGroup() {
+    if (!window.confirm("정말 그룹을 탈퇴하시겠습니까?")) return;
+
+    try {
+      const res = await authFetch(
+        // 1. API 엔드포인트를 'me'로 변경
+        `http://3.39.81.234:8080/api/studies/${studyId}/members/me`,
+        { method: "DELETE" }
+      );
+
+      if (res.ok) { // 204 대신 .ok로 체크 (더 안전함)
+        alert("그룹에서 탈퇴되었습니다.");
+        navigate("/mygroup"); // 내 그룹 목록으로 이동
+      } else {
+        alert("그룹 탈퇴에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
 
   /* ---------------------------
       그룹 프로필 설정 이동
@@ -171,18 +195,32 @@ export default function GroupScreen() {
         <ArrowLeft size={24} onClick={() => navigate(-1)} />
         <h1>{groupHome?.title || "그룹명"}</h1>
         <div className="top-icons">
-          <MessageCircle size={24} />
+          <MessageCircle
+            size={24}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate(`/chat/${studyId}`)}
+          />
           <div className="dropdown" ref={dropdownRef}>
             <Settings size={24} onClick={() => setOpen(!open)} />
             {open && (
               <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={deleteGroup}>
-                  그룹 삭제
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={goGroupProfileSetting}>
-                  그룹 프로필 설정
-                </div>
+                {groupInfo && groupInfo.leaderCheck ? (
+                  // 1. 🟢 방장일 때 메뉴
+                  <>
+                    <div className="dropdown-item" onClick={deleteGroup}>
+                      그룹 삭제
+                    </div>
+                    <div className="dropdown-divider"></div>
+                    <div className="dropdown-item" onClick={goGroupProfileSetting}>
+                      그룹 프로필 설정
+                    </div>
+                  </>
+                ) : (
+                  // 2. 🔵 일반 회원일 때 메뉴
+                  <div className="dropdown-item" onClick={leaveGroup}>
+                    그룹 탈퇴
+                  </div>
+                )}
               </div>
             )}
           </div>

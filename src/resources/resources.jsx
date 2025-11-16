@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./resources.css";
 import {
   ArrowLeft,
@@ -17,7 +17,7 @@ export default function Resources() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const studyId = 1; // 실제 스터디 ID로 교체 필요
+  const { studyId } = useParams(); // 실제 스터디 ID로 교체 필요
   const baseUrl = "http://3.39.81.234:8080/api/studies";
 
   // access token 재발급
@@ -75,7 +75,6 @@ export default function Resources() {
         const res = await fetch(`${baseUrl}/${studyId}/resources`, {
           method: "GET",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
@@ -99,21 +98,21 @@ export default function Resources() {
   if (loading) return <p>로딩 중...</p>;
 
   return (
-    <div className="resources-container">
+    // 1. CSS 파일에 맞게 className 수정
+    <div className="container">
       {/* Header */}
-      <div className="resources-header">
-        <button className="header-back" onClick={() => navigate(-1)}>
+      <div className="header"> {/* 👈 'resources-header' -> 'header' */}
+        <button className="headerButton" onClick={() => navigate(-1)}> {/* 👈 'header-back' -> 'headerButton' */}
           <ArrowLeft size={20} />
         </button>
-        <span className="header-title">그룹명</span>
+        <span className="headerTitle">그룹명</span> {/* 👈 'header-title' -> 'headerTitle' */}
 
-        {/* 버튼 클릭 시 access token & user data 전송 */}
         <button
-          className="add-button"
+          className="addButton" // 👈 'add-button' -> 'addButton'
           onClick={() => {
-            getRefreshToken();
-            postUserData();
-            navigate("/resourcescreate");
+            // getRefreshToken(); // 👈 글쓰기 페이지에서 할 일이므로 여기선 제거
+            // postUserData(); // 👈 제거
+            navigate(`/resourcescreate/${studyId}`);
           }}
         >
           <PlusCircle size={20} />
@@ -121,16 +120,30 @@ export default function Resources() {
       </div>
 
       {/* 자료 리스트 */}
-      <div className="resource-list">
+      <div className="resourceList"> {/* 👈 'resource-list' -> 'resourceList' */}
         {resources.length === 0 ? (
           <p>자료가 없습니다.</p>
         ) : (
-          resources.map((res) => (
-            <div key={res.id} className="resource-item">
-              <span className="resource-title">
+          resources.map((res, i) => (
+            <div
+              key={res.resourceId || i}
+              className="resourceItem"
+              
+              // 👇 [수정] res.id가 유효한지 확인하는 로직 추가
+              onClick={() => {
+                if (!res.resourceId) {
+                  console.error("클릭된 자료의 ID가 없습니다 (undefined):", res);
+                  alert("유효하지 않은 자료입니다.");
+                  return; // ID가 없으면 여기서 함수를 중단
+                }
+                // ID가 유효한 경우에만 상세 페이지로 이동
+                navigate(`/resourcesdetail/${studyId}/${res.resourceId}`);
+              }}
+            >
+              <span className="resourceTitle">
                 {res.title ? res.title : "제목 없음"}
               </span>
-              <div className="resource-author">
+              <div className="resourceAuthor">
                 <User size={16} />
                 <span>{res.author ? res.author : "작성자 미상"}</span>
               </div>
@@ -161,6 +174,5 @@ export default function Resources() {
     </div>
   );
 }
-
 
 
