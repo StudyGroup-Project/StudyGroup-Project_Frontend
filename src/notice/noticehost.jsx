@@ -1,10 +1,11 @@
 import React from 'react';
 import { ArrowLeft, Plus, Megaphone, Home, FileText, Heart, Users } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';   
+import { useNavigate, useParams } from "react-router-dom";
 import './notice.css';
 
 export default function NoticeHost() {
-  const navigate = useNavigate();   
+  const navigate = useNavigate();
+  const { studyId } = useParams();
 
   const notices = [
     { id: 1, text: '9월 7일 UI 피드백 세션 안내' },
@@ -24,7 +25,7 @@ export default function NoticeHost() {
         <Plus
           size={24}
           className='noticeIcon'
-          onClick={() => navigate('/notice/create')}
+          onClick={() => navigate(`/noticecreate/${studyId}`)}
           style={{ cursor: 'pointer' }}
         />
       </div>
@@ -40,21 +41,21 @@ export default function NoticeHost() {
       </div>
 
       {/* 하단 탭바 */}
-      <div className='noticeTabbar'>
-        <div className='noticeTabItem'>
-          <Home size={24} className='noticeTabIcon' />
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
+          <Home size={24} />
           <span>홈</span>
         </div>
-        <div className='noticeTabItem'>
-          <FileText size={24} className='noticeTabIcon' />
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
+          <FileText size={24} />
           <span>내 그룹</span>
         </div>
-        <div className='noticeTabItem'>
-          <Heart size={24} className='noticeTabIcon' />
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
+          <Heart size={24} />
           <span>찜 목록</span>
         </div>
-        <div className='noticeTabItem'>
-          <Users size={24} className='noticeTabIcon' />
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
+          <Users size={24} />
           <span>내 정보</span>
         </div>
       </div>

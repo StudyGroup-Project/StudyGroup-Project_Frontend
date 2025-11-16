@@ -36,7 +36,7 @@ async function getRefreshToken() {
 
     const data = await res.json();
     if (data?.accessToken) {
-      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
       console.log("Access token 갱신 완료");
       return data.accessToken;
     }
@@ -50,7 +50,7 @@ async function getRefreshToken() {
 
 async function authFetch(url, options = {}) {
   try {
-    let token = localStorage.getItem("token");
+    let token = localStorage.getItem("accessToken");
     const defaultHeaders = { "Content-Type": "application/json" };
     if (token) defaultHeaders.Authorization = `Bearer ${token}`;
 
@@ -60,13 +60,13 @@ async function authFetch(url, options = {}) {
     });
 
     if (res.status === 401) {
-  
+
       const newToken = await getRefreshToken();
       if (!newToken) {
-    
+
         return null;
       }
- 
+
       res = await fetch(url, {
         ...options,
         headers: {
@@ -99,7 +99,7 @@ export default function GroupScreen() {
 
   // 로그인 체크: token 없으면 로그인 페이지로 이동
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (!token) {
       navigate("/login");
     }
@@ -141,7 +141,7 @@ export default function GroupScreen() {
         const resInfo = await authFetch(`http://3.39.81.234:8080/api/studies/${studyId}`, { method: "GET" });
         if (!resInfo) {
           // authFetch 내부에서 토큰 만료로 login 필요 상태라면 이동
-          const token = localStorage.getItem("token");
+          const token = localStorage.getItem("accessToken");
           if (!token) navigate("/login");
           setLoading(false);
           return;
@@ -303,7 +303,7 @@ export default function GroupScreen() {
 
           {/* 하단 탭바 */}
           <div className="tab-bar">
-            <div className="tab-item" onClick={() => navigate("/")}>
+            <div className="tab-item" onClick={() => navigate("/home")}>
               <Home size={24} />
               <span>홈</span>
             </div>
@@ -311,11 +311,11 @@ export default function GroupScreen() {
               <FileText size={24} />
               <span>내 그룹</span>
             </div>
-            <div className="tab-item" onClick={() => navigate("/favorites")}>
+            <div className="tab-item" onClick={() => navigate("/bookmarked")}>
               <Heart size={24} />
               <span>찜 목록</span>
             </div>
-            <div className="tab-item" onClick={() => navigate("/profile")}>
+            <div className="tab-item" onClick={() => navigate("/myprofile")}>
               <Users size={24} />
               <span>내 정보</span>
             </div>

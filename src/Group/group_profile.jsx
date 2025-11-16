@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ApplicationModal from '../common/GroupRegisterForm.jsx';
 
 function GroupProfile() {
-    let { id } = useParams();
+    let { studyId } = useParams();
     let location = useLocation();
 
     let [groupData, setGroupData] = useState(location.state?.groupProfileData || {});
@@ -50,32 +50,32 @@ function GroupProfile() {
                     <Category selected={groupData.category} setUserData={setGroupData} />
                 </div>
                 {
-                    (groupData.recruitStatus === 'CLOSED' || groupData.canApply === false || groupData.applicationStatus === 'REJECTED') ?
+                    (groupData.recruitStatus === 'CLOSED') ?
                         <button className='group-profile-button' disabled={true}>
                             모집 마감
                         </button>
 
                         : (groupData.applicationStatus === 'SUBMITTED') ?
-                            <button className='group-profile-waiting-button'>
+                            <button className='group-profile-waiting-button' disabled={true}>
                                 승인 대기
                             </button>
 
-                            : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
+                            :
+                            <button
+                                className='group-profile-button'
+                                onClick={() => setIsModalOpen(true)}
+                                disabled={groupData.canApply === false}
+                            >
                                 지원하기
                             </button>
                 }
 
                 {isModalOpen && (
                     <ApplicationModal
-                        studyId={id}
+                        studyId={studyId}
                         onClose={() => setIsModalOpen(false)}
                         onSubmitSuccess={() => {
                             setIsModalOpen(false);
-                            setGroupData(prev => ({
-                                ...prev,
-                                applicationStatus: 'SUBMITTED',
-                                canApply: false
-                            }));
                         }}
                     />
                 )}

@@ -19,20 +19,20 @@ async function getRefreshToken() {
     if (!res.ok) throw new Error("토큰 재발급 실패");
     const data = await res.json();
     if (data.accessToken) {
-      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
       return data.accessToken;
     }
   } catch (err) {
     console.error("getRefreshToken 실패:", err);
     alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
     window.location.href = "/login";
   }
 }
 
 // API 요청 공통 함수 (토큰 자동 갱신 포함)
 async function postUserData(url, options = {}) {
-  let token = localStorage.getItem("token");
+  let token = localStorage.getItem("accessToken");
 
   const defaultOptions = {
     ...options,
@@ -82,7 +82,7 @@ export default function ResourceDetail() {
 
   // 자료 상세 GET
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("accessToken");
     setToken(storedToken);
 
     if (!storedToken) {
@@ -135,7 +135,7 @@ export default function ResourceDetail() {
   // 자료 수정 (PUT)
 const handleSaveClick = async () => {
   // 토큰 확인 및 갱신
-  let token = localStorage.getItem("token");
+  let token = localStorage.getItem("accessToken");
   if (!token) {
     alert("로그인이 필요합니다.");
     return;
@@ -143,7 +143,7 @@ const handleSaveClick = async () => {
 
   // 자동 갱신 시도
   await getRefreshToken();
-  token = localStorage.getItem("token");
+  token = localStorage.getItem("accessToken");
 
   // formData 구성
   const formData = new FormData();

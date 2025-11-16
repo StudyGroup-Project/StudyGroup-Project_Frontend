@@ -23,12 +23,12 @@ const AssignmentsTest = () => {
 
       if (!res.ok) throw new Error("리프레시 토큰 갱신 실패");
       const data = await res.json();
-      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
       return data.accessToken;
     } catch (err) {
       console.error(err);
       alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
-      localStorage.removeItem("token");
+      localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       navigate("/login");
       return null;
@@ -37,7 +37,7 @@ const AssignmentsTest = () => {
 
   // API 요청 공통 함수 (자동 토큰 갱신 포함)
   const fetchWithAuth = async (url, options = {}) => {
-    let token = localStorage.getItem("token");
+    let token = localStorage.getItem("accessToken");
     let res = await fetch(url, {
       ...options,
       headers: {
@@ -65,7 +65,7 @@ const AssignmentsTest = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (!token) {
       alert("로그인이 필요합니다!");
       navigate("/login");

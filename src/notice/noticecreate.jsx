@@ -1,48 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import "./noticecreate.css"; 
-import {
-  ArrowLeft,
-  Send,
-  Home,
-  FileText,
-  Heart,
-  Users
-} from 'lucide-react';
+import { useNavigate, useParams } from "react-router-dom";
+import "./noticecreate.css";
+import { Home, FileText, Heart, Users } from "lucide-react";
 
-export default function NoticeEdit() {
+export default function NoticeCreate() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { studyId } = useParams();
 
-  // location.state에서 studyId와 announcementId 전달
-  const { studyId: initialStudyId, announcementId, currentTitle, currentContent, currentFiles } = location.state || {};
-
-  const [title, setTitle] = useState(currentTitle || "");
-  const [content, setContent] = useState(currentContent || "");
-  const [files, setFiles] = useState([]); // 새로 첨부할 파일
-  const [deleteFileIds, setDeleteFileIds] = useState([]); // 삭제할 파일 ID
-
-  const [studyId, setStudyId] = useState(initialStudyId || null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [files, setFiles] = useState([]);
 
   /* ---------------------------
-      Access Token 자동 갱신
+      Refresh Token 자동 갱신
   ---------------------------- */
   async function getRefreshToken() {
     try {
-      const refreshToken = localStorage.getItem("refreshToken");
-      if (!refreshToken) return null;
-
       const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken }),
+        credentials: "include",
       });
 
-      if (!res.ok) throw new Error("refresh 실패");
+      if (!res.ok) return null;
 
       const data = await res.json();
-      localStorage.setItem("token", data.accessToken);
-
+      localStorage.setItem("accessToken", data.accessToken);
       return data.accessToken;
     } catch (err) {
       console.error(err);
@@ -51,77 +33,67 @@ export default function NoticeEdit() {
   }
 
   async function authFetch(url, options = {}) {
-    let token = localStorage.getItem("token");
-    const newOptions = {
+    let token = localStorage.getItem("accessToken");
+
+    let res = await fetch(url, {
       ...options,
       headers: {
         ...(options.headers || {}),
         Authorization: `Bearer ${token}`,
       },
-    };
+    });
 
-    let res = await fetch(url, newOptions);
-    if (res.status === 401) {
-      const newToken = await getRefreshToken();
-      if (!newToken) return res;
+    if (res.status === 401 || res.status === 403) {
+      const freshToken = await getRefreshToken();
+      if (!freshToken) return res;
 
-      newOptions.headers.Authorization = `Bearer ${newToken}`;
-      res = await fetch(url, newOptions);
+      res = await fetch(url, {
+        ...options,
+        headers: {
+          ...(options.headers || {}),
+          Authorization: `Bearer ${freshToken}`,
+        },
+      });
     }
     return res;
   }
 
   /* ---------------------------
-      파일 변경 처리
+      파일 추가
   ---------------------------- */
   const handleFileChange = (e) => {
     setFiles([...e.target.files]);
   };
 
-  const handleDeleteFile = (fileId) => {
-    setDeleteFileIds([...deleteFileIds, fileId]);
-  };
-
   /* ---------------------------
-      공지 수정 제출
+      공지 생성 제출
   ---------------------------- */
   const handleSubmit = async () => {
-    if (!studyId || !announcementId) {
-      return alert("스터디 또는 공지 정보가 없습니다.");
-    }
+    if (!studyId) return alert("스터디 ID가 없습니다.");
+    if (!title || !content) return alert("제목과 내용을 입력해주세요.");
 
-    if (!title || !content) {
-      return alert("제목과 내용을 입력해주세요.");
-    }
+    const url = `http://3.39.81.234:8080/api/studies/${studyId}/announcements`;
 
-    const url = `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}`;
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
 
-    // 새로 첨부할 파일
-    files.forEach(file => formData.append("files", file));
-
-    // 삭제할 파일 ID
-    if (deleteFileIds.length > 0) {
-      deleteFileIds.forEach(id => formData.append("deleteFileIds", id));
-    }
+    files.forEach((file) => formData.append("files", file));
 
     try {
       const res = await authFetch(url, {
-        method: "PUT",
+        method: "POST",
         body: formData,
       });
 
-      if (!res.ok) throw new Error(`공지 수정 실패: ${res.status}`);
+      if (!res.ok) throw new Error("공지 생성 실패: " + res.status);
 
-      alert("공지 수정 완료!");
-      // 수정 후 NoticeDetail로 이동
-      navigate(`/notice/${announcementId}`, { state: { studyId } });
+      alert("공지 생성 완료!");
 
+      navigate(`/noticehost/${studyId}`); // 생성 후 공지 목록으로
     } catch (err) {
       console.error(err);
-      alert("공지 수정 실패!");
+      alert("공지 생성 실패!");
     }
   };
 
@@ -129,70 +101,61 @@ export default function NoticeEdit() {
       로그인 체크
   ---------------------------- */
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     if (!token) {
-      alert("로그인 후 이용해주세요.");
+      alert("로그인이 필요합니다.");
       navigate("/login");
     }
   }, []);
 
   return (
     <div className="container">
-      {/* Header */}
       <div className="header">
         <button className="headerButton" onClick={() => navigate(-1)}>←</button>
       </div>
 
-      {/* 공지 제목 */}
       <label className="label">• 공지 제목</label>
       <input
-        type="text"
+        className="inputField"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="inputField"
       />
 
-      {/* 공지 내용 */}
       <label className="label">• 공지 내용</label>
       <textarea
+        className="textareaField"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        className="textareaField"
       />
 
-      {/* 새 첨부 파일 */}
-      <label className="label">• 첨부 파일 추가</label>
+      <label className="label">• 첨부 파일</label>
       <input type="file" multiple onChange={handleFileChange} />
 
-      {/* 기존 파일 삭제 */}
-      {currentFiles?.length > 0 && (
-        <div>
-          <label className="label">• 기존 첨부 파일</label>
-          <ul>
-            {currentFiles.map(file => (
-              <li key={file.id}>
-                {file.name} <button onClick={() => handleDeleteFile(file.id)}>삭제</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* 수정 버튼 */}
       <div className="submitButtonContainer">
-        <button onClick={handleSubmit} className="submitButton">
-          수정
+        <button className="submitButton" onClick={handleSubmit}>
+          생성
         </button>
       </div>
 
       {/* 하단 탭바 */}
-      <div className="tabbar">
-        <div className="tabItem"><Home size={24} /><span>홈</span></div>
-        <div className="tabItem"><FileText size={24} /><span>내 그룹</span></div>
-        <div className="tabItem"><Heart size={24} /><span>찜 목록</span></div>
-        <div className="tabItem"><Users size={24} /><span>내 정보</span></div>
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
+          <Home size={24} />
+          <span>홈</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
+          <FileText size={24} />
+          <span>내 그룹</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
+          <Heart size={24} />
+          <span>찜 목록</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
+          <Users size={24} />
+          <span>내 정보</span>
+        </div>
       </div>
     </div>
   );
 }
-

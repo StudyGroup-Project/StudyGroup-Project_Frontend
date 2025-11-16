@@ -1,4 +1,4 @@
-.main{
+.main {
   box-sizing: border-box;
   position: relative;
   width: 100vw;
@@ -12,7 +12,7 @@
 
 @media (max-width: 768px) and (orientation: landscape) {
   .main {
-      width: 100%;
+    width: 100%;
   }
 }
 
@@ -52,7 +52,7 @@
   text-align: center;
 }
 
-.profile-input-container{
+.profile-input-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -69,7 +69,7 @@
   margin-top: 20px;
 }
 
-.profile-info{
+.profile-info {
   position: static;
   width: auto;
   height: auto;
@@ -81,7 +81,7 @@
   color: #000;
 }
 
-.profile-input-box{
+.profile-input-box {
   position: static;
   padding: 10px 24px;
   width: 100%;
@@ -91,22 +91,22 @@
   border-radius: 15px;
   margin-bottom: 16px;
   font-size: 16px;
-
+  color: #000;
   outline: none;
 }
 
-.address-input-container{
+.address-input-container {
   display: flex;
-  align-items:center;
-  flex-direction: row; 
+  align-items: center;
+  flex-direction: row;
   gap: 10px;
   width: 100%;
   margin-bottom: 16px;
 }
 
-.address-input-box{
-  flex:1;
-  width: 70px;    
+.address-input-box {
+  flex: 1;
+  width: 70px;
   height: 61px;
   border: none;
   background: #E6E6E6;
@@ -114,11 +114,11 @@
   font-size: 16px;
   text-align: left;
   padding-left: 24px;
-
+  color: #000;
   outline: none;
 }
 
-.profile-birth-container{
+.profile-birth-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -129,9 +129,9 @@
 }
 
 .profile-birth-box {
-  flex:1;
+  flex: 1;
   padding: 10px;
-  width: 70px;    
+  width: 70px;
   height: 61px;
   border: none;
   background: #E6E6E6;
@@ -139,14 +139,14 @@
   font-size: 16px;
   text-align: left;
   padding-left: 24px;
-
+  color: #000;
   outline: none;
 }
 
 .birth-inputs-wrapper {
   display: flex;
-  align-items:center;
-  flex-direction: row; 
+  align-items: center;
+  flex-direction: row;
   gap: 10px;
   width: 100%;
   margin-bottom: 16px;
@@ -159,33 +159,32 @@
 }
 
 .next-button {
-    background: var(--purple);
-    color: #fff;
-    border: none;
-    border-radius: 15px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 15px 140px;
-    width: auto;
-    min-width: 180px;
-    margin-top: -20px;
-    transition: background-color 0.2s ease;
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 15px 140px;
+  width: auto;
+  min-width: 180px;
+  margin-top: -20px;
+  transition: background-color 0.2s ease;
 }
 
-.next-button:disabled{
-    background: #aaa;
-    transition: none;
+.next-button:disabled {
+  background: #aaa;
+  transition: none;
 }
 
 .next-button:hover:not(:disabled) {
-    background: #2a2a7a;
+  background: #2a2a7a;
 }
 
-.next-warning{
-    color:red;
-    font-size: 14px;
-    margin-top: 20px;
-    text-align:center;
+.next-warning {
+  color: red;
+  font-size: 14px;
+  margin-top: 20px;
+  text-align: center;
 }
-

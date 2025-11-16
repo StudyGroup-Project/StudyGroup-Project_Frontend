@@ -18,7 +18,7 @@ async function getRefreshToken() {
     if (!res.ok) throw new Error("토큰 갱신 실패");
 
     const data = await res.json();
-    localStorage.setItem("token", data.accessToken);
+    localStorage.setItem("accessToken", data.accessToken);
     console.log("Access token 갱신 완료");
   } catch (err) {
     console.error(err);
@@ -28,7 +28,7 @@ async function getRefreshToken() {
 // 사용자 데이터 POST
 async function postUserData() {
   try {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken");
     const userData = { /* 필요한 사용자 데이터 */ };
 
     const res = await fetch("http://3.39.81.234:8080/api/users/data", {
@@ -58,7 +58,7 @@ export default function Assignments() {
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("accessToken");
         if (!token) {
           alert("로그인이 필요합니다.");
           setLoading(false);

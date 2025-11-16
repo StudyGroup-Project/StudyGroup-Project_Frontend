@@ -36,7 +36,7 @@ export default function GroupScreenHost() {
       if (!res.ok) throw new Error("refresh 실패");
 
       const data = await res.json();
-      localStorage.setItem("token", data.accessToken);
+      localStorage.setItem("accessToken", data.accessToken);
 
       return data.accessToken;
     } catch (err) {
@@ -49,7 +49,7 @@ export default function GroupScreenHost() {
     Access Token 자동 포함 + 만료 시 refresh 재시도
   ---------------------------- */
   async function authFetch(url, options = {}) {
-    let token = localStorage.getItem("token");
+    let token = localStorage.getItem("accessToken");
 
     const newOptions = {
       ...options,
@@ -78,18 +78,28 @@ export default function GroupScreenHost() {
     그룹 정보 & 멤버 목록 불러오기
   ---------------------------- */
   const [groupInfo, setGroupInfo] = useState(null);
+  const [groupHome, setGroupHome] = useState(null);
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
     async function loadData() {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
 
       if (!token) {
         navigate("/login");
         return;
       }
 
-      try {
+      try { // /api/studies/{studyId}/home
+        // 그룹 홈 데이터 가져오기
+        const groupHomeData = await authFetch(
+          `http://3.39.81.234:8080/api/studies/${studyId}/home`,
+          { method: "GET" }
+        );
+        if (groupHomeData.ok) {
+          setGroupHome(await groupHomeData.json());
+        }
+
         // 그룹 정보 가져오기
         const resGroup = await authFetch(
           `http://3.39.81.234:8080/api/studies/${studyId}`,
@@ -167,9 +177,9 @@ export default function GroupScreenHost() {
     navigate(`/group_profile/${studyId}`);
   }
 
-  const goNotice = () => navigate(`/notice/${studyId}`);
+  const goNotice = () => navigate(`/noticehost/${studyId}`);
   const goAlarm = () => navigate(`/notification/${studyId}`);
-  const goAssignments = () => navigate(`/assignments/${studyId}`);
+  const goAssignments = () => navigate(`/assignmentshost/${studyId}`);
   const goResources = () => navigate(`/resources/${studyId}`);
   const goApplyList = () => navigate(`/apply/${studyId}`);
 
@@ -178,7 +188,7 @@ export default function GroupScreenHost() {
       {/* 상단 바 */}
       <div className="top-bar">
         <ArrowLeft size={24} onClick={() => navigate(-1)} />
-        <h1>{groupInfo?.name || "그룹명"}</h1>
+        <h1>{groupHome?.title || "그룹명"}</h1>
         <div className="top-icons">
           <MessageCircle size={24} />
           <div className="dropdown" ref={dropdownRef}>
@@ -237,19 +247,19 @@ export default function GroupScreenHost() {
 
       {/* 하단 탭바 */}
       <div className="tab-bar">
-        <div className="tab-item" onClick={() => navigate("/")}>
+        <div className="tab-item" onClick={() => navigate("/home")}>
           <Home size={24} />
           <span>홈</span>
         </div>
-        <div className="tab-item" onClick={() => navigate("/mygroups")}>
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
           <FileText size={24} />
           <span>내 그룹</span>
         </div>
-        <div className="tab-item" onClick={() => navigate("/favorites")}>
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
           <Heart size={24} />
           <span>찜 목록</span>
         </div>
-        <div className="tab-item" onClick={() => navigate("/mypage")}>
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
           <Users size={24} />
           <span>내 정보</span>
         </div>
