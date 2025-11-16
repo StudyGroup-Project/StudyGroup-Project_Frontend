@@ -113,14 +113,13 @@ function Search() {
             });
 
             setGroupProfileData(res.data);
-            console.log(res.data);
             if (res.data.leaderCheck === true) {
                 navigate(`/groupscreenhost/${studyId}`)
             }
             else if (res.data.applicationStatus !== 'ACCEPTED') {
                 navigate(`/groupprofile/${studyId}`, { state: { groupProfileData: res.data } });
             } else {
-                // navigate(각자 그룹화면으로 이동);
+                navigate(`/groupscreen/${studyId}`)
             }
 
         } catch (err) {

@@ -54,8 +54,10 @@ function MyGroup() {
             if (res.data.leaderCheck === true) {
                 navigate(`/groupscreenhost/${studyId}`)
             }
-            else {
-                // navigate 그냥 해당 그룹의 화면으로 이동하기
+            else if (res.data.applicationStatus !== 'ACCEPTED') {
+                navigate(`/groupprofile/${studyId}`, { state: { groupProfileData: res.data } });
+            } else {
+                navigate(`/groupscreen/${studyId}`)
             }
 
         } catch (err) {
