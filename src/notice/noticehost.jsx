@@ -41,21 +41,21 @@ export default function NoticeHost() {
       </div>
 
       {/* 하단 탭바 */}
-      <div className='noticeTabbar'>
-        <div className='noticeTabItem'>
-          <Home size={24} className='noticeTabIcon' />
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
+          <Home size={24} />
           <span>홈</span>
         </div>
-        <div className='noticeTabItem'>
-          <FileText size={24} className='noticeTabIcon' />
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
+          <FileText size={24} />
           <span>내 그룹</span>
         </div>
-        <div className='noticeTabItem'>
-          <Heart size={24} className='noticeTabIcon' />
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
+          <Heart size={24} />
           <span>찜 목록</span>
         </div>
-        <div className='noticeTabItem'>
-          <Users size={24} className='noticeTabIcon' />
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
+          <Users size={24} />
           <span>내 정보</span>
         </div>
       </div>

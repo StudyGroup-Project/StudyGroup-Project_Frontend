@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "./noticemodify.css"; 
+import "./noticemodify.css";
 import {
   ArrowLeft,
   Send,
@@ -183,11 +183,23 @@ export default function NoticeModify() {
       </div>
 
       {/* 하단 탭바 */}
-      <div className="tabbar">
-        <div className="tabItem"><Home size={24} /><span>홈</span></div>
-        <div className="tabItem"><FileText size={24} /><span>내 그룹</span></div>
-        <div className="tabItem"><Heart size={24} /><span>찜 목록</span></div>
-        <div className="tabItem"><Users size={24} /><span>내 정보</span></div>
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
+          <Home size={24} />
+          <span>홈</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
+          <FileText size={24} />
+          <span>내 그룹</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
+          <Heart size={24} />
+          <span>찜 목록</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
+          <Users size={24} />
+          <span>내 정보</span>
+        </div>
       </div>
     </div>
   );

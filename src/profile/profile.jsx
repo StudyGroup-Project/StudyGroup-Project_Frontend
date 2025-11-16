@@ -62,7 +62,7 @@ function ProfileInput(props) {
 
     async function getAccessToken() {
         try {
-            let res = await axios.post('http://3.39.81.234:8080/api/auth/token', {                
+            let res = await axios.post('http://3.39.81.234:8080/api/auth/token', {
                 refreshToken: localStorage.getItem("refreshToken")
             }, { withCredentials: true });
             localStorage.setItem('accessToken', res.data.accessToken);
@@ -75,15 +75,13 @@ function ProfileInput(props) {
     async function postUserData() {
         try {
             let accessToken = localStorage.getItem("accessToken")
-            console.log(accessToken);
             let res = await axios.post('http://3.39.81.234:8080/api/users/me/profile/basic', {
                 nickname: props.userData.nickName,
                 province: props.userData.address.province,
                 district: props.userData.address.district,
-                birthDate: props.userBirth.year + '-' + props.userBirth.month + '-' + props.userBirth.date,
+                birthDate: `${props.userBirth.year}-${props.userBirth.month}-${props.userBirth.date}`,
                 job: props.userData.job,
                 preferredCategory: props.userData.category
-                // preferredCategory: category
             },
                 {
                     // 2. headers 객체에 Authorization 추가
@@ -92,6 +90,7 @@ function ProfileInput(props) {
                     },
                     withCredentials: true // 기존 설정 유지
                 });
+
             navigate('/profileImage');
         }
         catch (err) {
@@ -210,7 +209,6 @@ function ProfileInput(props) {
                     disabled={props.checkEmpty()}
                     onClick={async () => {
                         console.log(props.userData);
-                        console.log(props.userBirth);
                         await getAccessToken();
                         await postUserData();
                     }}
