@@ -179,7 +179,7 @@ export default function NoticeDetailHost() {
               <button
                 className="menuItem"
                 onClick={() =>
-                  navigate("/noticemodify", {
+                  navigate(`/noticemodify/${studyId}/${noticeId}`, {
                     state: {
                       studyId,
                       noticeId,
