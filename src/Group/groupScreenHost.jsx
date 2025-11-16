@@ -46,12 +46,12 @@ export default function GroupScreenHost() {
   }
 
   /* ---------------------------
-    Access Token 자동 포함 + 만료 시 refresh 재시도
+    Access Token 포함 + 만료시 refresh 후 재시도
   ---------------------------- */
   async function authFetch(url, options = {}) {
     let token = localStorage.getItem("accessToken");
 
-    const newOptions = {
+    let newOptions = {
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +62,6 @@ export default function GroupScreenHost() {
 
     let res = await fetch(url, newOptions);
 
-    // 토큰 만료 → 자동 갱신
     if (res.status === 401) {
       const newToken = await getRefreshToken();
       if (!newToken) return res;
@@ -84,14 +83,12 @@ export default function GroupScreenHost() {
   useEffect(() => {
     async function loadData() {
       const token = localStorage.getItem("accessToken");
-
       if (!token) {
         navigate("/login");
         return;
       }
 
-      try { // /api/studies/{studyId}/home
-        // 그룹 홈 데이터 가져오기
+      try {
         const groupHomeData = await authFetch(
           `http://3.39.81.234:8080/api/studies/${studyId}/home`,
           { method: "GET" }
@@ -100,7 +97,6 @@ export default function GroupScreenHost() {
           setGroupHome(await groupHomeData.json());
         }
 
-        // 그룹 정보 가져오기
         const resGroup = await authFetch(
           `http://3.39.81.234:8080/api/studies/${studyId}`,
           { method: "GET" }
@@ -109,13 +105,13 @@ export default function GroupScreenHost() {
           setGroupInfo(await resGroup.json());
         }
 
-        // 그룹원 가져오기
         const resMembers = await authFetch(
           `http://3.39.81.234:8080/api/studies/${studyId}/members`,
           { method: "GET" }
         );
         if (resMembers.ok) {
-          setMembers(await resMembers.json());
+          const data = await resMembers.json();
+          setMembers(data.members);
         }
       } catch (err) {
         console.error(err);
@@ -126,7 +122,7 @@ export default function GroupScreenHost() {
   }, [studyId, navigate]);
 
   /* ---------------------------
-      그룹 삭제 기능
+      그룹 삭제
   ---------------------------- */
   async function deleteGroup() {
     if (!window.confirm("정말 그룹을 삭제하시겠습니까?")) return;
@@ -139,7 +135,7 @@ export default function GroupScreenHost() {
 
       if (res.status === 204) {
         alert("그룹이 삭제되었습니다.");
-        navigate("/mygroups"); // 삭제 후 내 그룹 화면으로 이동
+        navigate("/home");
       } else {
         alert("삭제 실패");
       }
@@ -149,7 +145,7 @@ export default function GroupScreenHost() {
   }
 
   /* ---------------------------
-      멤버 추방 (방장만)
+      멤버 추방
   ---------------------------- */
   async function removeMember(id) {
     if (!window.confirm("해당 멤버를 추방하시겠습니까?")) return;
@@ -161,7 +157,7 @@ export default function GroupScreenHost() {
       );
 
       if (res.ok) {
-        setMembers(prev => prev.filter(m => m.id !== id));
+        setMembers(prev => prev.filter(m => m.userId !== id));
       } else {
         alert("추방 실패");
       }
@@ -173,15 +169,22 @@ export default function GroupScreenHost() {
   /* ---------------------------
       그룹 프로필 설정 이동
   ---------------------------- */
-  function goGroupProfileSetting() {
-    navigate(`/group_profile/${studyId}`);
-  }
-
+  const goGroupProfileSetting = () => navigate(`/group_profile/${studyId}`);
   const goNotice = () => navigate(`/noticehost/${studyId}`);
   const goAlarm = () => navigate(`/notification/${studyId}`);
   const goAssignments = () => navigate(`/assignmentshost/${studyId}`);
   const goResources = () => navigate(`/resources/${studyId}`);
-  const goApplyList = () => navigate(`/apply/${studyId}`);
+  const goApplyList = () => navigate(`/studies/${studyId}/applications`);
+
+  /* ---------------------------
+      오버레이 바깥 클릭 시 닫기
+  ---------------------------- */
+  const handleOverlayClick = (e) => {
+    // overlay 바깥만 클릭했을 때 닫히도록
+    if (overlayRef.current && !overlayRef.current.contains(e.target)) {
+      setShowMembers(false);
+    }
+  };
 
   return (
     <div className="group-screen">
@@ -195,7 +198,9 @@ export default function GroupScreenHost() {
             <Settings size={24} onClick={() => setOpen(!open)} />
             {open && (
               <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={deleteGroup}>그룹 삭제</div>
+                <div className="dropdown-item" onClick={deleteGroup}>
+                  그룹 삭제
+                </div>
                 <div className="dropdown-divider"></div>
                 <div className="dropdown-item" onClick={goGroupProfileSetting}>
                   그룹 프로필 설정
@@ -206,7 +211,7 @@ export default function GroupScreenHost() {
         </div>
       </div>
 
-      {/* 그룹 메뉴 */}
+      {/* 메뉴 */}
       <div className="group-menu">
         <div className="menu-card">
           <div className="menu-item" onClick={goNotice}>
@@ -245,7 +250,7 @@ export default function GroupScreenHost() {
         </div>
       </div>
 
-      {/* 하단 탭바 */}
+      {/* 탭바 */}
       <div className="tab-bar">
         <div className="tab-item" onClick={() => navigate("/home")}>
           <Home size={24} />
@@ -267,35 +272,48 @@ export default function GroupScreenHost() {
 
       {/* 그룹원 오버레이 */}
       {showMembers && (
-        <div className="overlay">
-          <div className="overlay-content" ref={overlayRef}>
-            {members.map(member => (
-              <div key={member.id} className="member-item">
+        <div className="overlay" onClick={handleOverlayClick}>
+          <div
+            className="overlay-content"
+            ref={overlayRef}
+            onClick={(e) => e.stopPropagation()} // 안쪽 클릭시 닫기 방지
+          >
+            <div className="overlay-header">
+              <h2>그룹원</h2>
+              <X
+                size={24}
+                onClick={() => setShowMembers(false)}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+
+            {members.map((member) => (
+              <div key={member.userId} className="member-item">
                 <div className="member-info">
                   <div className="avatar">
                     <img
-                      src={member.avatar || "/img/Group 115.png"}
+                      src={member.profileImageUrl || "/img/Group 115.png"}
                       alt="프로필"
                       className="avatarImg"
                     />
                   </div>
 
                   <span>
-                    {member.name}
-                    {member.isOwner && (
+                    {member.nickname}
+                    {member.role === "LEADER" && (
                       <Crown size={16} color="#FFD700" fill="#FFD700" />
                     )}
                   </span>
                 </div>
 
                 <div className="member-meta">
-                  <span>최초 접속 {member.joinedAt}</span>
+                  <span>마지막 접속 {member.lastLoginAt}</span>
 
-                  {currentUserIsOwner && !member.isOwner && (
+                  {currentUserIsOwner && member.role !== "LEADER" && (
                     <X
                       size={16}
                       color="#D03636"
-                      onClick={() => removeMember(member.id)}
+                      onClick={() => removeMember(member.userId)}
                     />
                   )}
                 </div>

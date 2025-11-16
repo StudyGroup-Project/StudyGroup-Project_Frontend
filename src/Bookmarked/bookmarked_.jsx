@@ -73,6 +73,25 @@ function Bookmarked() {
         }
     }
 
+    async function toggleBookmark(studyId, currentlyBookmarked) {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            if (currentlyBookmarked) {
+                await axios.delete(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
+            } else {
+                await axios.post(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {}, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
+            }
+        } catch (err) {
+            console.error('북마크 토글 실패:', err.response?.data || err.message);
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             await getAccessToken();
@@ -89,10 +108,8 @@ function Bookmarked() {
                 <h1 className='bookmarked-title-text'>찜 목록</h1>
             </div>
 
-            {/* 그룹 리스트 서버에서 가져와야함. */}
             {
                 groupData.map((group, i) => (
-                    //group -> 받아온 groupData의 각 그룹객체 하나하나
                     <div className='bookmarked-group-container' key={group.id}
                         onClick={async () => {
                             await getAccessToken();
@@ -124,10 +141,15 @@ function Bookmarked() {
                             </div>
                         </div>
                         <button className='bookmarked-group-bookmark-button'
-                            onClick={() => {
+                            onClick={async (e) => {
+                                e.stopPropagation();
                                 let copy = [...groupData];
                                 setGroupData(copy.filter(g => g.id !== group.id));
-                                //이때 post로 group의 객체 정보 다시 전송해야함.
+                                try {
+                                    await toggleBookmark(group.id, group.bookmarked);
+                                } catch (err) {
+                                    setGroupData(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
+                                }
                             }}
                         >
                             <img

@@ -75,6 +75,25 @@ function MyGroup() {
         return 'gauge-low'; // 30점 미만: 빨간색
     }
 
+    async function toggleBookmark(studyId, currentlyBookmarked) {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+            if (currentlyBookmarked) {
+                await axios.delete(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
+            } else {
+                await axios.post(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {}, {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                    withCredentials: true,
+                });
+            }
+        } catch (err) {
+            console.error('북마크 토글 실패:', err.response?.data || err.message);
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             await getAccessToken();
@@ -126,14 +145,19 @@ function MyGroup() {
                         </div>
 
                         <button className='bookmarked-group-bookmark-button'
-                            onClick={() => {
+                            onClick={async (e) => {
+                                e.stopPropagation();
                                 setGroupData(prev =>
                                     prev.map(function (g, i) {
                                         return (
                                             g.id == group.id ? { ...g, bookmarked: !g.bookmarked } : g
                                         );
-                                    })
-                                )
+                                    }));
+                                try {
+                                    await toggleBookmark(group.id, group.bookmarked);
+                                } catch (err) {
+                                    setGroupData(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
+                                }
                             }}
                         >
                             <img

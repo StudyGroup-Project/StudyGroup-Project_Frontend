@@ -13,7 +13,7 @@ const AssignmentsTestList = () => {
   const getRefreshToken = async () => {
     try {
       const refreshToken = localStorage.getItem("refreshToken");
-      const res = await fetch("/api/auth/refresh", {
+      const res = await fetch("/api/auth/token", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ refreshToken }),

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./AssignmentsHost.css";
 import { ArrowLeft, PlusCircle, Home, FileText, Heart, Users, User } from "lucide-react";
 
@@ -9,7 +9,7 @@ async function getRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) return;
 
-    const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
+    const res = await fetch("http://3.39.81.234:8080/api/auth/token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),
@@ -25,34 +25,12 @@ async function getRefreshToken() {
   }
 }
 
-// 사용자 데이터 POST
-async function postUserData() {
-  try {
-    const token = localStorage.getItem("accessToken");
-    const userData = { /* 실제 필요한 사용자 데이터 */ };
-
-    const res = await fetch("http://3.39.81.234:8080/api/users/data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!res.ok) throw new Error("유저 데이터 전송 실패");
-    console.log("유저 데이터 전송 완료");
-  } catch (err) {
-    console.error(err);
-  }
-}
-
 export default function Assignments() {
   const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { studyId } = useParams();
 
-  const studyId = 1; // 실제 스터디 ID로 변경 필요
   const baseUrl = "http://3.39.81.234:8080/api/studies";
 
   useEffect(() => {
@@ -92,8 +70,7 @@ export default function Assignments() {
   // 버튼 클릭 핸들러 (async/await 적용)
   const handleAddClick = async () => {
     await getRefreshToken();
-    await postUserData();
-    navigate("/assignmentscreate");
+    navigate(`/assignmentscreate/${studyId}`);
   };
 
   return (
@@ -117,10 +94,6 @@ export default function Assignments() {
           assignments.map((assignment) => (
             <div key={assignment.id} className="assignment-item">
               <span className="assignment-title">{assignment.title}</span>
-              <div className="assignment-author">
-                <User size={16} />
-                <span>{assignment.author || "작성자 없음"}</span>
-              </div>
             </div>
           ))
         )}
