@@ -34,10 +34,11 @@ import NoticeScreen from './notice/notice.jsx';
 import NoticeDetail from './notice/noticedetail.jsx';
 import NoticeDetailHost from './notice/noticedetailhost.jsx';
 import NoticeHost from './notice/noticehost.jsx';
-import Notice from './notice/notice.jsx';
 import NoticeCreate from './notice/noticecreate.jsx';
 import NoticeModify from './notice/noticemodify.jsx';
 import ApplicationList from './ApplicationList/ApplicationList.jsx';
+import ChatRoom from './Chat/ChatRoom.jsx';
+import GroupProfileEdit from './Group/GroupProfileEdit.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -98,8 +99,8 @@ function App() {
         <Route path='groupprofile/:studyId' element = {<GroupProfile/>}/>
         <Route path='groupscreen/:studyId' element={<GroupScreen/>}/>
         <Route path ='resources/:studyId' element={<Resources/>}/>
-        <Route path ='resourcesdetail/:studyId' element={<ResourcesDetail/>}/>
-        <Route path ='resourcescreate' element={<ResourcesCreate/>}/>
+        <Route path ='resourcesdetail/:studyId/:resourceId' element={<ResourcesDetail/>}/>
+        <Route path ='resourcescreate/:studyId' element={<ResourcesCreate/>}/>
         <Route path ='assignmentshost/:studyId' element={<AssignmentsHost/>}/>
         <Route path ='assignments/:studyId' element={<Assignments/>}/>
         <Route path='assignmentsdetail/:studyId' element={<AssignmentsDetail/>}/>
@@ -110,14 +111,15 @@ function App() {
         <Route path='assignmentstestlist/:studyId' element={<AssignmentsTestList/>}/>
         <Route path='notice/:studyId' element={<NoticeScreen/>}/>
         <Route path='groupScreenhost/:studyId' element={<GroupScreenHost/>}/>
+        <Route path="/noticedetailhost/:studyId/:noticeId" element={<NoticeDetailHost />} />
         <Route path='noticedetail/:studyId' element={<NoticeDetail/>}/>
-        <Route path='noticedetailhost/:studyId' element={<NoticeDetailHost/>}/>
         <Route path='noticehost/:studyId' element={<NoticeHost/>}/>
-        <Route path='notice/:studyId' element={<Notice/>}/>
         <Route path='noticecreate/:studyId' element={<NoticeCreate/>}/>
         <Route path='noticemodify/:studyId' element={<NoticeModify/>}/>
         <Route path="/studies/:studyId/applications" element={<ApplicationList />} />
         <Route path="/studies/:studyId/applications/:applicationId" element={<ApplicationList />} />
+        <Route path="/chat/:studyId" element={<ChatRoom />} />
+        <Route path='group/edit/:studyId' element={<GroupProfileEdit />} />
       </Routes>
     </>
   )

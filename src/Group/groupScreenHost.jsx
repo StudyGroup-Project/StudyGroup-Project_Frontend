@@ -169,7 +169,7 @@ export default function GroupScreenHost() {
   /* ---------------------------
       그룹 프로필 설정 이동
   ---------------------------- */
-  const goGroupProfileSetting = () => navigate(`/group_profile/${studyId}`);
+  const goGroupProfileSetting = () => navigate(`/group/edit/${studyId}`);
   const goNotice = () => navigate(`/noticehost/${studyId}`);
   const goAlarm = () => navigate(`/notification/${studyId}`);
   const goAssignments = () => navigate(`/assignmentshost/${studyId}`);
@@ -191,9 +191,13 @@ export default function GroupScreenHost() {
       {/* 상단 바 */}
       <div className="top-bar">
         <ArrowLeft size={24} onClick={() => navigate(-1)} />
-        <h1>{groupHome?.title || "그룹명"}</h1>
+        <h1>{groupHome?.title || "그룹명" }</h1>
         <div className="top-icons">
-          <MessageCircle size={24} />
+          <MessageCircle
+            size={24}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate(`/chat/${studyId}`)}
+          />
           <div className="dropdown" ref={dropdownRef}>
             <Settings size={24} onClick={() => setOpen(!open)} />
             {open && (
