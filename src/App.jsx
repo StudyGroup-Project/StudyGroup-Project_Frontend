@@ -111,7 +111,7 @@ function App() {
         <Route path='assignmentstestlist/:studyId' element={<AssignmentsTestList/>}/>
         <Route path='notice/:studyId' element={<NoticeScreen/>}/>
         <Route path='groupScreenhost/:studyId' element={<GroupScreenHost/>}/>
-        <Route path="/noticedetailhost/:studyId/:noticeId" element={<NoticeDetailHost />} />
+        <Route path="noticedetailhost/:studyId/:noticeId" element={<NoticeDetailHost />} />
         <Route path='noticedetail/:studyId' element={<NoticeDetail/>}/>
         <Route path='noticehost/:studyId' element={<NoticeHost/>}/>
         <Route path='noticecreate/:studyId' element={<NoticeCreate/>}/>
