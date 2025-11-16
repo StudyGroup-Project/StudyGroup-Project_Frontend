@@ -80,7 +80,6 @@ function Home() {
             });
 
             setGroupProfileData(res.data);
-            console.log(res.data);
             if (res.data.leaderCheck === true) {
                 navigate(`/groupscreenhost/${studyId}`)
             }
