@@ -86,7 +86,7 @@ function Home() {
             else if (res.data.applicationStatus !== 'ACCEPTED') {
                 navigate(`/groupprofile/${studyId}`, { state: { groupProfileData: res.data } });
             } else {
-                // navigate(각자 그룹화면으로 이동);
+                navigate(`/groupscreen/${studyId}`)
             }
 
         } catch (err) {
