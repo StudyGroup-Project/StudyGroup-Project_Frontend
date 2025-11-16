@@ -13,7 +13,7 @@ import Notification from './notification/notification.jsx';
 import Bookmarked from './Bookmarked/bookmarked_.jsx';
 import MyGroup from './MyGroup/my_group.jsx';
 import MyProfile from './profile/my_profile.jsx';
-import {ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory} from './profile/my_profile_settings.jsx';
+import { ChangeNickname, ChangeAddress, ChangeJob, ChangeCategory } from './profile/my_profile_settings.jsx';
 import Search from './home/search_.jsx';
 import AddGroup from './home/addGroup/addGroup_.jsx';
 import GroupProfile from './Group/group_profile.jsx';
@@ -71,27 +71,27 @@ function App() {
                   Focus
                 </h4>
                 <div className='login-container'>
-                  <Initial/>
+                  <Initial />
                 </div>
               </>
             )
-          }
+            }
           </div>}
         />
-        <Route path='home' element={<Home/>}/>
-        <Route path='oauth/kakao' element={<Kakao/>}/>
-        <Route path='profile' element={<Profile/>}/>
-        <Route path='profileimage' element={<ProfileImage/>}/>
-        <Route path='login' element={<Login/>}/>
-        <Route path='register' element={<Register/>}/>
-        <Route path='bookmarked' element={<Bookmarked/>}/>
-        <Route path='mygroup' element={<MyGroup/>}/>
-        <Route path='myprofile' element={<MyProfile/>}/>
-        <Route path='newnickname' element={<ChangeNickname/>}/>
-        <Route path='newaddress' element={<ChangeAddress/>}/>
-        <Route path='newjob' element={<ChangeJob/>}/>
-        <Route path='newcategory' element={<ChangeCategory/>}/>
-        <Route path='search' element={<Search/>}/>
+        <Route path='home' element={<Home />} />
+        <Route path='oauth/kakao' element={<Kakao />} />
+        <Route path='profile' element={<Profile />} />
+        <Route path='profileimage' element={<ProfileImage />} />
+        <Route path='login' element={<Login />} />
+        <Route path='register' element={<Register />} />
+        <Route path='bookmarked' element={<Bookmarked />} />
+        <Route path='mygroup' element={<MyGroup />} />
+        <Route path='myprofile' element={<MyProfile />} />
+        <Route path='newnickname' element={<ChangeNickname />} />
+        <Route path='newaddress' element={<ChangeAddress />} />
+        <Route path='newjob' element={<ChangeJob />} />
+        <Route path='newcategory' element={<ChangeCategory />} />
+        <Route path='search' element={<Search />} />
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
         <Route path='notification/:studyId' element={<Notification/>}/>
@@ -101,14 +101,14 @@ function App() {
         <Route path ='resources/:studyId' element={<Resources/>}/>
         <Route path ='resourcesdetail/:studyId/:resourceId' element={<ResourcesDetail/>}/>
         <Route path ='resourcescreate/:studyId' element={<ResourcesCreate/>}/>
-        <Route path ='assignmentshost/:studyId' element={<AssignmentsHost/>}/>
-        <Route path ='assignments/:studyId' element={<Assignments/>}/>
-        <Route path='assignmentsdetail/:studyId' element={<AssignmentsDetail/>}/>
-        <Route path='assignmentsdetailhost/:studyId' element={<AssignmentsDetailHost/>}/>
-        <Route path='assignmentscreate/:studyId' element={<AssignmentsCreate/>}/>
-        <Route path='assignmentsmodify/:studyId' element={<AssignmentsModify/>}/>
-        <Route path='assignmentstest/:studyId' element={<AssignmentsTest/>}/>
-        <Route path='assignmentstestlist/:studyId' element={<AssignmentsTestList/>}/>
+        <Route path='assignmentshost/:studyId' element={<AssignmentsHost />} />
+        <Route path='assignments/:studyId' element={<Assignments />} />
+        <Route path='assignmentsdetail/:studyId/:assignmentId' element={<AssignmentsDetail />} />
+        <Route path='assignmentsdetailhost/:studyId/:assignmentId' element={<AssignmentsDetailHost />} />
+        <Route path='assignmentscreate/:studyId' element={<AssignmentsCreate />} />
+        <Route path='assignmentsmodify/:studyId/:assignmentId' element={<AssignmentsModify />} />
+        <Route path="assignments/:studyId/:assignmentId/submissions/:submissionId" element={<AssignmentsTest />} />
+        <Route path="assignments/:studyId/:assignmentId/submissions/:submissionId/feedbacks" element={<AssignmentsTestList />} />
         <Route path='notice/:studyId' element={<NoticeScreen/>}/>
         <Route path='groupScreenhost/:studyId' element={<GroupScreenHost/>}/>
         <Route path="noticedetailhost/:studyId/:noticeId" element={<NoticeDetailHost />} />
