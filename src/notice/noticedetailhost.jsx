@@ -1,21 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { ArrowLeft, MoreHorizontal, Send, Home, FileText, Heart, Users } from 'lucide-react';
 import './noticedetailhost.css';
 
 export default function NoticeDetailHost() {
   const navigate = useNavigate();
-  const location = useLocation();
-
   const menuRef = useRef(null);
-  const [menuOpen, setMenuOpen] = useState(false);
 
+  const [menuOpen, setMenuOpen] = useState(false);
   const [noticeData, setNoticeData] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
 
-  // location.state에서 studyId와 announcementId 전달
-  const { studyId, announcementId } = location.state || {};
+  const { studyId, noticeId } = useParams();
 
   /* ---------------------------
       Access Token 자동 갱신
@@ -79,27 +76,28 @@ export default function NoticeDetailHost() {
       공지 상세 가져오기
   ---------------------------- */
   const fetchNoticeDetail = async () => {
-    if (!studyId || !announcementId) return;
+    if (!studyId || !noticeId) return;
 
     try {
-      const res = await authFetch(`http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}`, {
-        method: "GET",
-      });
+      const res = await authFetch(
+        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${noticeId}`,
+        { method: "GET" }
+      );
 
-      if (!res.ok) throw new Error(`공지 상세 불러오기 실패: ${res.status}`);
+      if (!res.ok) throw new Error("공지 상세 불러오기 실패");
 
       const data = await res.json();
       setNoticeData(data);
       setComments(data.comments || []);
     } catch (err) {
       console.error(err);
-      alert("공지 상세 불러오기 실패!");
+      alert("공지 불러오기 실패!");
     }
   };
 
   useEffect(() => {
     fetchNoticeDetail();
-  }, [studyId, announcementId]);
+  }, [studyId, noticeId]);
 
   /* ---------------------------
       댓글 작성
@@ -108,16 +106,18 @@ export default function NoticeDetailHost() {
     if (!commentInput.trim()) return;
     try {
       const res = await authFetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}/comments`,
+        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${noticeId}/comments`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ content: commentInput }),
         }
       );
-      if (res.status !== 201) throw new Error(`댓글 작성 실패: ${res.status}`);
+
+      if (res.status !== 201) throw new Error("댓글 작성 실패");
+
       setCommentInput("");
-      fetchNoticeDetail(); // 댓글 리스트 갱신
+      fetchNoticeDetail();
     } catch (err) {
       console.error(err);
       alert("댓글 작성 실패!");
@@ -131,152 +131,162 @@ export default function NoticeDetailHost() {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
     try {
       const res = await authFetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}`,
+        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${noticeId}`,
         { method: "DELETE" }
       );
-      if (!res.ok) throw new Error(`공지 삭제 실패: ${res.status}`);
-      alert("공지 삭제 완료!");
-      navigate(-1); // 목록으로 돌아가기
+      if (!res.ok) throw new Error("삭제 실패");
+
+      alert("삭제 완료!");
+      navigate(-1);
     } catch (err) {
       console.error(err);
-      alert("공지 삭제 실패!");
+      alert("삭제 실패!");
     }
   };
 
-  // 바깥 클릭 시 메뉴 닫기
+  /* ---------------------------
+      메뉴 바깥 클릭 시 닫기
+  ---------------------------- */
   useEffect(() => {
-    function handleClickOutside(e) {
+    const handleClick = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  if (!noticeData) return <div style={{ textAlign: 'center', marginTop: 50 }}>로딩중...</div>;
+  if (!noticeData) return <div className="loading">로딩중...</div>;
 
   return (
-    <div className='container'>
-      {/* 상단 헤더 */}
-      <div className='header'>
-        <ArrowLeft size={24} className='icon' onClick={() => navigate(-1)} style={{ cursor: 'pointer' }} />
-        <h1 className='headerTitle'>상세보기</h1>
+    <div className="container">
 
-        {/* ... 아이콘 + 메뉴 */}
-        <div className='menuWrapper' ref={menuRef}>
+      {/* 상단 헤더 */}
+      <div className="header">
+        <ArrowLeft size={24} className="icon" onClick={() => navigate(-1)} />
+        <h1 className="headerTitle">상세보기</h1>
+
+        <div className="menuWrapper" ref={menuRef}>
           <MoreHorizontal
             size={24}
-            className='icon'
+            className="icon"
             onClick={() => setMenuOpen(!menuOpen)}
-            style={{ cursor: 'pointer' }}
           />
+
           {menuOpen && (
-            <div className='dropdownMenu'>
+            <div className="dropdownMenu">
               <button
-                className='menuItem'
-                onClick={() => navigate('/noticemodify', {
-                  state: {
-                    studyId,
-                    announcementId,
-                    currentTitle: noticeData.title,
-                    currentContent: noticeData.content,
-                    currentFiles: noticeData.files,
-                  }
-                })}
+                className="menuItem"
+                onClick={() =>
+                  navigate("/noticemodify", {
+                    state: {
+                      studyId,
+                      noticeId,
+                      currentTitle: noticeData.title,
+                      currentContent: noticeData.content,
+                      currentFiles: noticeData.files,
+                    },
+                  })
+                }
               >
                 수정
               </button>
-              <div className='dropdown-divider'></div>
-              <button className='menuItem' onClick={handleDelete}>삭제</button>
+
+              <button className="menuItem" onClick={handleDelete}>
+                삭제
+              </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* 공지 내용 */}
-      <div className='noticeContent'>
-        <h2 className='noticeTitle'>{noticeData.title}</h2>
-        <div className='noticeMeta'>
-          <div className='tabItem'>
-            <img src={noticeData.userProfileImageUrl} className='tabIcon' />
-          </div>
-          <div className='noticeContainer'>
-            <span className='noticeAuthor'>{noticeData.userName}</span>
-            <span className='noticeDate'>{new Date(noticeData.updatedAt).toLocaleString()}</span>
+      {/* 공지 본문 */}
+      <div className="noticeContent">
+        <div className="noticeMetaRow">
+          <img
+            src={noticeData.userProfileImageUrl}
+            className="noticeProfileImg"
+          />
+
+          <div className="noticeMetaInfo">
+            <span className="noticeAuthor">{noticeData.userName}</span>
+            <span className="noticeDate">
+              {new Date(noticeData.updatedAt).toLocaleString()}
+            </span>
           </div>
         </div>
 
-        <hr className='noticeDivider' />
-
-        <p className='noticeText'>{noticeData.content}</p>
+        <h2 className="noticeTitle">{noticeData.title}</h2>
+        <p className="noticeText">{noticeData.content}</p>
 
         {noticeData.files && noticeData.files.length > 0 && (
-          <ul>
-            {noticeData.files.map(file => (
+          <ul className="fileList">
+            {noticeData.files.map((file) => (
               <li key={file.fileId}>
-                <a href={file.fileUrl} target="_blank" rel="noreferrer">{file.fileName}</a>
+                <a href={file.fileUrl} target="_blank" rel="noreferrer">
+                  {file.fileName}
+                </a>
               </li>
             ))}
           </ul>
         )}
 
-        <hr className='noticeDivider' />
+        <hr className="noticeDivider" />
       </div>
 
       {/* 댓글 리스트 */}
-      <div className='commentList'>
-        {comments.map(c => (
-          <div key={c.commentId} className='commentItem'>
-            <div className='tabItem'>
-              <img src={c.userProfileImageUrl} className='tabIcon' />
-            </div>
-            <div className='commentBody'>
-              <div className='commentMeta'>
-                <span className='commentName'>{c.userName}</span>
-                <span className='commentDate'>{new Date(c.createdAt).toLocaleString()}</span>
+      <div className="commentList">
+        {comments.map((c) => (
+          <div key={c.commentId} className="commentItem">
+            <img src={c.userProfileImageUrl} className="commentProfileImg" />
+
+            <div className="commentBody">
+              <div className="commentMeta">
+                <span className="commentName">{c.userName}</span>
+                <span className="commentDate">
+                  {new Date(c.createdAt).toLocaleString()}
+                </span>
               </div>
-              <p className='commentText'>{c.content}</p>
+              <p className="commentText">{c.content}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* 댓글 입력창 */}
-      <div className='commentInputBox'>
+      <div className="commentInputBox">
         <input
           type="text"
-          className='commentInput'
+          className="commentInput"
           placeholder="댓글을 입력하세요..."
           value={commentInput}
           onChange={(e) => setCommentInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleCommentSubmit()}
+          onKeyDown={(e) => e.key === "Enter" && handleCommentSubmit()}
         />
-        <Send size={20} className='sendIcon' onClick={handleCommentSubmit} />
+
+        <Send size={20} className="sendIcon" onClick={handleCommentSubmit} />
       </div>
 
       {/* 하단 탭바 */}
       <div className="tab-bar">
         <div className="tab-item" onClick={() => navigate("/home")}>
-          <Home size={24} />
+          <Home size={22} />
           <span>홈</span>
         </div>
         <div className="tab-item" onClick={() => navigate("/mygroup")}>
-          <FileText size={24} />
+          <FileText size={22} />
           <span>내 그룹</span>
         </div>
         <div className="tab-item" onClick={() => navigate("/bookmarked")}>
-          <Heart size={24} />
+          <Heart size={22} />
           <span>찜 목록</span>
         </div>
         <div className="tab-item" onClick={() => navigate("/myprofile")}>
-          <Users size={24} />
+          <Users size={22} />
           <span>내 정보</span>
         </div>
       </div>
     </div>
   );
 }
-
-
-
