@@ -60,13 +60,13 @@ async function authFetch(url, options = {}) {
     });
 
     if (res.status === 401) {
-  
+
       const newToken = await getRefreshToken();
       if (!newToken) {
-    
+
         return null;
       }
- 
+
       res = await fetch(url, {
         ...options,
         headers: {
@@ -303,7 +303,7 @@ export default function GroupScreen() {
 
           {/* 하단 탭바 */}
           <div className="tab-bar">
-            <div className="tab-item" onClick={() => navigate("/")}>
+            <div className="tab-item" onClick={() => navigate("/home")}>
               <Home size={24} />
               <span>홈</span>
             </div>
@@ -311,11 +311,11 @@ export default function GroupScreen() {
               <FileText size={24} />
               <span>내 그룹</span>
             </div>
-            <div className="tab-item" onClick={() => navigate("/favorites")}>
+            <div className="tab-item" onClick={() => navigate("/bookmarked")}>
               <Heart size={24} />
               <span>찜 목록</span>
             </div>
-            <div className="tab-item" onClick={() => navigate("/profile")}>
+            <div className="tab-item" onClick={() => navigate("/myprofile")}>
               <Users size={24} />
               <span>내 정보</span>
             </div>

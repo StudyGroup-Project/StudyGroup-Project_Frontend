@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ApplicationModal from '../common/GroupRegisterForm.jsx';
 
 function GroupProfile() {
-    let { id } = useParams();
+    let { studyId } = useParams();
     let location = useLocation();
 
     let [groupData, setGroupData] = useState(location.state?.groupProfileData || {});
@@ -49,7 +49,7 @@ function GroupProfile() {
                     <h4 className='group-profile-catalog-category'>카테고리</h4>
                     <Category selected={groupData.category} setUserData={setGroupData} />
                 </div>
-                {/* {  {
+                {
                     (groupData.recruitStatus === 'CLOSED' || groupData.canApply === false || groupData.applicationStatus === 'REJECTED') ?
                         <button className='group-profile-button' disabled={true}>
                             모집 마감
@@ -63,29 +63,23 @@ function GroupProfile() {
                             : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
                                 지원하기
                             </button>
+                }
 
-                }} */}
-
-                {(groupData.applicationStatus === 'SUBMITTED') ?
+                {/* {(groupData.applicationStatus === 'SUBMITTED') ?
                             <button className='group-profile-waiting-button'>
                                 승인 대기
                             </button>
 
                             : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
                                 지원하기
-                            </button>}
+                            </button>} */}
 
                 {isModalOpen && (
                     <ApplicationModal
-                        studyId={id}
+                        studyId={studyId}
                         onClose={() => setIsModalOpen(false)}
                         onSubmitSuccess={() => {
                             setIsModalOpen(false);
-                            setGroupData(prev => ({
-                                ...prev,
-                                applicationStatus: 'SUBMITTED',
-                                canApply: false
-                            }));
                         }}
                     />
                 )}

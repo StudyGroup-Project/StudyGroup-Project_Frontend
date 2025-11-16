@@ -14,6 +14,7 @@ function Home() {
     const [userData, setUserData] = useState({});
     const [groupData, setGroupData] = useState([]);
     const [groupProfileData, setGroupProfileData] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     function getGaugeColorClass(score) {
         if (score >= 70) {
@@ -33,6 +34,7 @@ function Home() {
             localStorage.setItem('accessToken', res.data.accessToken);
         } catch (err) {
             console.log(err);
+            throw err;
         }
     }
 
@@ -66,7 +68,6 @@ function Home() {
             }
         } catch (err) {
             console.error('북마크 토글 실패:', err.response?.data || err.message);
-            throw err;
         }
     }
 
@@ -95,115 +96,132 @@ function Home() {
     }
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.href);
-        if (localStorage.getItem("refreshToken") === null) {
-            const accessToken = params.get('accessToken');
-            const refreshToken = params.get('refreshToken');
-            localStorage.setItem('accessToken', accessToken);
-            localStorage.setItem('refreshToken', refreshToken);
+        const params = new URLSearchParams(window.location.search);
+        const urlAccessToken = params.get('accessToken');
+        const urlRefreshToken = params.get('refreshToken');
+
+        if (urlAccessToken && urlRefreshToken) {
+            localStorage.setItem('accessToken', urlAccessToken);
+            localStorage.setItem('refreshToken', urlRefreshToken);
+            window.location.href='/home';
+            return;
         }
         const fetchData = async () => {
-            await getAccessToken();
-            await getUserData();
+            try {
+                setIsLoading(true);
+                await getAccessToken();
+                await getUserData();
+            } catch (err) {
+                console.error(err.message);
+            } finally {
+                setIsLoading(false);
+            }
         };
         fetchData();
-    }, []);
+
+    }, [navigate, location.pathname]);
 
     return (
         <div className='home-background'>
-            <div className='web-header'>
-                <button className='back-button' onClick={() => window.history.back()}></button>
-                <img className='address-image' src="/img/main-assets/location.png" />
-                <h4 className='address-text'>{userData.province} {userData.district}</h4>
-            </div>
-
-            <div className='user-container'>
-                <img className='user-image' src={userData.profileImageUrl} />
-                <h4 className='user-text--greeting'>안녕하세요!</h4>
-                <h4 className='user-text--nickname'>{userData.nickname}</h4>
-                <button className='plus-button' onClick={() => navigate('/addGroup')}>
-                    <img src="/img/main-assets/plus.png" />
-                </button>
-            </div>
-
-            <div className='search-container'>
-                <img src="/img/main-assets/search.png" className='search-icon' />
-                <input className='search-input' type='text'
-                    placeholder={search}
-                    onFocus={() => { setSearch(''); navigate('/search'); }}
-                    onBlur={() => setSearch('그룹을 검색해보세요!')}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-            </div>
-
-            <div className='active-group-text-container'>
-                <h4 className='active-group-text'>현재 활발히 활동중인 그룹들 🔥</h4>
-            </div>
-
-            {groupData.map(group => (
-                <div className='active-group-container' key={group.id}
-                    onClick={async () => {
-                        await getAccessToken();
-                        await handleGroupClick(group.id);
-                    }}>
-                    <h4 className='active-group-title'>{group.title}</h4>
-                    {group.category.map((cat, j) => (
-                        <div className='active-group-category' key={j}><h4># {cat}</h4></div>
-                    ))}
-                    <h4 className='active-group-bio'>{group.bio}</h4>
-                    <div className='active-group-Curmember-container'>
-                        <h4 className='active-group-member-count'>{group.memberCount}</h4>
-                        <h4 className='active-group-member-text'>현재인원</h4>
-                    </div>
-                    <h4 className='active-group-member-bar'>/</h4>
-                    <div className='active-group-Maxmember-container'>
-                        <h4 className='active-group-member-count'>{group.maxMemberCount}</h4>
-                        <h4 className='active-group-member-text'>전체인원</h4>
+            {!isLoading && (
+                <>
+                    <div className='web-header'>
+                        <button className='back-button' onClick={() => window.history.back()}></button>
+                        <img className='address-image' src="/img/main-assets/location.png" />
+                        <h4 className='address-text'>{userData.province} {userData.district}</h4>
                     </div>
 
-                    <div className="trust-score-container">
-                        <div className="gauge-background">
-                            <div
-                                className={`gauge-bar ${getGaugeColorClass(group.trustScore)}`}
-                                style={{ width: `${group.trustScore}%` }}
-                            >
+                    <div className='user-container'>
+                        <img className='user-image' src={userData.profileImageUrl} />
+                        <h4 className='user-text--greeting'>안녕하세요!</h4>
+                        <h4 className='user-text--nickname'>{userData.nickname}</h4>
+                        <button className='plus-button' onClick={() => navigate('/addGroup')}>
+                            <img src="/img/main-assets/plus.png" />
+                            _               </button>
+                    </div>
+
+                    <div className='search-container'>
+                        <img src="/img/main-assets/search.png" className='search-icon' />
+                        <input className='search-input' type='text'
+                            placeholder={search}
+                            onFocus={() => { setSearch(''); navigate('/search'); }}
+                            onBlur={() => setSearch('그룹을 검색해보세요!')}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
+
+                    <div className='active-group-text-container'>
+                        <h4 className='active-group-text'>현재 활발히 활동중인 그룹들 🔥</h4>
+                    </div>
+
+                    {groupData.map(group => (
+                        <div className='active-group-container' key={group.id}
+                            onClick={async () => {
+                                await getAccessToken();
+                                await handleGroupClick(group.id);
+                            }}>
+                            {/* ... (group.map 내부 코드는 동일) ... */}
+                            <h4 className='active-group-title'>{group.title}</h4>
+                            {group.category.map((cat, j) => (
+                                <div className='active-group-category' key={j}><h4># {cat}</h4></div>
+                            ))}
+                            <h4 className='active-group-bio'>{group.bio}</h4>
+                            <div className='active-group-Curmember-container'>
+                                <h4 className='active-group-member-count'>{group.memberCount}</h4>
+                                <h4 className='active-group-member-text'>현재인원</h4>
                             </div>
+                            <h4 className='active-group-member-bar'>/</h4>
+                            <div className='active-group-Maxmember-container'>
+                                <h4 className='active-group-member-count'>{group.maxMemberCount}</h4>
+                                <h4 className='active-group-member-text'>전체인원</h4>
+                            </div>
+
+                            <div className="trust-score-container">
+                                <div className="gauge-background">
+                                    <div
+                                        className={`gauge-bar ${getGaugeColorClass(group.trustScore)}`}
+                                        style={{ width: `${group.trustScore}%` }}
+                                    >
+                                        ----------------                 </div>
+                                </div>
+                            </div>
+
+                            <button
+                                className='active-group-bookmark-button'
+                                onClick={async (e) => {
+                                    e.stopPropagation();
+                                    setGroupData(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
+                                    try {
+                                        await toggleBookmark(group.id, group.bookmarked);
+                                    } catch (err) {
+                                        setGroupData(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
+                                    }
+                                    _
+                                }}
+                            >
+                                <img
+                                    className={group.bookmarked ? 'active-group-heart' : 'active-group-emptyHeart'}
+                                    src={group.bookmarked ? "/img/main-assets/heart.png" : "/img/main-assets/empty_heart.png"} />
+                            </button>
                         </div>
+                    ))}
+
+                    <div className="under-bar-container">
+                        <button className={page === 'home' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/home')}>
+                            <HomeIcon size={24} /><h4>홈</h4>
+                        </button>
+                        <button className={page === 'mygroup' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/mygroup')}>
+                            <FileText size={24} /><h4>내 그룹</h4>
+                        </button>
+                        <button className={page === 'bookmarked' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/bookmarked')}>
+                            <Heart size={24} /><h4>찜 목록</h4>
+                        </button>
+                        <button className={page === 'profile' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/myprofile')}>
+                            <Users size={24} /><h4>내 정보</h4>
+                        </button>
                     </div>
-
-                    <button
-                        className='active-group-bookmark-button'
-                        onClick={async (e) => {
-                            e.stopPropagation();
-                            setGroupData(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
-                            try {
-                                await toggleBookmark(group.id, group.bookmarked);
-                            } catch (err) {
-                                setGroupData(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
-                            }
-                        }}
-                    >
-                        <img
-                            className={group.bookmarked ? 'active-group-heart' : 'active-group-emptyHeart'}
-                            src={group.bookmarked ? "/img/main-assets/heart.png" : "/img/main-assets/empty_heart.png"} />
-                    </button>
-                </div>
-            ))}
-
-            <div className="under-bar-container">
-                <button className={page === 'home' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/home')}>
-                    <HomeIcon size={24} /><h4>홈</h4>
-                </button>
-                <button className={page === 'mygroup' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/mygroup')}>
-                    <FileText size={24} /><h4>내 그룹</h4>
-                </button>
-                <button className={page === 'bookmarked' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/bookmarked')}>
-                    <Heart size={24} /><h4>찜 목록</h4>
-                </button>
-                <button className={page === 'profile' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/myprofile')}>
-                    <Users size={24} /><h4>내 정보</h4>
-                </button>
-            </div>
+                </>
+            )}
         </div>
     );
 }
