@@ -73,7 +73,7 @@ const AssignmentsTestList = () => {
     const fetchFeedbackList = async () => {
       try {
         const res = await fetchWithAuth(
-          `/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionsId}/feedbacks`
+          `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}feedbacks`
         );
         if (!res.ok) throw new Error("피드백 목록 불러오기 실패");
 

@@ -76,12 +76,13 @@ const AssignmentsTest = () => {
     const fetchAssignmentData = async () => {
       try {
         const res = await fetchWithAuth(
-          `/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}`
+          `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}`
         );
         if (!res.ok) throw new Error("과제 정보를 불러오지 못했습니다.");
 
         const data = await res.json();
         setAssignmentData(data);
+        console.log(data);
       } catch (err) {
         console.error(err);
         alert("데이터를 불러오는 중 오류가 발생했습니다.");
@@ -114,7 +115,7 @@ const AssignmentsTest = () => {
 
     try {
       const res = await fetchWithAuth(
-        `/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}/feedbacks`,
+        `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}/feedbacks`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -126,7 +127,7 @@ const AssignmentsTest = () => {
 
       if (!res.ok) throw new Error("피드백 전송 실패");
       alert("피드백이 성공적으로 등록되었습니다!");
-      navigate("/assignmentstestlist");
+      navigate(-1);
     } catch (err) {
       console.error(err);
       alert("피드백 전송 중 오류가 발생했습니다.");
@@ -142,7 +143,7 @@ const AssignmentsTest = () => {
     <div className="assignments-detail">
       <div className="top-bar">
         <button className="back-btn" onClick={() => navigate(-1)}>
-          <ArrowLeft size={24} color="#000" /> 
+          <ArrowLeft size={24} color="#000" />
         </button>
         <span className="title">상세보기</span>
       </div>
@@ -150,13 +151,18 @@ const AssignmentsTest = () => {
       <div className="scroll-container">
         {/* 프로필 섹션 */}
         <div className="profile-section">
-          <img src="/img/Group 115.png" alt="profile" className="profile-img" />
+          <img
+            src={assignmentData.submitterProfileUrl || "/img/Group 115.png"}
+            alt="profile"
+            className="profile-img"
+          />
           <div className="profile-info">
-            <div className="name">{assignmentData.userName || "이름 없음"}</div>
+            <div className="name">
+              {assignmentData.submitterName || "이름 없음"}
+            </div>
+
             <div className="time">
-              {assignmentData.submittedAt
-                ? new Date(assignmentData.submittedAt).toLocaleString()
-                : ""}
+              {new Date(assignmentData.createAt).toLocaleString()}
             </div>
           </div>
         </div>
@@ -164,11 +170,22 @@ const AssignmentsTest = () => {
         {/* 첨부파일 */}
         <div className="info-row">
           <p>• 첨부 파일</p>
-          <input
-            className="input-box italic"
-            value={assignmentData.fileName || "첨부파일 없음"}
-            readOnly
-          />
+
+          {assignmentData.files.length > 0 ? (
+            assignmentData.files.map((file, idx) => (
+              <a
+                key={idx}
+                href={file.url}
+                target="_blank"
+                rel="noreferrer"
+                style={{ display: "block", marginTop: "5px" }}
+              >
+                📎 {file.originalName || "파일"}
+              </a>
+            ))
+          ) : (
+            <p>첨부파일 없음</p>
+          )}
         </div>
 
         <hr />
@@ -178,7 +195,7 @@ const AssignmentsTest = () => {
           <p>• 과제 내용</p>
           <textarea
             className="input-box"
-            value={assignmentData.content || "내용 없음"}
+            value={assignmentData.description || "내용 없음"}
             readOnly
           />
         </div>
@@ -223,7 +240,7 @@ const AssignmentsTest = () => {
         <div className="comment-list">
           {comments.map((comment, idx) => (
             <div key={idx} className="comment-item">
-              <img src="/img/Group 115.png" alt="profile" />
+              <img src={assignmentData.submitterProfileUrl || 기본값} />
               <div className="comment-text">{comment}</div>
             </div>
           ))}
