@@ -180,8 +180,7 @@ function Home() {
                                     <div
                                         className={`gauge-bar ${getGaugeColorClass(group.trustScore)}`}
                                         style={{ width: `${group.trustScore}%` }}
-                                    >
-                                        ----------------                 </div>
+                                    ></div>
                                 </div>
                             </div>
 
@@ -195,7 +194,6 @@ function Home() {
                                     } catch (err) {
                                         setGroupData(prev => prev.map(g => g.id === group.id ? { ...g, bookmarked: !g.bookmarked } : g));
                                     }
-                                    _
                                 }}
                             >
                                 <img
