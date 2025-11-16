@@ -10,17 +10,26 @@
   justify-content: center;
 }
 
+.login-buttons-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px; 
+  gap: 20px;      
+  align-items: center;
+}
+
 .id-password {
   background-color: #fff;
   border: none;
-  border-radius: 15px;
-  width: 100%;
-  max-width: 290px;
-  height: 51px;
-  padding: 0 16px;
+  border-radius: 8px;
+  width: clamp(80px, 12vw, 80px);
+  height: clamp(80px, 12vw, 80px);
   font-size: 16px;
-
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .signup-container {
@@ -31,22 +40,6 @@
 
   gap: 50px;
 
-}
-
-/* .login-button-container{
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
-  justify-content: center;
-} */
-.login-button-container {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  /* 좁은 화면에서 겹치지 않게 */
-  justify-content: center;
-  align-items: center;
 }
 
 .social-login-button {
