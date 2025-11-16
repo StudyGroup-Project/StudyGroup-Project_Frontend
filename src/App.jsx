@@ -115,7 +115,7 @@ function App() {
         <Route path='noticedetail/:studyId' element={<NoticeDetail/>}/>
         <Route path='noticehost/:studyId' element={<NoticeHost/>}/>
         <Route path='noticecreate/:studyId' element={<NoticeCreate/>}/>
-        <Route path='noticemodify/:studyId' element={<NoticeModify/>}/>
+        <Route path='noticemodify/:studyId/:noticeId' element={<NoticeModify/>}/>
         <Route path="/studies/:studyId/applications" element={<ApplicationList />} />
         <Route path="/studies/:studyId/applications/:applicationId" element={<ApplicationList />} />
         <Route path="/chat/:studyId" element={<ChatRoom />} />

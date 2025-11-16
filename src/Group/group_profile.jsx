@@ -42,7 +42,7 @@ function GroupProfile() {
                 <div className='group-profile-bottom-container'>
                     <h4 className='group-profile-catalog-introduction'>그룹 소개</h4>
                     <h4 className='group-profile-text' style={{ whiteSpace: 'pre-line' }}>
-                        {groupData.bio}
+                        {groupData.description}
                     </h4>
                     <h4 className='group-profile-catalog-address'>활동 지역</h4>
                     <h4 className='group-profile-text'>{groupData.province} {groupData.district}</h4>

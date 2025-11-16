@@ -15,7 +15,7 @@ export default function NoticeModify() {
   const location = useLocation();
 
   // location.state에서 studyId, announcementId, 기존 데이터 가져오기
-  const { studyId: initialStudyId, announcementId, currentTitle, currentContent, currentFiles } = location.state || {};
+  const { studyId: initialStudyId, noticeId, currentTitle, currentContent, currentFiles } = location.state || {};
 
   const [title, setTitle] = useState(currentTitle || "");
   const [content, setContent] = useState(currentContent || "");
@@ -85,14 +85,14 @@ export default function NoticeModify() {
       공지 수정 제출
   ---------------------------- */
   const handleSubmit = async () => {
-    if (!studyId || !announcementId) {
+    if (!studyId || !noticeId ) {
       return alert("스터디 또는 공지 정보가 없습니다.");
     }
     if (!title || !content) {
       return alert("제목과 내용을 입력해주세요.");
     }
 
-    const url = `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}`;
+    const url = `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${noticeId}`;
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -115,7 +115,7 @@ export default function NoticeModify() {
 
       alert("공지 수정 완료!");
       // 수정 후 상세페이지로 이동
-      navigate("/noticedetailhost", { state: { studyId, announcementId } });
+      navigate(`/noticedetailhost/${studyId}/${noticeId}`, { state: { studyId, noticeId } });
     } catch (err) {
       console.error(err);
       alert("공지 수정 실패!");
