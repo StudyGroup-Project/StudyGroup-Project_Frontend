@@ -6,4 +6,11 @@ export default defineConfig({
 
   plugins: [react()],
   base: '/',
+  define: {
+    global: {}
+  },
+  server: {
+    https: false,
+    host: true,
+  }
 })

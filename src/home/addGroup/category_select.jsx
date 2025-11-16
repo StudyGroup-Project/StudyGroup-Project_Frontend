@@ -1,13 +1,21 @@
 import styled from 'styled-components'
 import './category_select.css'
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 
 function CustomSelect(props){
     let list = props.list;
     let setUserData = props.setGroupData;
+    let selectedCategories = props.selectedCategories;
     let [open, setOpen] = useState(false);
-    let [selected, setSelected] = useState([]);
+    let [selected, setSelected] = useState(selectedCategories || []);
     let [curValue, setCurValue] = useState(list[0]);
+
+    useEffect(() => {
+        // selectedCategories가 존재하고, 내부 state와 다를 때만 업데이트
+        if (selectedCategories) {
+            setSelected(selectedCategories);
+        }
+    }, [selectedCategories]);
 
     return(
         <>

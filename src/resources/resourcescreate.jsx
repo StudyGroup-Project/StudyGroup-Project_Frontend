@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Home, FileText, Heart, Users } from "lucide-react";
 import axios from "axios";
 import "./resourcescreate.css";
@@ -12,7 +12,7 @@ export default function ResourcesCreate() {
   const [files, setFiles] = useState([]); // 여러 파일 업로드 지원
   const [loading, setLoading] = useState(true);
 
-  const studyId = 1;
+  const { studyId } = useParams();
   const baseUrl = `http://3.39.81.234:8080/api/studies/${studyId}/resources`;
 
 
@@ -95,21 +95,56 @@ export default function ResourcesCreate() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    files.forEach((f) => formData.append("files", f)); //  files로 append
+    files.forEach((f) => formData.append("files", f)); // 'files' 키로 파일 추가
 
     try {
-      const res = await authorizedFetch(baseUrl, {
+      // 1. 토큰을 직접 가져옵니다.
+      let token = localStorage.getItem("accessToken");
+      if (!token) {
+        token = await getRefreshToken(); // 없으면 재발급 시도
+      }
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        navigate("/login");
+        return;
+      }
+
+      // 2. authorizedFetch 대신 fetch를 직접 사용합니다.
+      //    (resourcesDetail.jsx의 handleSaveClick 방식과 동일)
+      let res = await fetch(baseUrl, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // 🚨 'Content-Type' 헤더를 절대 추가하지 마세요.
+          //    브라우저가 FormData를 위해 자동으로 설정합니다.
+        },
         body: formData,
       });
 
+      // 3. 토큰 만료(401) 시 수동으로 재시도
+      if (res.status === 401) {
+        token = await getRefreshToken(); // 새 토큰 발급
+        if (!token) return; // 재발급 실패
+
+        // 새 토큰으로 재시도
+        res = await fetch(baseUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+      }
+
+      // 4. 최종 결과 확인
       if (!res || !res.ok) {
         throw new Error(`자료 생성 실패: ${res?.status}`);
       }
 
       if (res.status === 201) {
         alert("자료 생성 완료!");
-        navigate("/resources");
+        // 🚨 navigate("/resources") 대신 studyId가 포함된 경로로 가야 합니다.
+        navigate(`/resources/${studyId}`);
       } else {
         alert("자료 생성에 성공했지만 응답 코드가 예상과 다릅니다.");
       }
@@ -122,32 +157,43 @@ export default function ResourcesCreate() {
   if (loading) return <p>로딩 중...</p>;
 
   return (
-    <div className="resources-container">
-      <header className="resources-header">
-        <button className="header-back" onClick={() => navigate(-1)}>
+    <div className="container"> 
+      <header className="header"> 
+        <button className="headerButton" onClick={() => navigate(-1)}>
           <ArrowLeft size={20} />
         </button>
-        <h1 className="header-title">자료실</h1>
+        <h1 className="headerTitle">자료실</h1> 
       </header>
 
-      <label>자료명</label>
+      <label className="label">자료명</label> 
       <input
         type="text"
+        className="inputField"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <label>내용</label>
+      <label className="label">내용</label> 
       <textarea
+        className="textareaField" 
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
 
-      <label>첨부 파일</label>
-      <input type="file" multiple onChange={handleFileChange} /> {/* 여러 파일 가능 */}
+      <label className="label">첨부 파일</label> 
+      <div className="fileInputContainer"> 
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="fileInput" 
+        />
+      </div>
 
-      <div style={{ marginTop: "10px" }}>
-        <button onClick={handleSubmit}>생성</button>
+      <div className="submitButtonContainer"> 
+        <button className="submitButton" onClick={handleSubmit}> 
+          생성
+        </button>
       </div>
 
       <div className="tabbar">
