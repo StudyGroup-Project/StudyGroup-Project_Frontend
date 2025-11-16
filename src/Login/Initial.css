@@ -43,8 +43,8 @@
 }
 
 .social-login-button {
-  width: clamp(60px, 12vw, 80px);
-  height: clamp(60px, 12vw, 80px);
+  width: clamp(80px, 12vw, 80px);
+  height: clamp(80px, 12vw, 80px);
   background-color: #fff;
   border: none;
   border-radius: 8px;

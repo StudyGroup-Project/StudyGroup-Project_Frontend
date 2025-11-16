@@ -8,8 +8,6 @@ import Register from './Login/Register.jsx';
 import ProfileImage from './profile/profile_image.jsx';
 import { Routes, Route } from 'react-router-dom';
 import Kakao from './OAuth/Kakao.jsx';
-import Google from './OAuth/Google.jsx';
-import Naver from './OAuth/Naver.jsx';  
 import Home from './home/home_.jsx';
 import Notification from './notification/notification.jsx';
 import Bookmarked from './Bookmarked/bookmarked_.jsx';
@@ -81,8 +79,6 @@ function App() {
         />
         <Route path='home' element={<Home/>}/>
         <Route path='oauth/kakao' element={<Kakao/>}/>
-        <Route path='oauth/google' element={<Google/>}/>
-        <Route path='oauth/naver' element={<Naver/>}/>
         <Route path='profile' element={<Profile/>}/>
         <Route path='profileimage' element={<ProfileImage/>}/>
         <Route path='login' element={<Login/>}/>
