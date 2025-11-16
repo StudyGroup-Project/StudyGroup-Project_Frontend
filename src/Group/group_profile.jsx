@@ -50,29 +50,25 @@ function GroupProfile() {
                     <Category selected={groupData.category} setUserData={setGroupData} />
                 </div>
                 {
-                    (groupData.recruitStatus === 'CLOSED' || groupData.canApply === false || groupData.applicationStatus === 'REJECTED') ?
+                    (groupData.recruitStatus === 'CLOSED') ?
                         <button className='group-profile-button' disabled={true}>
                             모집 마감
                         </button>
 
                         : (groupData.applicationStatus === 'SUBMITTED') ?
-                            <button className='group-profile-waiting-button'>
+                            <button className='group-profile-waiting-button' disabled={true}>
                                 승인 대기
                             </button>
 
-                            : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
+                            :
+                            <button
+                                className='group-profile-button'
+                                onClick={() => setIsModalOpen(true)}
+                                disabled={groupData.canApply === false}
+                            >
                                 지원하기
                             </button>
                 }
-
-                {/* {(groupData.applicationStatus === 'SUBMITTED') ?
-                            <button className='group-profile-waiting-button'>
-                                승인 대기
-                            </button>
-
-                            : <button className='group-profile-button' onClick={() => setIsModalOpen(true)}>
-                                지원하기
-                            </button>} */}
 
                 {isModalOpen && (
                     <ApplicationModal
