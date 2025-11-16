@@ -25,28 +25,6 @@ async function getRefreshToken() {
   }
 }
 
-// 사용자 데이터 POST
-async function postUserData() {
-  try {
-    const token = localStorage.getItem("accessToken");
-    const userData = { /* 필요한 사용자 데이터 */ };
-
-    const res = await fetch("http://3.39.81.234:8080/api/users/data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!res.ok) throw new Error("유저 데이터 전송 실패");
-    console.log("유저 데이터 전송 완료");
-  } catch (err) {
-    console.error(err);
-  }
-}
-
 const AssignmentsDetail = () => {
   const { studyId, assignmentId } = useParams();
   const navigate = useNavigate();
@@ -67,7 +45,6 @@ const AssignmentsDetail = () => {
         }
 
         await getRefreshToken();
-        await postUserData();
 
         const res = await fetch(
           `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
@@ -128,8 +105,8 @@ const AssignmentsDetail = () => {
           <div className="file-section">
             <p>• 첨부 파일</p>
             {assignment.files.map((f, i) => (
-              <a key={i} href={f.fileUrl} target="_blank" rel="noopener noreferrer">
-                {f.fileUrl.split("/").pop()}
+              <a key={i} href={f.url} target="_blank" rel="noopener noreferrer">
+                {f.originalName || f.url.split("/").pop()}
               </a>
             ))}
           </div>

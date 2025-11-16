@@ -55,6 +55,7 @@ export default function Assignments() {
 
         const data = await res.json();
         setAssignments(data);
+        console.log(data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -77,7 +78,7 @@ export default function Assignments() {
     <div className="assignments-container">
       {/* Header */}
       <div className="assignments-header">
-        <button className="header-back" onClick={() => navigate(-1)}>
+        <button className="header-back" onClick={() => navigate(`/groupscreenHost/${studyId}`)}>
           <ArrowLeft size={20} />
         </button>
         <span className="header-title">그룹명</span>
@@ -92,7 +93,12 @@ export default function Assignments() {
           <p>과제가 없습니다.</p>
         ) : (
           assignments.map((assignment) => (
-            <div key={assignment.id} className="assignment-item">
+            <div
+              key={assignment.id}
+              className="assignment-item"
+              onClick={() => navigate(`/assignmentsdetailhost/${studyId}/${assignment.id}`)}
+              style={{ cursor: "pointer" }}
+            >
               <span className="assignment-title">{assignment.title}</span>
             </div>
           ))

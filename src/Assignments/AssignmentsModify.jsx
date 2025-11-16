@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
-/* ✅ Access token 갱신 */
+/* Access token 갱신 */
 async function getRefreshToken() {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -30,28 +30,6 @@ async function getRefreshToken() {
     console.log("Access token 갱신 완료");
   } catch (err) {
     console.error("토큰 갱신 오류:", err);
-  }
-}
-
-/* ✅ 사용자 데이터 POST */
-async function postUserData() {
-  try {
-    const token = localStorage.getItem("accessToken");
-    const userData = { /* 필요시 유저 데이터 */ };
-
-    const res = await fetch("http://3.39.81.234:8080/api/users/data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!res.ok) throw new Error("유저 데이터 전송 실패");
-    console.log("유저 데이터 전송 완료");
-  } catch (err) {
-    console.error(err);
   }
 }
 
@@ -76,7 +54,6 @@ const AssignmentsModify = () => {
     day: "",
   });
 
-  /* ✅ 기존 과제 데이터 불러오기 */
   useEffect(() => {
     const fetchAssignmentDetail = async () => {
       try {
@@ -88,7 +65,6 @@ const AssignmentsModify = () => {
         }
 
         await getRefreshToken();
-        await postUserData();
 
         const res = await fetch(
           `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
@@ -101,6 +77,7 @@ const AssignmentsModify = () => {
         if (!res.ok) throw new Error("과제 상세 불러오기 실패");
 
         const data = await res.json();
+        console.log(data)
         setModifiedTitle(data.title || "");
         setModifiedContent(data.description || "");
 
@@ -133,7 +110,7 @@ const AssignmentsModify = () => {
     setModifiedFile(e.target.files[0]);
   };
 
-  /* ✅ 과제 수정 (multipart) */
+  /* 과제 수정 (multipart) */
   const handleModifyAssignment = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -148,15 +125,12 @@ const AssignmentsModify = () => {
       formData.append("description", modifiedContent);
       formData.append(
         "startAt",
-        `${modifiedStartDate.year}-${modifiedStartDate.month}-${modifiedStartDate.day}`
+        `${modifiedStartDate.year}-${modifiedStartDate.month}-${modifiedStartDate.day}T00:00:00`
       );
       formData.append(
         "dueAt",
-        `${modifiedEndDate.year}-${modifiedEndDate.month}-${modifiedEndDate.day}`
+        `${modifiedEndDate.year}-${modifiedEndDate.month}-${modifiedEndDate.day}T23:59:59`
       );
-      if (modifiedFile) {
-        formData.append("files", modifiedFile);
-      }
 
       const res = await fetch(
         `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
@@ -176,7 +150,7 @@ const AssignmentsModify = () => {
 
       if (res.status === 201 || res.status === 200) {
         alert("과제가 성공적으로 수정되었습니다!");
-        navigate(`/studies/${studyId}/assignments/${assignmentId}`);
+        navigate(`/assignmentsdetailhost/${studyId}/${assignmentId}`);
       } else {
         const errText = await res.text();
         console.error("수정 실패:", errText);
@@ -188,7 +162,7 @@ const AssignmentsModify = () => {
     }
   };
 
-  /* ✅ 날짜 선택 */
+  /* 날짜 선택 */
   const handleDateSelect = (type, value) => {
     const d = new Date(value);
     const formatted = {

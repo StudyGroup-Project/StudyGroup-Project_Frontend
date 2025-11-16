@@ -1,367 +1,290 @@
-// GroupScreen.jsx
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
-  Bell,
-  Megaphone,
-  FileText,
-  Image,
-  Users,
-  Settings,
-  ArrowLeft,
-  Home,
-  Heart,
-  MessageCircle,
-  Crown
-} from 'lucide-react';
-import './groupScreen.css';
-import { useParams, useNavigate } from 'react-router-dom';
+  Bell, Megaphone, FileText, Image, Users, Settings, ArrowLeft,
+  Home, Heart, MessageCircle, X, Crown, Archive
+} from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import "./groupScreen.css";
 
-
-async function getRefreshToken() {
-  try {
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) return null;
-
-    const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
-
-    if (!res.ok) {
-      // 갱신 실패 (로그아웃 필요)
-      console.warn("getRefreshToken: refresh failed", res.status);
-      return null;
-    }
-
-    const data = await res.json();
-    if (data?.accessToken) {
-      localStorage.setItem("accessToken", data.accessToken);
-      console.log("Access token 갱신 완료");
-      return data.accessToken;
-    }
-    return null;
-  } catch (err) {
-    console.error("getRefreshToken error:", err);
-    return null;
-  }
-}
-
-
-async function authFetch(url, options = {}) {
-  try {
-    let token = localStorage.getItem("accessToken");
-    const defaultHeaders = { "Content-Type": "application/json" };
-    if (token) defaultHeaders.Authorization = `Bearer ${token}`;
-
-    let res = await fetch(url, {
-      ...options,
-      headers: { ...defaultHeaders, ...(options.headers || {}) },
-    });
-
-    if (res.status === 401) {
-
-      const newToken = await getRefreshToken();
-      if (!newToken) {
-
-        return null;
-      }
-
-      res = await fetch(url, {
-        ...options,
-        headers: {
-          ...defaultHeaders,
-          Authorization: `Bearer ${newToken}`,
-          ...(options.headers || {}),
-        },
-      });
-    }
-
-    return res;
-  } catch (err) {
-    console.error("authFetch error:", err);
-    throw err;
-  }
-}
+const PURPLE = "#3D348B";
 
 export default function GroupScreen() {
-  const { id: studyId } = useParams(); // route: /groupprofile/:id (user said this)
   const navigate = useNavigate();
+  const { studyId } = useParams();
 
-  const [open, setOpen] = useState(false); // settings dropdown
+  const [open, setOpen] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const dropdownRef = useRef(null);
   const overlayRef = useRef(null);
 
-  const [groupInfo, setGroupInfo] = useState(null);
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const currentUserIsOwner = true;
 
-  // 로그인 체크: token 없으면 로그인 페이지로 이동
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      navigate("/login");
-    }
-  }, [navigate]);
-
-  // 외부 클릭 시 드롭다운 / 오버레이 닫기
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-      if (overlayRef.current && !overlayRef.current.contains(event.target)) {
-        setShowMembers(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // 오버레이 열릴 때 body 스크롤 잠금
-  useEffect(() => {
-    if (showMembers) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [showMembers]);
-
-  // 그룹 정보 + 멤버 목록 불러오기
-  useEffect(() => {
-    if (!studyId) return;
-    let mounted = true;
-
-    const load = async () => {
-      setLoading(true);
-      try {
-        // 1) 그룹 기본 정보
-        const resInfo = await authFetch(`http://3.39.81.234:8080/api/studies/${studyId}`, { method: "GET" });
-        if (!resInfo) {
-          // authFetch 내부에서 토큰 만료로 login 필요 상태라면 이동
-          const token = localStorage.getItem("accessToken");
-          if (!token) navigate("/login");
-          setLoading(false);
-          return;
-        }
-        if (!resInfo.ok) {
-          console.error("그룹 정보 조회 실패", resInfo.status);
-        } else {
-          const data = await resInfo.json();
-          if (!mounted) return;
-          setGroupInfo({
-            name: data.studyName || data.name || "그룹명",
-            description: data.description || "",
-          });
-        }
-
-        // 2) 멤버 목록 (members 엔드포인트이거나 study response 안에 멤버 포함될 수 있음)
-        // 우선 멤버 전용 엔드포인트 시도
-        const resMembers = await authFetch(`http://3.39.81.234:8080/api/studies/${studyId}/members`, { method: "GET" });
-        if (resMembers && resMembers.ok) {
-          const mData = await resMembers.json();
-          if (!mounted) return;
-          setMembers(
-            Array.isArray(mData) ? mData.map(m => ({
-              id: m.memberId ?? m.id,
-              name: m.nickname ?? m.name,
-              joinedAt: m.joinedAt ?? m.createdAt ?? "",
-              isOwner: !!m.isOwner,
-              avatar: m.profileImageUrl ?? m.avatarUrl ?? null
-            })) : []
-          );
-        } else {
-          // 멤버 전용 엔드포인트가 없으면, study 정보 안의 members 필드 사용
-          try {
-            const fallback = await resInfo.json(); // might already be read; safe guard above
-            const mm = fallback.members || fallback.memberList || [];
-            if (Array.isArray(mm) && mm.length > 0) {
-              setMembers(mm.map(m => ({
-                id: m.memberId ?? m.id,
-                name: m.nickname ?? m.name,
-                joinedAt: m.joinedAt ?? m.createdAt ?? "",
-                isOwner: !!m.isOwner,
-                avatar: m.profileImageUrl ?? m.avatarUrl ?? null
-              })));
-            }
-          } catch (e) {
-            console.warn("멤버 목록 fallback 불가", e);
-          }
-        }
-      } catch (err) {
-        console.error("그룹 데이터 로드 에러:", err);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    load();
-    return () => { mounted = false; };
-  }, [studyId, navigate]);
-
-  // 그룹 탈퇴 (DELETE)
-  const handleLeaveGroup = async () => {
-    if (!window.confirm("정말 그룹을 탈퇴하시겠습니까?")) return;
-
+  /* ---------------------------
+      Access Token 자동 갱신 함수
+  ---------------------------- */
+  async function getRefreshToken() {
     try {
-      const res = await authFetch(`http://3.39.81.234:8080/api/studies/${studyId}/members/me`, {
-        method: "DELETE"
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) return null;
+
+      const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
       });
 
-      if (!res) {
-        // authFetch returned null -> probably login required
-        alert("로그인이 필요합니다.");
+      if (!res.ok) throw new Error("refresh 실패");
+
+      const data = await res.json();
+      localStorage.setItem("accessToken", data.accessToken);
+
+      return data.accessToken;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
+  /* ---------------------------
+    Access Token 포함 + 만료시 refresh 후 재시도
+  ---------------------------- */
+  async function authFetch(url, options = {}) {
+    let token = localStorage.getItem("accessToken");
+
+    let newOptions = {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    let res = await fetch(url, newOptions);
+
+    if (res.status === 401) {
+      const newToken = await getRefreshToken();
+      if (!newToken) return res;
+
+      newOptions.headers.Authorization = `Bearer ${newToken}`;
+      res = await fetch(url, newOptions);
+    }
+
+    return res;
+  }
+
+  /* ---------------------------
+    그룹 정보 & 멤버 목록 불러오기
+  ---------------------------- */
+  const [groupInfo, setGroupInfo] = useState(null);
+  const [groupHome, setGroupHome] = useState(null);
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    async function loadData() {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
         navigate("/login");
         return;
       }
 
+      try {
+        const groupHomeData = await authFetch(
+          `http://3.39.81.234:8080/api/studies/${studyId}/home`,
+          { method: "GET" }
+        );
+        if (groupHomeData.ok) {
+          setGroupHome(await groupHomeData.json());
+        }
+
+        const resGroup = await authFetch(
+          `http://3.39.81.234:8080/api/studies/${studyId}`,
+          { method: "GET" }
+        );
+        if (resGroup.ok) {
+          setGroupInfo(await resGroup.json());
+        }
+
+        const resMembers = await authFetch(
+          `http://3.39.81.234:8080/api/studies/${studyId}/members`,
+          { method: "GET" }
+        );
+        if (resMembers.ok) {
+          const data = await resMembers.json();
+          setMembers(data.members);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadData();
+  }, [studyId, navigate]);
+
+  /* ---------------------------
+      그룹 삭제
+  ---------------------------- */
+  async function deleteGroup() {
+    if (!window.confirm("정말 그룹을 삭제하시겠습니까?")) return;
+
+    try {
+      const res = await authFetch(
+        `http://3.39.81.234:8080/api/studies/${studyId}`,
+        { method: "DELETE" }
+      );
+
       if (res.status === 204) {
-        alert("그룹 탈퇴 성공");
-        // 탈퇴 후 이동: 내 그룹 목록 등으로
-        navigate("/mygroup");
+        alert("그룹이 삭제되었습니다.");
+        navigate("/home");
       } else {
-        const text = await res.text();
-        console.warn("탈퇴 실패", res.status, text);
-        alert("그룹 탈퇴에 실패했습니다.");
+        alert("삭제 실패");
       }
     } catch (err) {
-      console.error("그룹 탈퇴 에러:", err);
-      alert("오류가 발생했습니다.");
+      console.error(err);
+    }
+  }
+
+
+  /* ---------------------------
+      그룹 프로필 설정 이동
+  ---------------------------- */
+  const goGroupProfileSetting = () => navigate(`/group_profile/${studyId}`);
+  const goNotice = () => navigate(`/notice/${studyId}`);
+  const goAlarm = () => navigate(`/notification/${studyId}`);
+  const goAssignments = () => navigate(`/assignments/${studyId}`);
+  const goResources = () => navigate(`/resources/${studyId}`);
+
+  /* ---------------------------
+      오버레이 바깥 클릭 시 닫기
+  ---------------------------- */
+  const handleOverlayClick = (e) => {
+    // overlay 바깥만 클릭했을 때 닫히도록
+    if (overlayRef.current && !overlayRef.current.contains(e.target)) {
+      setShowMembers(false);
     }
   };
-
-  // 네비게이션 헬퍼 (스터디 컨텍스트 포함)
-  const toNotice = () => navigate(`/groupprofile/${studyId}/notice`);
-  const toNotification = () => navigate(`/groupprofile/${studyId}/notification`);
-  const toAssignments = () => navigate(`/groupprofile/${studyId}/assignments`);
-  const toResources = () => navigate(`/groupprofile/${studyId}/resources`);
 
   return (
     <div className="group-screen">
       {/* 상단 바 */}
       <div className="top-bar">
-        <button className="back-btn" onClick={() => navigate(-1)} aria-label="뒤로가기">
-          <ArrowLeft size={24} />
-        </button>
-
-        <h1 className="group-title">{groupInfo?.name ?? "그룹명"}</h1>
-
+        <ArrowLeft size={24} onClick={() => navigate(-1)} />
+        <h1>{groupHome?.title || "그룹명"}</h1>
         <div className="top-icons">
-          <MessageCircle size={24} onClick={() => navigate(`/groupprofile/${studyId}/chat`)} />
-
+          <MessageCircle size={24} />
           <div className="dropdown" ref={dropdownRef}>
-            <Settings size={24} onClick={() => setOpen(prev => !prev)} />
+            <Settings size={24} onClick={() => setOpen(!open)} />
             {open && (
               <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={handleLeaveGroup}>그룹 탈퇴</div>
+                <div className="dropdown-item" onClick={deleteGroup}>
+                  그룹 삭제
+                </div>
+                <div className="dropdown-divider"></div>
+                <div className="dropdown-item" onClick={goGroupProfileSetting}>
+                  그룹 프로필 설정
+                </div>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* 로딩 표시 (간단) */}
-      {loading ? (
-        <div className="loading">로딩 중...</div>
-      ) : (
-        <>
-          {/* 그룹 메뉴 */}
-          <div className="group-menu">
-            <div className="menu-card">
-              <div className="menu-item clickable" onClick={toNotice}>
-                <span>공지</span>
-                <Megaphone size={16} color="#FF3B30" fill="#FF3B30" />
-              </div>
-
-              <div className="menu-item clickable" onClick={toNotification}>
-                <span>알림함</span>
-                <Bell size={16} color="#23D238" fill="#23D238" />
-              </div>
-
-              <div className="menu-item clickable" onClick={toAssignments}>
-                <span>과제</span>
-                <FileText size={16} color="#04A3FF" />
-              </div>
-            </div>
-
-            <div className="menu-card">
-              <div className="menu-item clickable" onClick={toResources}>
-                <span>자료실</span>
-                <Image size={16} />
-              </div>
-            </div>
-
-            <div className="menu-card clickable" onClick={() => setShowMembers(true)}>
-              <div className="menu-item">
-                <span>그룹원</span>
-                <Users size={16} color="#000" />
-              </div>
-            </div>
+      {/* 메뉴 */}
+      <div className="group-menu">
+        <div className="menu-card">
+          <div className="menu-item" onClick={goNotice}>
+            <span>공지</span>
+            <Megaphone size={16} color="#FF3B30" fill="#FF3B30" />
           </div>
-
-          {/* 하단 탭바 */}
-          <div className="tab-bar">
-            <div className="tab-item" onClick={() => navigate("/home")}>
-              <Home size={24} />
-              <span>홈</span>
-            </div>
-            <div className="tab-item" onClick={() => navigate("/mygroup")}>
-              <FileText size={24} />
-              <span>내 그룹</span>
-            </div>
-            <div className="tab-item" onClick={() => navigate("/bookmarked")}>
-              <Heart size={24} />
-              <span>찜 목록</span>
-            </div>
-            <div className="tab-item" onClick={() => navigate("/myprofile")}>
-              <Users size={24} />
-              <span>내 정보</span>
-            </div>
+          <div className="menu-item" onClick={goAlarm}>
+            <span>알림함</span>
+            <Bell size={16} color="#23D238" fill="#23D238" />
           </div>
-        </>
-      )}
+          <div className="menu-item" onClick={goAssignments}>
+            <span>과제</span>
+            <FileText size={16} color="#04A3FF" />
+          </div>
+        </div>
+
+        <div className="menu-card">
+          <div className="menu-item" onClick={goResources}>
+            <span>자료실</span>
+            <Image size={16} />
+          </div>
+        </div>
+
+        <div className="menu-card clickable" onClick={() => setShowMembers(true)}>
+          <div className="menu-item">
+            <span>그룹원</span>
+            <Users size={16} />
+          </div>
+        </div>
+      </div>
+
+      {/* 탭바 */}
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
+          <Home size={24} />
+          <span>홈</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
+          <FileText size={24} />
+          <span>내 그룹</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
+          <Heart size={24} />
+          <span>찜 목록</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
+          <Users size={24} />
+          <span>내 정보</span>
+        </div>
+      </div>
 
       {/* 그룹원 오버레이 */}
       {showMembers && (
-        <div className="overlay">
-          <div className="overlay-content" ref={overlayRef}>
+        <div className="overlay" onClick={handleOverlayClick}>
+          <div
+            className="overlay-content"
+            ref={overlayRef}
+            onClick={(e) => e.stopPropagation()} // 안쪽 클릭시 닫기 방지
+          >
             <div className="overlay-header">
-              <h3>그룹원 ({members.length})</h3>
-              <button className="close-btn" onClick={() => setShowMembers(false)}><X /></button>
+              <h2>그룹원</h2>
+              <X
+                size={24}
+                onClick={() => setShowMembers(false)}
+                style={{ cursor: "pointer" }}
+              />
             </div>
 
-            <div className="members-list">
-              {members.length === 0 ? (
-                <div className="no-members">그룹원이 없습니다.</div>
-              ) : (
-                members.map(member => (
-                  <div key={member.id} className="member-item">
-                    <div className="member-info">
-                      <div className="avatar">
-                        <img
-                          src={member.avatar || "/img/Group 115.png"}
-                          alt={member.name}
-                          className="avatarImg"
-                        />
-                      </div>
-                      <div className="member-name-wrap">
-                        <div className="member-name">
-                          {member.name}
-                          {member.isOwner && <Crown size={14} color="#FFD700" />}
-                        </div>
-                        <div className="member-joined">최초 접속 {member.joinedAt}</div>
-                      </div>
-                    </div>
+            {members.map((member) => (
+              <div key={member.userId} className="member-item">
+                <div className="member-info">
+                  <div className="avatar">
+                    <img
+                      src={member.profileImageUrl || "/img/Group 115.png"}
+                      alt="프로필"
+                      className="avatarImg"
+                    />
                   </div>
-                ))
-              )}
-            </div>
+
+                  <span>
+                    {member.nickname}
+                    {member.role === "LEADER" && (
+                      <Crown size={16} color="#FFD700" fill="#FFD700" />
+                    )}
+                  </span>
+                </div>
+
+                <div className="member-meta">
+                  <span>마지막 접속 {member.lastLoginAt}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
     </div>
   );
 }
-
