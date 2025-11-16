@@ -135,8 +135,7 @@ function Home() {
                         <h4 className='user-text--greeting'>안녕하세요!</h4>
                         <h4 className='user-text--nickname'>{userData.nickname}</h4>
                         <button className='plus-button' onClick={() => navigate('/addGroup')}>
-                            <img src="/img/main-assets/plus.png" />
-                            _               </button>
+                            <img src="/img/main-assets/plus.png" /></button>
                     </div>
 
                     <div className='search-container'>

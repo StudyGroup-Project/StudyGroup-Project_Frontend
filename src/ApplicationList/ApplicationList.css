@@ -1,0 +1,164 @@
+/* 페이지 전체 */
+.applicationListPage {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  height: 100vh;
+  overflow: hidden; /* 스크롤 충돌 방지 */
+  position: relative;
+}
+
+/* 상단 헤더 */
+.header {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 16px;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  z-index: 10;
+}
+
+.backBtn {
+  font-size: 22px;
+  position: absolute;
+  left: 16px;
+  cursor: pointer;
+}
+
+.header h2 {
+  width: 100%;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* 멤버 리스트 (여기가 스크롤 담당) */
+.memberList {
+  flex: 1;
+  overflow-y: auto; /* 오직 여기가 스크롤 */
+  padding-bottom: 90px; /* 탭바와 충돌 방지 */
+  z-index: 1;
+}
+
+/* 멤버 아이템 */
+.memberItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1.5px solid #34348b;
+  cursor: pointer;
+  background: #fff;
+  min-height: 70px;
+  box-sizing: border-box;
+}
+
+.profileIcon {
+  stroke: #34348b;
+  width: 40px;
+  height: 40px;
+}
+
+.memberInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.memberInfo .name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.memberInfo .date {
+  font-size: 12px;
+  color: #777;
+}
+
+/* 하단 탭바 */
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 65px;
+  background: #34348b;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: white;
+  z-index: 20;
+}
+
+.tabItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.tabItem span {
+  margin-top: 4px;
+}
+
+/* 모달 오버레이 */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; /* 화면 최상단 */
+}
+
+/* 모달 박스 */
+.modalBox {
+  width: 85%;
+  max-width: 420px;
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  text-align: left;
+}
+
+.applicationText {
+  background: #f2f2f2;
+  padding: 18px;
+  border-radius: 15px;
+  font-size: 15px;
+  margin: 16px 0 28px 0;
+  line-height: 1.4;
+}
+
+/* 모달 버튼 */
+.modalBtns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.approveBtn, .rejectBtn {
+  width: 48%;
+  padding: 14px 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 17px;
+  color: white;
+}
+
+.approveBtn {
+  background: #3d8b3d;
+}
+
+.rejectBtn {
+  background: #cf5332;
+}
+
+
+
+

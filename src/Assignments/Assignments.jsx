@@ -9,7 +9,7 @@ async function getRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) return;
 
-    const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
+    const res = await fetch("http://3.39.81.234:8080/api/auth/token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),

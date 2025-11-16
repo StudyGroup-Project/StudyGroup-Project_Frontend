@@ -39,6 +39,7 @@ import NoticeHost from './notice/noticehost.jsx';
 import Notice from './notice/notice.jsx';
 import NoticeCreate from './notice/noticecreate.jsx';
 import NoticeModify from './notice/noticemodify.jsx';
+import ApplicationList from './ApplicationList/ApplicationList.jsx';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -119,6 +120,8 @@ function App() {
         <Route path='notice/:studyId' element={<Notice/>}/>
         <Route path='noticecreate/:studyId' element={<NoticeCreate/>}/>
         <Route path='noticemodify/:studyId' element={<NoticeModify/>}/>
+        <Route path="/studies/:studyId/applications" element={<ApplicationList />} />
+        <Route path="/studies/:studyId/applications/:applicationId" element={<ApplicationList />} />
       </Routes>
     </>
   )
