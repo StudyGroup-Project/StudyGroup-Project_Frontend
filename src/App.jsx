@@ -94,13 +94,13 @@ function App() {
         <Route path='search' element={<Search />} />
         {/* <Route path='oauth/google' element={<Google/>}/>
         <Route path='oauth/naver' element={<Naver/>}/> */}
-        <Route path='notification/:studyId' element={<Notification />} />
-        <Route path='addGroup' element={<AddGroup />} />
-        <Route path='groupprofile/:studyId' element={<GroupProfile />} />
-        <Route path='groupscreen/:studyId' element={<GroupScreen />} />
-        <Route path='resources/:studyId' element={<Resources />} />
-        <Route path='resourcesdetail/:studyId' element={<ResourcesDetail />} />
-        <Route path='resourcescreate' element={<ResourcesCreate />} />
+        <Route path='notification/:studyId' element={<Notification/>}/>
+        <Route path='addGroup' element = {<AddGroup/>}/>
+        <Route path='groupprofile/:studyId' element = {<GroupProfile/>}/>
+        <Route path='groupscreen/:studyId' element={<GroupScreen/>}/>
+        <Route path ='resources/:studyId' element={<Resources/>}/>
+        <Route path ='resourcesdetail/:studyId/:resourceId' element={<ResourcesDetail/>}/>
+        <Route path ='resourcescreate/:studyId' element={<ResourcesCreate/>}/>
         <Route path='assignmentshost/:studyId' element={<AssignmentsHost />} />
         <Route path='assignments/:studyId' element={<Assignments />} />
         <Route path='assignmentsdetail/:studyId/:assignmentId' element={<AssignmentsDetail />} />
@@ -109,29 +109,6 @@ function App() {
         <Route path='assignmentsmodify/:studyId/:assignmentId' element={<AssignmentsModify />} />
         <Route path="assignments/:studyId/:assignmentId/submissions/:submissionId" element={<AssignmentsTest />} />
         <Route path="assignments/:studyId/:assignmentId/submissions/:submissionId/feedbacks" element={<AssignmentsTestList />} />
-        <Route path='notice/:studyId' element={<NoticeScreen />} />
-        <Route path='groupScreenhost/:studyId' element={<GroupScreenHost />} />
-        <Route path='noticedetail/:studyId' element={<NoticeDetail />} />
-        <Route path='noticedetailhost/:studyId' element={<NoticeDetailHost />} />
-        <Route path='noticehost/:studyId' element={<NoticeHost />} />
-        <Route path='notice/:studyId' element={<Notice />} />
-        <Route path='noticecreate/:studyId' element={<NoticeCreate />} />
-        <Route path='noticemodify/:studyId' element={<NoticeModify />} />
-        <Route path='notification/:studyId' element={<Notification/>}/>
-        <Route path='addGroup' element = {<AddGroup/>}/>
-        <Route path='groupprofile/:studyId' element = {<GroupProfile/>}/>
-        <Route path='groupscreen/:studyId' element={<GroupScreen/>}/>
-        <Route path ='resources/:studyId' element={<Resources/>}/>
-        <Route path ='resourcesdetail/:studyId/:resourceId' element={<ResourcesDetail/>}/>
-        <Route path ='resourcescreate/:studyId' element={<ResourcesCreate/>}/>
-        <Route path ='assignmentshost/:studyId' element={<AssignmentsHost/>}/>
-        <Route path ='assignments/:studyId' element={<Assignments/>}/>
-        <Route path='assignmentsdetail/:studyId' element={<AssignmentsDetail/>}/>
-        <Route path='assignmentsdetailhost/:studyId' element={<AssignmentsDetailHost/>}/>
-        <Route path='assignmentscreate/:studyId' element={<AssignmentsCreate/>}/>
-        <Route path='assignmentsmodify/:studyId' element={<AssignmentsModify/>}/>
-        <Route path='assignmentstest/:studyId' element={<AssignmentsTest/>}/>
-        <Route path='assignmentstestlist/:studyId' element={<AssignmentsTestList/>}/>
         <Route path='notice/:studyId' element={<NoticeScreen/>}/>
         <Route path='groupScreenhost/:studyId' element={<GroupScreenHost/>}/>
         <Route path="/noticedetailhost/:studyId/:noticeId" element={<NoticeDetailHost />} />

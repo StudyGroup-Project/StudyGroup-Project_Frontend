@@ -127,7 +127,7 @@ const AssignmentsTest = () => {
 
       if (!res.ok) throw new Error("피드백 전송 실패");
       alert("피드백이 성공적으로 등록되었습니다!");
-      navigate("/assignmentstestlist");
+      navigate(-1);
     } catch (err) {
       console.error(err);
       alert("피드백 전송 중 오류가 발생했습니다.");
