@@ -1,10 +1,10 @@
 import axios from 'axios';
 import './Initial.css';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 /* 로그인 방법 선택하는 컴포넌트 */
 
-let semiTitleStyle={
+let semiTitleStyle = {
     fontFamily: 'Yusei Magic, Arial, sans-serif',
     color: '#fff',
     fontSize: 'clamp(20px, 4vw, 24px)',
@@ -14,7 +14,7 @@ let semiTitleStyle={
     margin: '0',
 }
 
-let passwordFontStyle={
+let passwordFontStyle = {
     fontFamily: 'Roboto, Arial, sans-serif',
     color: '#3D348B',
     fontSize: 'clamp(14px, 3vw, 16px)',
@@ -24,8 +24,8 @@ let passwordFontStyle={
     margin: '0 0 0 0',
 }
 
-let signupFontStyle=(props)=>{
-    return({
+let signupFontStyle = (props) => {
+    return ({
         fontFamily: 'Roboto, Arial, sans-serif',
         color: `${props.color}`,
         fontSize: 'clamp(14px, 3vw, 16px)',
@@ -34,86 +34,71 @@ let signupFontStyle=(props)=>{
     })
 }
 
-function Initial(){
-    let array = ['Google', 'Naver', 'KakaoTalk'];
+function Initial() {
+    let array = ['KakaoTalk'];
     let navigate = useNavigate();
 
-    return(
+    return (
         <>
             <div className='login-container'>
-                <h4 style={semiTitleStyle}>로그인</h4>
-                
-                <button className='id-password' onClick={()=>{
-                    navigate('/login')
-                }}>
-                    <p style={passwordFontStyle}>아이디/비밀번호 입력</p>
-                </button>
 
-                <h4 style={semiTitleStyle}>OR</h4>
+                <div className='login-buttons-container'>
+                    <button className='id-password' onClick={() => {
+                        navigate('/login')
+                    }}>
+                        <p style={passwordFontStyle}>로그인</p>
+                    </button>
 
-                <div className='login-button-container'>
                     {
-                        array.map(function(a, i){
-                            return(
-                                <LoginButton array={array} i = {i}key = {i}/>
+                        array.map(function (a, i) {
+                            return (
+                                <LoginButton array={array} i={i} key={i} />
                             )
                         })
                     }
+
                 </div>
 
                 <div className='signup-container'>
-                    <p style={signupFontStyle({color: '#fff', fontWeight: '300'})}>회원이 아니신가요?</p>
-                    <button className='register-button' style={signupFontStyle({color: '#F35b04', fontWeight: '500'})}
-                    onClick={()=>{
-                        navigate('/register');
-                    }}>회원가입</button>
+                    <p style={signupFontStyle({ color: '#fff', fontWeight: '300' })}>회원이 아니신가요?</p>
+                    <button className='register-button' style={signupFontStyle({ color: '#F35b04', fontWeight: '500' })}
+                        onClick={() => {
+                            navigate('/register');
+                        }}>회원가입</button>
                 </div>
             </div>
         </>
-        
+
     )
 }
 
-function LoginButton(props){
+function LoginButton(props) {
     let kakao = () => {
         let link = "http://3.39.81.234:8080/oauth2/authorization/kakao";
         window.location.href = link;
     }
 
-    let google = () =>{
-        let link = "http://ec2-3-39-81-234.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/google"
-        window.location.href = link;
-    }
-
-    let naver = () =>{
-        let link = "http://3.39.81.234:8080/oauth2/authorization/naver"
-        window.location.href = link;
-    }
-
-
-    let font_style={
+    let font_style = {
         fontFamily: 'Yusei Magic, Arial, sans-serif',
         color: '#3D348B',
         fontSize: 'clamp(10px, 2vw, 12px)',
         margin: '2px 0 0 0',
         textAlign: 'center',
     }
-    let img_style={
+    let img_style = {
         width: 'clamp(24px, 5vw, 30px)',
         height: 'clamp(24px, 5vw, 30px)',
     }
-    
-    let loginFun = () =>{
+
+    let loginFun = () => {
         props.array[props.i] == 'KakaoTalk' && kakao();
-        props.array[props.i] == 'Google' && google();
-        props.array[props.i] == 'Naver' && naver();
     }
 
-    return(
+    return (
         <div className='social-login-button' onClick={loginFun}>
-            <img 
-            src={`/img/login-button/${props.array[props.i]}.png`}
-            style={img_style}
+            <img
+                src={`/img/login-button/${props.array[props.i]}.png`}
+                style={img_style}
             >
             </img>
             <h4 style={font_style}>{props.array[props.i]}</h4>
