@@ -7,7 +7,7 @@ const AssignmentsTestList = () => {
   const [feedbackList, setFeedbackList] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const { studyId, assignmentId, submissionsId } = useParams();
+  const { studyId, assignmentId, submissionId } = useParams();
 
   // 토큰 갱신
   const getRefreshToken = async () => {
@@ -73,7 +73,7 @@ const AssignmentsTestList = () => {
     const fetchFeedbackList = async () => {
       try {
         const res = await fetchWithAuth(
-          `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}feedbacks`
+          `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}/feedbacks`
         );
         if (!res.ok) throw new Error("피드백 목록 불러오기 실패");
 
@@ -86,7 +86,7 @@ const AssignmentsTestList = () => {
     };
 
     fetchFeedbackList();
-  }, [studyId, assignmentId, submissionsId]);
+  }, [studyId, assignmentId, submissionId]);
 
   // 평가하기 화면에서 navigate()로 전달된 데이터 반영
   useEffect(() => {
