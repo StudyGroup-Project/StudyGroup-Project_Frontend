@@ -30,7 +30,7 @@ import AssignmentsCreate from './Assignments/AssignmentsCreate.jsx';
 import AssignmentsModify from './Assignments/AssignmentsModify.jsx';
 import AssignmentsTest from './Assignments/AssignmentsTest.jsx';
 import AssignmentsTestList from './Assignments/AssignmentsTestList.jsx';
-import NoticeScreen from './notice/notice.jsx';
+import Notice from './notice/notice.jsx';
 import NoticeDetail from './notice/noticedetail.jsx';
 import NoticeDetailHost from './notice/noticedetailhost.jsx';
 import NoticeHost from './notice/noticehost.jsx';
@@ -109,10 +109,10 @@ function App() {
         <Route path='assignmentsmodify/:studyId/:assignmentId' element={<AssignmentsModify />} />
         <Route path="assignments/:studyId/:assignmentId/submissions/:submissionId" element={<AssignmentsTest />} />
         <Route path="assignmentslist/:studyId/:assignmentId/submissions/:submissionId/feedbacks" element={<AssignmentsTestList />} />
-        <Route path='notice/:studyId' element={<NoticeScreen/>}/>
+        <Route path='notice/:studyId' element={<Notice/>}/>
         <Route path='groupScreenhost/:studyId' element={<GroupScreenHost/>}/>
         <Route path="noticedetailhost/:studyId/:noticeId" element={<NoticeDetailHost />} />
-        <Route path='noticedetail/:studyId' element={<NoticeDetail/>}/>
+        <Route path="noticedetail/:studyId/:noticeId" element={<NoticeDetail/>}/>
         <Route path='noticehost/:studyId' element={<NoticeHost/>}/>
         <Route path='noticecreate/:studyId' element={<NoticeCreate/>}/>
         <Route path='noticemodify/:studyId/:noticeId' element={<NoticeModify/>}/>

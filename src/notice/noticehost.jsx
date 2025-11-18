@@ -99,7 +99,7 @@ async function fetchNotices() {
       {/* 상단 바 */}
       <div className='noticeHeader'>
         <ArrowLeft size={24} className='noticeIcon'
-          onClick={() => navigate(`/groupScreenhost/${studyId}`)}
+          onClick={() => navigate(`/groupScreenHost/${studyId}`)}
           style={{ cursor: 'pointer' }} />
 
         <h1 className='noticeTitle'>공지</h1>

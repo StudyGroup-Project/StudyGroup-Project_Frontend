@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, MoreHorizontal, Send, Home, FileText, Heart, Users } from 'lucide-react';
 import './noticedetailhost.css';
 
@@ -11,6 +11,7 @@ export default function NoticeDetailHost() {
   const [noticeData, setNoticeData] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState("MEMBER"); // 기본 MEMBER
 
   const { studyId, noticeId } = useParams();
 
@@ -62,15 +63,34 @@ export default function NoticeDetailHost() {
   }
 
   /* ---------------------------
-      로그인 체크
+      로그인 체크 + 역할 확인
   ---------------------------- */
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      alert("로그인 후 이용해주세요.");
-      navigate("/login");
+    async function fetchRole() {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("로그인 후 이용해주세요.");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const roleRes = await authFetch(
+          `http://3.39.81.234:8080/api/studies/${studyId}/members`,
+          { method: "GET" }
+        );
+        if (!roleRes.ok) throw new Error("멤버 정보 불러오기 실패");
+        const membersData = await roleRes.json();
+        const currentUserId = parseInt(localStorage.getItem("userId"));
+        const me = membersData.members.find(m => m.userId === currentUserId);
+        setCurrentUserRole(me?.role || "MEMBER");
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }, []);
+
+    fetchRole();
+  }, [studyId, navigate]);
 
   /* ---------------------------
       공지 상세 가져오기
@@ -137,7 +157,7 @@ export default function NoticeDetailHost() {
       if (!res.ok) throw new Error("삭제 실패");
 
       alert("삭제 완료!");
-      navigate(-1);
+      navigate(`/noticehost/${studyId}`);
     } catch (err) {
       console.error(err);
       alert("삭제 실패!");
@@ -161,47 +181,46 @@ export default function NoticeDetailHost() {
 
   return (
     <div className="notice-detail-container">
-
       {/* 상단 헤더 */}
       <div className="header">
         <ArrowLeft size={24} className="icon" onClick={() => navigate(`/noticehost/${studyId}`)} />
         <h1 className="title">상세보기</h1>
 
-        <div className="menuWrapper" ref={menuRef}>
-          <MoreHorizontal
-            size={24}
-            className="icon"
-            style={{zIndex: 9999, position: "relative" }}
-            onClick={() => setMenuOpen(!menuOpen)}
-          />
+      
+          <div className="menuWrapper" ref={menuRef}>
+            <MoreHorizontal
+              size={24}
+              className="icon"
+              style={{ zIndex: 9999, position: "relative" }}
+              onClick={() => setMenuOpen(!menuOpen)}
+            />
 
-          {/* 드롭다운 메뉴 */}
-          {menuOpen && (
-            <div className="dropdownMenu">
-              <button
-                className="menuItem"
-                onClick={() =>
-                  navigate(`/noticemodify/${studyId}/${noticeId}`, {
-                    state: {
-                      studyId,
-                      noticeId,
-                      currentTitle: noticeData.title,
-                      currentContent: noticeData.content,
-                      currentFiles: noticeData.files,
-                    },
-                  })
-                }
-              >
-                수정
-              </button>
+            {menuOpen && (
+              <div className="dropdownMenu">
+                <button
+                  className="menuItem"
+                  onClick={() =>
+                    navigate(`/noticemodify/${studyId}/${noticeId}`, {
+                      state: {
+                        studyId,
+                        noticeId,
+                        currentTitle: noticeData.title,
+                        currentContent: noticeData.content,
+                        currentFiles: noticeData.files,
+                      },
+                    })
+                  }
+                >
+                  수정
+                </button>
 
-              <button className="menuItem" onClick={handleDelete}>삭제</button>
-            </div>
-          )}
-        </div>
+                <button className="menuItem" onClick={handleDelete}>삭제</button>
+              </div>
+            )}
+          </div>
+        
       </div>
-
-      {/* 본문 구조: ResourceDetail 스타일 */}
+    
       <div className="content">
 
         {/* 제목 */}

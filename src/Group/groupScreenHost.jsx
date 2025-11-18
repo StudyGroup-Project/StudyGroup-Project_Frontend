@@ -190,7 +190,7 @@ export default function GroupScreenHost() {
     <div className="group-screen">
       {/* 상단 바 */}
       <div className="top-bar">
-        <ArrowLeft size={24} onClick={() => navigate(-1)} />
+        <ArrowLeft size={24} onClick={() => navigate('/home')} />
         <h1>{groupHome?.title || "그룹명" }</h1>
         <div className="top-icons">
           <MessageCircle

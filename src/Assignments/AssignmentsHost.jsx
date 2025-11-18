@@ -7,6 +7,7 @@ export default function Assignments() {
   const [assignments, setAssignments] = useState([]);
   const [groupInfo, setGroupInfo] = useState(null); 
   const [loading, setLoading] = useState(true);
+  const [currentUserRole, setCurrentUserRole] = useState("MEMBER"); // 기본 MEMBER
 
   const navigate = useNavigate();
   const { studyId } = useParams();
@@ -21,35 +22,35 @@ export default function Assignments() {
       }
 
       try {
-        /* -------------------------
-              그룹 정보 가져오기
-        -------------------------- */
+        // 그룹 정보 가져오기
         const resGroup = await fetch(`${baseUrl}/${studyId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         });
-
         if (resGroup.ok) {
           const group = await resGroup.json();
           setGroupInfo(group);
         }
 
-        /* -------------------------
-              과제 목록 가져오기
-        -------------------------- */
+        // 과제 목록 가져오기
         const resAssignments = await fetch(`${baseUrl}/${studyId}/assignments`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         });
-
         if (resAssignments.ok) {
           const list = await resAssignments.json();
           setAssignments(list);
         }
+
+        // 내 역할 가져오기
+        const resMembers = await fetch(`${baseUrl}/${studyId}/members`, {
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        });
+        if (resMembers.ok) {
+          const membersData = await resMembers.json();
+          const currentUserId = parseInt(localStorage.getItem("userId"));
+          const me = membersData.members.find(m => m.userId === currentUserId);
+          setCurrentUserRole(me?.role || "MEMBER");
+        }
+
       } catch (err) {
         console.error("데이터 불러오기 실패:", err);
       } finally {
@@ -78,9 +79,12 @@ export default function Assignments() {
           {groupInfo?.title || groupInfo?.name || "그룹명"}
         </span>
 
-        <button className="add-button" onClick={handleAddClick}>
-          <PlusCircle size={20} />
-        </button>
+        {/* 방장만 과제 추가 버튼 표시 */}
+        {currentUserRole === "LEADER" && (
+          <button className="add-button" onClick={handleAddClick}>
+            <PlusCircle size={20} />
+          </button>
+        )}
       </div>
 
       {/* 과제 리스트 */}
