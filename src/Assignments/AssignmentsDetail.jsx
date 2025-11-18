@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./AssignmentsDetail.css";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, Plus, Home, FileText, Heart, Users } from "lucide-react";
 
 /* 토큰 갱신 */
 async function getRefreshToken() {
@@ -106,7 +106,6 @@ const AssignmentsDetail = () => {
     }
   };
 
-
   const f = (dateString) => {
     if (!dateString) return "-";
     return new Date(dateString).toLocaleString();
@@ -126,7 +125,7 @@ const AssignmentsDetail = () => {
         </div>
       </div>
 
-      <div className="scroll-container">
+      <div className="scroll-container" style={{ paddingBottom: "70px" }}>
         {/* 제목 */}
         <div className="info-row">
           <p>• 과제 제목</p>
@@ -222,51 +221,77 @@ const AssignmentsDetail = () => {
 
         <hr />
 
-        {/* 제출 현황 */}
-        <div className="section">
-          <p className="section-title">• 제출 현황</p>
+{/* 제출 현황 */}
+<div className="section">
+  <p className="section-title">• 제출 현황</p>
 
-          {assignment.submissions?.length > 0 ? (
-            assignment.submissions.map((s) => (
-              <div className="submission-item" key={s.id}>
-                <div className="profile">
-                  <img
-                    src={s.submitterProfileUrl || "/img/Group 115.png"}
-                    alt="profile"
-                  />
-                  <div>
-                    <div>{s.submitterName || "이름 없음"}</div>
-                    <div className="time">{f(s.createdAt)}</div>
-                  </div>
-                </div>
+  {assignment?.submissions?.length > 0 ? (
+    assignment.submissions.map((submission) => {
+      const profile = assignment.profileUrls?.find(
+        (p) => p.id === submission.submitterId
+      );
+      const submissionId = submission.id;
 
-                <div className="actions">
-                  <button
-                    onClick={() =>
-                      navigate(
-                        `/assignments/${studyId}/${assignmentId}/submissions/${s.id}`
-                      )
-                    }
-                  >
-                    상세보기
-                  </button>
+      return (
+        <div className="submission-item" key={submissionId}>
+          <div className="profile">
+            <img
+              src={
+                profile?.profileImageUrl && profile.profileImageUrl.trim() !== ""
+                  ? profile.profileImageUrl
+                  : "/img/Group 115.png"
+              }
+              alt="profile"
+            />
+            <div>
+              <div>{profile?.nickname || submission.nickname || "이름 없음"}</div>
+              <div className="time">{f(submission.createdAt)}</div>
+            </div>
+          </div>
 
-                  <button
-                    onClick={() =>
-                      navigate(
-                        `/assignments/${studyId}/${assignmentId}/submissions/${s.id}/feedbacks`
-                      )
-                    }
-                  >
-                    평가목록
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p style={{ marginLeft: 10 }}>제출한 사람이 없습니다.</p>
-          )}
+          <div className="actions">
+            <button
+              onClick={() =>
+                navigate(`/assignments/${studyId}/${assignmentId}/submissions/${submissionId}`)
+              }
+            >
+              평가하기
+            </button>
 
+            <button
+              onClick={() =>
+                navigate(`/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`)
+              }
+            >
+              평가목록
+            </button>
+          </div>
+        </div>
+      );
+    })
+  ) : (
+    <p style={{ marginLeft: 10 }}>제출한 사람이 없습니다.</p>
+  )}
+</div>
+      </div>
+
+      {/* 하단 탭바 */}
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
+          <Home size={24} />
+          <span>홈</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
+          <FileText size={24} />
+          <span>내 그룹</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
+          <Heart size={24} />
+          <span>찜 목록</span>
+        </div>
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
+          <Users size={24} />
+          <span>내 정보</span>
         </div>
       </div>
     </div>

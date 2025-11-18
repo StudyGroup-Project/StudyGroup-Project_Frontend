@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./AssignmentsTest.css";
-import { Home, FileText, Heart, Users, ChevronUp, ArrowLeft } from "lucide-react";
+import { Home, FileText, Heart, Users, ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const AssignmentsTest = () => {
   const [score, setScore] = useState("");
   const [feedback, setFeedback] = useState("");
-  const [comments, setComments] = useState([]);
   const [assignmentData, setAssignmentData] = useState(null);
   const navigate = useNavigate();
   const { studyId, assignmentId, submissionId } = useParams();
 
-  // 토큰 갱신 함수 
+  // 토큰 갱신
   const getRefreshToken = async () => {
     try {
       const refreshToken = localStorage.getItem("refreshToken");
@@ -35,7 +34,7 @@ const AssignmentsTest = () => {
     }
   };
 
-  // API 요청 공통 함수 (자동 토큰 갱신 포함)
+  // 인증 포함 fetch
   const fetchWithAuth = async (url, options = {}) => {
     let token = localStorage.getItem("accessToken");
     let res = await fetch(url, {
@@ -47,7 +46,6 @@ const AssignmentsTest = () => {
       },
     });
 
-    // 토큰 만료 시 자동 갱신
     if (res.status === 401) {
       token = await getRefreshToken();
       if (!token) return null;
@@ -64,80 +62,70 @@ const AssignmentsTest = () => {
     return res;
   };
 
+  // 과제 정보 불러오기
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      alert("로그인이 필요합니다!");
-      navigate("/login");
-      return;
-    }
-
-    // 서버에서 과제 정보 불러오기
     const fetchAssignmentData = async () => {
       try {
-        const res = await fetchWithAuth(
-          `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}`
-        );
-        if (!res.ok) throw new Error("과제 정보를 불러오지 못했습니다.");
+        const url = `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}`;
+        const res = await fetchWithAuth(url);
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("서버 응답:", text);
+          throw new Error("과제 정보를 불러오지 못했습니다.");
+        }
 
         const data = await res.json();
+        console.log("assignmentData:", data);
         setAssignmentData(data);
-        console.log(data);
       } catch (err) {
-        console.error(err);
+        console.error("fetchAssignmentData 에러:", err);
         alert("데이터를 불러오는 중 오류가 발생했습니다.");
       }
     };
 
     fetchAssignmentData();
-  }, [studyId, assignmentId, submissionId, navigate]);
+  }, [studyId, assignmentId, submissionId]);
 
-  // 댓글 추가
-  const handleAddComment = () => {
-    if (feedback.trim() === "") return;
-    setComments((prev) => [...prev, feedback]);
-    setFeedback("");
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddComment();
-    }
-  };
-
-  // 평가하기 버튼
+  // 평가 제출
   const handleSubmit = async () => {
-    if (!score) {
-      alert("점수를 선택해주세요!");
+    const numScore = Number(score);
+
+    if (isNaN(numScore) || numScore < 0) {
+      alert("점수를 올바르게 선택해주세요!");
       return;
     }
 
-    try {
-      const res = await fetchWithAuth(
-        `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${submissionId}/feedbacks`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            content: feedback || "피드백 없음",
-            score: Number(score),
-          }),
-        }
-      );
+    const payload = {
+      content: feedback.trim() || "",
+      score: Number(score),
+    };
 
-      if (!res.ok) throw new Error("피드백 전송 실패");
+    console.log("보내는 payload:", payload);
+
+    try {
+      const url = `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${assignmentData.id}/feedbacks`;
+      const res = await fetchWithAuth(url, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+
+      const resText = await res.text();
+      console.log("서버 응답:", resText);
+
+      if (!res.ok) {
+        throw new Error("피드백 전송 실패");
+      }
+
       alert("피드백이 성공적으로 등록되었습니다!");
-      navigate(-1);
+       navigate(`/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`);
     } catch (err) {
-      console.error(err);
+      console.error("handleSubmit 에러:", err);
       alert("피드백 전송 중 오류가 발생했습니다.");
     }
   };
 
-  // 로딩 상태
-  if (!assignmentData) {
-    return <div className="assignments-detail">불러오는 중...</div>;
-  }
+  if (!assignmentData) return <div className="assignments-detail">불러오는 중...</div>;
 
   return (
     <div className="assignments-detail">
@@ -149,7 +137,7 @@ const AssignmentsTest = () => {
       </div>
 
       <div className="scroll-container">
-        {/* 프로필 섹션 */}
+        {/* 프로필 */}
         <div className="profile-section">
           <img
             src={assignmentData.submitterProfileUrl || "/img/Group 115.png"}
@@ -157,12 +145,9 @@ const AssignmentsTest = () => {
             className="profile-img"
           />
           <div className="profile-info">
-            <div className="name">
-              {assignmentData.submitterName || "이름 없음"}
-            </div>
-
+            <div className="name">{assignmentData.submitterName || "이름 없음"}</div>
             <div className="time">
-              {new Date(assignmentData.createAt).toLocaleString()}
+              {assignmentData.createdAt ? new Date(assignmentData.createdAt).toLocaleString() : "-"}
             </div>
           </div>
         </div>
@@ -170,8 +155,7 @@ const AssignmentsTest = () => {
         {/* 첨부파일 */}
         <div className="info-row">
           <p>• 첨부 파일</p>
-
-          {assignmentData.files.length > 0 ? (
+          {assignmentData.files?.length > 0 ? (
             assignmentData.files.map((file, idx) => (
               <a
                 key={idx}
@@ -180,7 +164,7 @@ const AssignmentsTest = () => {
                 rel="noreferrer"
                 style={{ display: "block", marginTop: "5px" }}
               >
-                📎 {file.originalName || "파일"}
+                📎 {file.originalName || file.url || "파일"}
               </a>
             ))
           ) : (
@@ -193,23 +177,15 @@ const AssignmentsTest = () => {
         {/* 과제 내용 */}
         <div className="info-row">
           <p>• 과제 내용</p>
-          <textarea
-            className="input-box"
-            value={assignmentData.description || "내용 없음"}
-            readOnly
-          />
+          <textarea className="input-box" value={assignmentData.content || "내용 없음"} readOnly />
         </div>
 
         <hr />
 
-        {/* 점수 측정 */}
+        {/* 점수 선택 */}
         <div className="info-row">
           <p>• 점수 측정</p>
-          <select
-            className="input-box select-box"
-            value={score}
-            onChange={(e) => setScore(e.target.value)}
-          >
+          <select className="input-box select-box" value={score} onChange={(e) => setScore(e.target.value)}>
             <option value="">선택</option>
             <option value="5">5</option>
             <option value="4">4</option>
@@ -219,34 +195,21 @@ const AssignmentsTest = () => {
           </select>
         </div>
 
+        <hr />
+
         {/* 피드백 입력 */}
-        <div className="feedback-row">
+        <div className="info-row">
+          <p>• 피드백</p>
           <input
             type="text"
-            className="feedback-input"
+            className="input-box"
             placeholder="피드백을 입력하세요"
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-          <ChevronUp
-            className="feedback-icon"
-            onClick={handleAddComment}
-            role="button"
           />
         </div>
 
-        {/* 댓글 리스트 */}
-        <div className="comment-list">
-          {comments.map((comment, idx) => (
-            <div key={idx} className="comment-item">
-              <img src={assignmentData.submitterProfileUrl || 기본값} />
-              <div className="comment-text">{comment}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* 평가하기 버튼 */}
+        {/* 평가 제출 버튼 */}
         <div className="submit-btn-wrapper">
           <button className="submit-btn" onClick={handleSubmit}>
             평가하기
@@ -255,20 +218,20 @@ const AssignmentsTest = () => {
       </div>
 
       {/* 하단 탭바 */}
-      <div className="tabbar">
-        <div className="tabItem">
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
           <Home size={24} />
           <span>홈</span>
         </div>
-        <div className="tabItem">
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
           <FileText size={24} />
           <span>내 그룹</span>
         </div>
-        <div className="tabItem">
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
           <Heart size={24} />
           <span>찜 목록</span>
         </div>
-        <div className="tabItem">
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
           <Users size={24} />
           <span>내 정보</span>
         </div>
@@ -278,4 +241,3 @@ const AssignmentsTest = () => {
 };
 
 export default AssignmentsTest;
-

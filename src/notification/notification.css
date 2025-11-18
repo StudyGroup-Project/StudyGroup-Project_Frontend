@@ -34,12 +34,15 @@
 }
 
 .notificationItem {
+  display: flex; 
+  flex-direction: row;
   background-color: #3d348b;
   color: white;
   border-radius: 10px;
   padding: 10px 14px;
   display: flex;
   align-items: center;
+  gap: 8px;;
   margin-bottom: 10px;
   font-weight: bold;
   cursor: pointer;
@@ -57,6 +60,8 @@
   fill: #32cd32;
   stroke: #32cd32;
   margin-right: 8px;
+  transition: none; /* hover 시 애니메이션 제거 */
+  transform: none;  /* 크기 변형 방지 */
 }
 
 .modalOverlay {

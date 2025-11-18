@@ -103,12 +103,12 @@ function App() {
         <Route path ='resourcescreate/:studyId' element={<ResourcesCreate/>}/>
         <Route path='assignmentshost/:studyId' element={<AssignmentsHost />} />
         <Route path='assignments/:studyId' element={<Assignments />} />
-        <Route path='assignmentsdetail/:studyId/:assignmentId' element={<AssignmentsDetail />} />
         <Route path='assignmentsdetailhost/:studyId/:assignmentId' element={<AssignmentsDetailHost />} />
+        <Route path='assignmentsdetail/:studyId/:assignmentId' element={<AssignmentsDetail />} />
         <Route path='assignmentscreate/:studyId' element={<AssignmentsCreate />} />
         <Route path='assignmentsmodify/:studyId/:assignmentId' element={<AssignmentsModify />} />
         <Route path="assignments/:studyId/:assignmentId/submissions/:submissionId" element={<AssignmentsTest />} />
-        <Route path="assignments/:studyId/:assignmentId/submissions/:submissionId/feedbacks" element={<AssignmentsTestList />} />
+        <Route path="assignmentslist/:studyId/:assignmentId/submissions/:submissionId/feedbacks" element={<AssignmentsTestList />} />
         <Route path='notice/:studyId' element={<NoticeScreen/>}/>
         <Route path='groupScreenhost/:studyId' element={<GroupScreenHost/>}/>
         <Route path="noticedetailhost/:studyId/:noticeId" element={<NoticeDetailHost />} />

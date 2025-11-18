@@ -160,20 +160,22 @@ export default function NoticeDetailHost() {
   if (!noticeData) return <div className="loading">로딩중...</div>;
 
   return (
-    <div className="container">
+    <div className="notice-detail-container">
 
       {/* 상단 헤더 */}
       <div className="header">
-        <ArrowLeft size={24} className="icon" onClick={() => navigate(-1)} />
-        <h1 className="headerTitle">상세보기</h1>
+        <ArrowLeft size={24} className="icon" onClick={() => navigate(`/noticehost/${studyId}`)} />
+        <h1 className="title">상세보기</h1>
 
         <div className="menuWrapper" ref={menuRef}>
           <MoreHorizontal
             size={24}
             className="icon"
+            style={{zIndex: 9999, position: "relative" }}
             onClick={() => setMenuOpen(!menuOpen)}
           />
 
+          {/* 드롭다운 메뉴 */}
           {menuOpen && (
             <div className="dropdownMenu">
               <button
@@ -193,46 +195,54 @@ export default function NoticeDetailHost() {
                 수정
               </button>
 
-              <button className="menuItem" onClick={handleDelete}>
-                삭제
-              </button>
+              <button className="menuItem" onClick={handleDelete}>삭제</button>
             </div>
           )}
         </div>
       </div>
 
-      {/* 공지 본문 */}
-      <div className="noticeContent">
-        <div className="noticeMetaRow">
-          <img
-            src={noticeData.userProfileImageUrl}
-            className="noticeProfileImg"
-          />
+      {/* 본문 구조: ResourceDetail 스타일 */}
+      <div className="content">
 
-          <div className="noticeMetaInfo">
-            <span className="noticeAuthor">{noticeData.userName}</span>
-            <span className="noticeDate">
+        {/* 제목 */}
+        <h2 className="noticeTitle">{noticeData.title}</h2>
+
+        {/* 작성자 섹션 */}
+        <div className="author-info">
+          <img
+            src={noticeData.userProfileImageUrl || "/img/user/Group115.png"}
+            className="profile-img"
+          />
+          <div className="author-text">
+            <p className="author-name">{noticeData.userName}</p>
+            <p className="author-date">
               {new Date(noticeData.updatedAt).toLocaleString()}
-            </span>
+            </p>
           </div>
         </div>
 
-        <h2 className="noticeTitle">{noticeData.title}</h2>
+        <div className="divider" />
+
+        {/* 내용 */}
         <p className="noticeText">{noticeData.content}</p>
 
+        {/* 첨부파일 */}
         {noticeData.files && noticeData.files.length > 0 && (
-          <ul className="fileList">
-            {noticeData.files.map((file) => (
-              <li key={file.fileId}>
-                <a href={file.fileUrl} target="_blank" rel="noreferrer">
-                  {file.fileName}
-                </a>
-              </li>
-            ))}
-          </ul>
+          <div className="file-list">
+            <h4>첨부파일</h4>
+            <ul>
+              {noticeData.files.map((file) => (
+                <li key={file.fileId}>
+                  <a href={file.fileUrl} target="_blank" rel="noreferrer">
+                    {file.fileName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
-        <hr className="noticeDivider" />
+        <div className="divider" />
       </div>
 
       {/* 댓글 리스트 */}
@@ -287,6 +297,7 @@ export default function NoticeDetailHost() {
           <span>내 정보</span>
         </div>
       </div>
+
     </div>
   );
 }

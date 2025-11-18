@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Bell, Home, FileText, Heart, Users, X } from "lucide-react";
+import { Bell, Home, FileText, Heart, Users, X, ArrowLeft} from "lucide-react";
 import axios from "axios";
 import './notification.css';
 import { useNavigate, useParams } from "react-router-dom";
@@ -159,25 +159,24 @@ const NotificationPage = () => {
     <div className="container">
       {/* ---------------- Header ---------------- */}
       <header className="header">
-        <button className="headerCloseButton" onClick={() => navigate(-1)}>←</button>
+        <button className="headerCloseButton" onClick={() => navigate(-1)}>
+        <ArrowLeft size={22} strokeWidth={2} />
+        </button>
         <h1 className="title">알림함</h1>
       </header>
 
       {/* ---------------- 알림 목록 ---------------- */}
       <div className="notificationList">
         {notifications.map((n) => (
+
+          
           <div
+          
             key={n.id}
             className="notificationItem"
-            onClick={() => fetchNotificationDetail(n.id)}
-          >
+            onClick={() => fetchNotificationDetail(n.id)}>
             <Bell className="icon" />
-            <div style={{ display: "flex", flexDirection: "column" }}>
               <span>{n.title}</span>
-              <span style={{ fontSize: "12px", marginTop: "4px" }}>
-                {timeAgo(n.createdAt)}
-              </span>
-            </div>
           </div>
         ))}
       </div>

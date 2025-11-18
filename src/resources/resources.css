@@ -1,21 +1,26 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  padding: 16px;
-  background-color: white;
-  font-family: Arial, sans-serif;
+  height: 100vh; /* 화면 전체 높이 */
+  background: #fff;
+  font-family: "Pretendard", sans-serif;
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 5px;
+  padding: 14px 20px;
   border-bottom: 2px solid #3d348b;
 }
 
-.headerButton {
+.headerButton,
+.addButton {
   background: none;
   border: none;
   cursor: pointer;
@@ -24,19 +29,12 @@
 .headerTitle {
   font-weight: bold;
   font-size: 18px;
-  padding: 15px;
-  margin-bottom: 10px;
-  
-}
-
-.addButton {
-  background: none;
-  border: none;
-  cursor: pointer;
 }
 
 .resourceList {
-  flex-grow: 1;
+  flex-grow: 1;       /* 남은 공간 모두 채움 */
+  overflow-y: auto;   /* 내용 많으면 스크롤 */
+  padding: 0 16px;    /* 좌우 여백 */
   margin-bottom: 10px;
 }
 
@@ -44,10 +42,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 16px 0;
   border-bottom: 2px solid #3d348b;
   font-weight: bold;
-  margin: 0;
   cursor: pointer;
 }
 
@@ -62,6 +59,7 @@
   font-size: 14px;
 }
 
+/* 하단 탭바 */
 .tabbar {
   display: flex;
   justify-content: space-around;

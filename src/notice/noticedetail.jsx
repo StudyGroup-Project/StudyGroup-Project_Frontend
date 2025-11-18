@@ -123,93 +123,143 @@ export default function NoticeDetail() {
   if (!noticeData) return <div style={{ textAlign: 'center', marginTop: 50 }}>로딩중...</div>;
 
   return (
-    <div className='container'>
+    <div className="notice-detail-container">
+
       {/* 상단 헤더 */}
-      <div className='header'>
-        <ArrowLeft size={24} className='icon' onClick={() => navigate(-1)} style={{ cursor: 'pointer' }} />
-        <h1 className='headerTitle'>상세보기</h1>
+      <div className="header">
+        <ArrowLeft size={24} className="icon" onClick={() => navigate(-1)} />
+        <h1 className="title">상세보기</h1>
+
+        <div className="menuWrapper" ref={menuRef}>
+          <MoreHorizontal
+            size={24}
+            className="icon"
+            onClick={() => setMenuOpen(!menuOpen)}
+          />
+
+          {/* 드롭다운 메뉴 */}
+          {menuOpen && (
+            <div className="dropdownMenu">
+              <button
+                className="menuItem"
+                onClick={() =>
+                  navigate(`/noticemodify/${studyId}/${noticeId}`, {
+                    state: {
+                      studyId,
+                      noticeId,
+                      currentTitle: noticeData.title,
+                      currentContent: noticeData.content,
+                      currentFiles: noticeData.files,
+                    },
+                  })
+                }
+              >
+                수정
+              </button>
+
+              <button className="menuItem" onClick={handleDelete}>삭제</button>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* 공지 내용 */}
-      <div className='noticeContent'>
-        <h2 className='noticeTitle'>{noticeData.title}</h2>
-        <div className='noticeMeta'>
-          <div className='tabItem'>
-            <img src={noticeData.userProfileImageUrl} className='tabIcon' />
-          </div>
-          <div className='noticeContainer'>
-            <span className='noticeAuthor'>{noticeData.userName}</span>
-            <span className='noticeDate'>{new Date(noticeData.updatedAt).toLocaleString()}</span>
+      {/* 본문 구조: ResourceDetail 스타일 */}
+      <div className="content">
+
+        {/* 제목 */}
+        <h2 className="noticeTitle">{noticeData.title}</h2>
+
+        {/* 작성자 섹션 */}
+        <div className="author-info">
+          <img
+            src={noticeData.userProfileImageUrl || "/img/user/Group115.png"}
+            className="profile-img"
+          />
+          <div className="author-text">
+            <p className="author-name">{noticeData.userName}</p>
+            <p className="author-date">
+              {new Date(noticeData.updatedAt).toLocaleString()}
+            </p>
           </div>
         </div>
 
-        <hr className='noticeDivider' />
+        <div className="divider" />
 
-        <p className='noticeText'>{noticeData.content}</p>
+        {/* 내용 */}
+        <p className="noticeText">{noticeData.content}</p>
 
+        {/* 첨부파일 */}
         {noticeData.files && noticeData.files.length > 0 && (
-          <ul>
-            {noticeData.files.map(file => (
-              <li key={file.fileId}>
-                <a href={file.fileUrl} target="_blank" rel="noreferrer">{file.fileName}</a>
-              </li>
-            ))}
-          </ul>
+          <div className="file-list">
+            <h4>첨부파일</h4>
+            <ul>
+              {noticeData.files.map((file) => (
+                <li key={file.fileId}>
+                  <a href={file.fileUrl} target="_blank" rel="noreferrer">
+                    {file.fileName}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
-        <hr className='noticeDivider' />
+        <div className="divider" />
       </div>
 
       {/* 댓글 리스트 */}
-      <div className='commentList'>
-        {comments.map(c => (
-          <div key={c.commentId} className='commentItem'>
-            <div className='tabItem'>
-              <img src={c.userProfileImageUrl} className='tabIcon' />
-            </div>
-            <div className='commentBody'>
-              <div className='commentMeta'>
-                <span className='commentName'>{c.userName}</span>
-                <span className='commentDate'>{new Date(c.createdAt).toLocaleString()}</span>
+      <div className="commentList">
+        {comments.map((c) => (
+          <div key={c.commentId} className="commentItem">
+            <img src={c.userProfileImageUrl} className="commentProfileImg" />
+
+            <div className="commentBody">
+              <div className="commentMeta">
+                <span className="commentName">{c.userName}</span>
+                <span className="commentDate">
+                  {new Date(c.createdAt).toLocaleString()}
+                </span>
               </div>
-              <p className='commentText'>{c.content}</p>
+              <p className="commentText">{c.content}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* 댓글 입력창 */}
-      <div className='commentInputBox'>
+      <div className="commentInputBox">
         <input
           type="text"
-          className='commentInput'
+          className="commentInput"
           placeholder="댓글을 입력하세요..."
           value={commentInput}
           onChange={(e) => setCommentInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleCommentSubmit()}
+          onKeyDown={(e) => e.key === "Enter" && handleCommentSubmit()}
         />
-        <Send size={20} className='sendIcon' onClick={handleCommentSubmit} />
+
+        <Send size={20} className="sendIcon" onClick={handleCommentSubmit} />
       </div>
 
       {/* 하단 탭바 */}
       <div className="tab-bar">
         <div className="tab-item" onClick={() => navigate("/home")}>
-          <Home size={24} />
+          <Home size={22} />
           <span>홈</span>
         </div>
         <div className="tab-item" onClick={() => navigate("/mygroup")}>
-          <FileText size={24} />
+          <FileText size={22} />
           <span>내 그룹</span>
         </div>
         <div className="tab-item" onClick={() => navigate("/bookmarked")}>
-          <Heart size={24} />
+          <Heart size={22} />
           <span>찜 목록</span>
         </div>
         <div className="tab-item" onClick={() => navigate("/myprofile")}>
-          <Users size={24} />
+          <Users size={22} />
           <span>내 정보</span>
         </div>
       </div>
+
     </div>
   );
 }

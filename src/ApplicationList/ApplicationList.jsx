@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Home, FileText, Heart, Users } from "lucide-react";
+import { Home, FileText, Heart, Users, ArrowLeft } from "lucide-react";
 import "./ApplicationList.css";
 
 export default function ApplicationList() {
@@ -184,8 +184,9 @@ export default function ApplicationList() {
       {/* 상단 헤더 */}
       <div className="header">
         <span className="backBtn" onClick={() => navigate(-1)}>
-          ←
+          <ArrowLeft size={22} strokeWidth={2} />
         </span>
+
         <h2>{groupName}</h2>
       </div>
 
