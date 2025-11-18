@@ -17,13 +17,9 @@
   padding: 12px 14px;
   border-bottom: 1px solid #eaeaea;
   background: #fff;
-}
 
-.middleDivider {
-  width: 60%;                /* 선 길이 (원하면 50%도 가능) */
-  height: 1px;
-  margin: 18px auto;         /* auto → 중앙 정렬 */
-  background-color: #bcbcbc;
+  /* 헤더 아이콘 기본 색 → 모든 아이콘은 이걸 따라감 */
+  color: #222;
 }
 
 .headerTitle {
@@ -31,25 +27,28 @@
   font-weight: 600;
 }
 
-/* 아이콘 스타일 */
-.icon {
-  color: #222;
-  cursor: pointer;
+/* ArrowLeft 포함 헤더의 모든 lucide 아이콘 */
+.header svg,
+.header svg * {
+  stroke: currentColor !important;
+  fill: none !important;
 }
 
-/* 메뉴 */
+/* 메뉴(… 버튼) 전용 */
 .menuWrapper {
-  margin-left: auto;      /* 오른쪽 끝으로 밀어냄 */
+  margin-left: auto;
   position: relative;
   display: flex;
   align-items: center;
+
+  /* … 버튼의 색 고정 */
+  color: #222;
 }
 
-
 .dropdownMenu {
-  position: fixed;        /* 화면 기준 고정 */
-  top: 60px;              /* 헤더 아래에 적당히 놓기 */
-  right: 12px;            /* 화면 오른쪽 끝에서 12px */
+  position: fixed;
+  top: 60px;
+  right: 12px;
   width: 120px;
 
   background: white;
@@ -77,13 +76,12 @@
 }
 
 /* ---------------------- */
-/* 공지 본문 영역 */
+/* 본문(공지 내용) */
 /* ---------------------- */
 .noticeContent {
   padding: 14px 16px 0 16px;
 }
 
-/* 프로필 + 작성자 + 날짜 + 제목 섹션 */
 .noticeMetaRow {
   display: flex;
   align-items: center;
@@ -91,7 +89,6 @@
   margin-bottom: 10px;
 }
 
-/* 프로필 이미지 */
 .noticeProfileImg {
   width: 38px;
   height: 38px;
@@ -99,7 +96,6 @@
   object-fit: cover;
 }
 
-/* 작성자 + 날짜 */
 .noticeMetaInfo {
   display: flex;
   flex-direction: column;
@@ -116,14 +112,12 @@
   color: #7a7a7a;
 }
 
-/* 제목 */
 .noticeTitle {
   margin: 8px 0 6px 0;
   font-size: 18px;
   font-weight: 700;
 }
 
-/* 내용 */
 .noticeText {
   font-size: 15px;
   line-height: 1.55;
@@ -235,3 +229,5 @@
   align-items: center;
   font-size: 12px;
 }
+
+

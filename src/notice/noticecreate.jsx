@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./noticecreate.css";
-import { Home, FileText, Heart, Users } from "lucide-react";
+import { Home, FileText, Heart, Users, ArrowLeft } from "lucide-react";
 
 export default function NoticeCreate() {
   const navigate = useNavigate();
@@ -111,8 +111,9 @@ export default function NoticeCreate() {
   return (
     <div className="container">
       <div className="header">
-        <button className="headerButton" onClick={() => navigate(-1)}>←</button>
-      </div>
+        <ArrowLeft size={24} className="icon" onClick={() => navigate(`/noticehost/${studyId}`)} />
+          </div>
+          
 
       <label className="label">• 공지 제목</label>
       <input
