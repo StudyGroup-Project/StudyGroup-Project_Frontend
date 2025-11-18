@@ -5,7 +5,7 @@ import './notice.css';
 
 export default function NoticeScreen() {
   const navigate = useNavigate();
-  const { studyId } = useParams();   // ← URL에서 동적 studyId 받기!
+  const { studyId } = useParams();  
   const [notices, setNotices] = useState([]);
 
   /* ---------------------------
@@ -15,7 +15,7 @@ export default function NoticeScreen() {
     try {
       const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
         method: "POST",
-        credentials: "include",     // refreshToken은 cookie 기반!
+        credentials: "include",     
       });
 
       if (!res.ok) {
@@ -69,7 +69,6 @@ export default function NoticeScreen() {
       공지 목록 가져오기
   ---------------------------- */
   async function fetchNotices() {
-    console.log(" NoticeScreen 렌더링됨");
     try {
       if (!studyId) {
         console.error("studyId 없음:", studyId);
@@ -107,9 +106,9 @@ export default function NoticeScreen() {
       {/* 상단 바 */}
       <div className='noticeHeader'>
         <ArrowLeft size={24} className='noticeIcon'
-          onClick={() => navigate(`/groupScreenhost/${studyId}`)}
+          onClick={() => navigate(`/groupScreen/${studyId}`)}
           style={{ cursor: 'pointer' }} />
-          
+
         <h1 className='noticeTitle'>공지</h1>
         <Megaphone size={24} className='noticeIcon' style={{ visibility: 'hidden' }} />
       </div>
@@ -121,10 +120,10 @@ export default function NoticeScreen() {
         ) : (
           notices.map(notice => (
             <div
-              key={notice.id}
+              key={notice.announcementId}
               className='noticeItem'
               onClick={() =>
-                navigate(`/notice/${studyId}/${notice.id}`)  // ✔ 공지 상세 이동
+                navigate(`/noticedetail/${studyId}/${notice.announcementId}`)  
               }
             >
               <Megaphone size={16} className='noticeMegaphone' />

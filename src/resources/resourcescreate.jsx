@@ -162,7 +162,7 @@ export default function ResourcesCreate() {
         <button className="headerButton" onClick={() => navigate(-1)}>
           <ArrowLeft size={20} />
         </button>
-        <h1 className="headerTitle">자료실</h1> 
+       
       </header>
 
       <label className="label">자료명</label> 

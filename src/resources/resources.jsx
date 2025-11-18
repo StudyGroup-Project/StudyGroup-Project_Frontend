@@ -2,22 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import "./resources.css";
-import {
-  ArrowLeft,
-  PlusCircle,
-  Home,
-  FileText,
-  Heart,
-  Users,
-  User,
-} from "lucide-react";
+import { ArrowLeft, PlusCircle, Home, FileText, Heart, Users, User } from "lucide-react";
 
 export default function Resources() {
   const [resources, setResources] = useState([]);
+  const [groupInfo, setGroupInfo] = useState(null); // 그룹 정보
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
-  const { studyId } = useParams(); // 실제 스터디 ID로 교체 필요
+  const navigate = useNavigate();
+  const { studyId } = useParams();
   const baseUrl = "http://3.39.81.234:8080/api/studies";
 
   // access token 재발급
@@ -34,34 +27,11 @@ export default function Resources() {
         { withCredentials: true }
       );
       localStorage.setItem("accessToken", res.data.accessToken);
-      console.log("🔄 accessToken 재발급 성공");
     } catch (err) {
       console.error("accessToken 재발급 실패:", err.response?.data || err);
     }
   }
 
-  // 사용자 기본 프로필 등록 (예시용)
-  async function postUserData() {
-    try {
-      const res = await axios.post(
-        "http://3.39.81.234:8080/api/users/me/profile/basic",
-        {
-          nickName: "tester",
-          province: "대구광역시",
-          district: "중구",
-          birth: "2000-01-01",
-          job: "학생",
-          preferredCategory: "IT",
-        },
-        { withCredentials: true }
-      );
-      console.log("✅ 사용자 정보 업데이트 완료:", res.data);
-    } catch (err) {
-      console.error("사용자 정보 업데이트 실패:", err.response?.data || err);
-    }
-  }
-
-  // 자료 목록 조회 (GET)
   useEffect(() => {
     const fetchResources = async () => {
       try {
@@ -72,16 +42,27 @@ export default function Resources() {
           return;
         }
 
+        // 🔹 1. 그룹 정보 가져오기
+        const groupRes = await fetch(`${baseUrl}/${studyId}`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (groupRes.ok) {
+          const groupData = await groupRes.json();
+
+          setGroupInfo(groupData);
+        }
+
+        // 🔹 2. 자료 목록 가져오기
         const res = await fetch(`${baseUrl}/${studyId}/resources`, {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-
         const data = await res.json();
+
         if (Array.isArray(data)) setResources(data);
         else console.warn("⚠️ 예상과 다른 응답 형식:", data);
       } catch (error) {
@@ -93,34 +74,32 @@ export default function Resources() {
     };
 
     fetchResources();
-  }, [navigate]);
+  }, [studyId, navigate]);
 
   if (loading) return <p>로딩 중...</p>;
 
   return (
-    // 1. CSS 파일에 맞게 className 수정
     <div className="container">
       {/* Header */}
-      <div className="header"> {/* 👈 'resources-header' -> 'header' */}
-        <button className="headerButton" onClick={() => navigate(-1)}> {/* 👈 'header-back' -> 'headerButton' */}
+      <div className="header">
+        <button className="headerButton" onClick={() => navigate(`/groupScreenhost/${studyId}`)}>
           <ArrowLeft size={20} />
         </button>
-        <span className="headerTitle">그룹명</span> {/* 👈 'header-title' -> 'headerTitle' */}
+
+        <span className="headerTitle">
+          {groupInfo?.title || "그룹명"}
+        </span>
 
         <button
-          className="addButton" // 👈 'add-button' -> 'addButton'
-          onClick={() => {
-            // getRefreshToken(); // 👈 글쓰기 페이지에서 할 일이므로 여기선 제거
-            // postUserData(); // 👈 제거
-            navigate(`/resourcescreate/${studyId}`);
-          }}
+          className="addButton"
+          onClick={() => navigate(`/resourcescreate/${studyId}`)}
         >
           <PlusCircle size={20} />
         </button>
       </div>
 
       {/* 자료 리스트 */}
-      <div className="resourceList"> {/* 👈 'resource-list' -> 'resourceList' */}
+      <div className="resourceList">
         {resources.length === 0 ? (
           <p>자료가 없습니다.</p>
         ) : (
@@ -128,24 +107,21 @@ export default function Resources() {
             <div
               key={res.resourceId || i}
               className="resourceItem"
-              
-              // 👇 [수정] res.id가 유효한지 확인하는 로직 추가
               onClick={() => {
                 if (!res.resourceId) {
-                  console.error("클릭된 자료의 ID가 없습니다 (undefined):", res);
+                  console.error("클릭된 자료의 ID가 없습니다:", res);
                   alert("유효하지 않은 자료입니다.");
-                  return; // ID가 없으면 여기서 함수를 중단
+                  return;
                 }
-                // ID가 유효한 경우에만 상세 페이지로 이동
                 navigate(`/resourcesdetail/${studyId}/${res.resourceId}`);
               }}
             >
-              <span className="resourceTitle">
-                {res.title ? res.title : "제목 없음"}
-              </span>
+              <span className="resourceTitle">{res.title || "제목 없음"}</span>
               <div className="resourceAuthor">
                 <User size={16} />
-                <span>{res.author ? res.author : "작성자 미상"}</span>
+                <span>
+                  {res.userName || "작성자 미상"}
+                </span>
               </div>
             </div>
           ))
@@ -174,5 +150,6 @@ export default function Resources() {
     </div>
   );
 }
+
 
 

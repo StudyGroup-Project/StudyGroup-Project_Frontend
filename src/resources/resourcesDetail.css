@@ -8,7 +8,6 @@
   position: static;
 }
 
-/* 상단 헤더 */
 .header {
   display: flex;
   align-items: center;
@@ -28,10 +27,11 @@
   cursor: pointer;
 }
 
-/* 본문 */
+
 .content {
   flex: 1;
   padding: 16px 20px;
+  overflow-y: auto; 
 }
 
 .subtitle {
@@ -68,7 +68,7 @@
   margin-bottom: 200px;
 }
 
-/* 첨부 파일 */
+
 .attachment {
   margin-top: 10px;
 }
@@ -85,7 +85,6 @@
   cursor: pointer;
 }
 
-/* 하단 네비게이션 */
 .bottom-nav {
   display: flex;
   justify-content: space-around;
@@ -114,7 +113,6 @@
   margin-bottom: 3px;
 }
 
-/* More 메뉴 */
 .more-menu {
   position: absolute;
   top: 28px;
@@ -143,6 +141,7 @@
   background: #ddd;
   margin: 0;
 }
+
 
 .modal-overlay {
   position: fixed !important;
@@ -174,12 +173,13 @@
   height: 140px;   
 }
 
-/* 버튼들 */
+
 .modal-buttons {
   display: flex !important;
   gap: 10px !important;
   margin-top: 16px !important;
 }
+
 .modal-buttons button {
   flex: 1;
   padding: 10px 0;
@@ -187,8 +187,10 @@
   border: none;
   cursor: pointer;
 }
+
 .modal-buttons button:first-child { background: #ccc; }
 .modal-buttons button:last-child { background: #e74c3c; color: #fff; }
+
 
 .edit-title {
   width: 100%;
@@ -205,11 +207,73 @@
   margin-bottom: 12px;
 }
 
+.edit-section {
+  display: flex;
+  flex-direction: column;
+}
+
 .save-btn {
+  align-self: flex-end;
   padding: 8px 16px;
   background: #3d348b;
   color: #fff;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  margin-top: 12px;
 }
+
+
+.file-list {
+  margin-top: 12px;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  padding: 8px;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.file-list h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.file-list ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.file-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 13px; 
+}
+
+.file-list li a {
+  color: #3d348b;
+  text-decoration: underline;
+  cursor: pointer;
+  flex: 1;
+  font-size: 13px; 
+}
+
+.file-list li button {
+  margin-left: 8px;
+  padding: 2px 5px;
+  font-size: 11px;
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-list li button:hover {
+  background-color: #c0392b;
+}
+

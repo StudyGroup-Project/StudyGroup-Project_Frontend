@@ -146,18 +146,18 @@ const AssignmentDetailHost = () => {
           <ArrowLeft size={24} />
         </div>
 
-        <div className="more-btn" onClick={() => setShowMenu((p) => !p)}>
-          <MoreHorizontal size={20} />
-          {showMenu && (
-            <div className="menu-popup">
-              <div onClick={() => navigate(`/assignmentsmodify/${studyId}/${assignmentId}`)}>
-                수정
-              </div>
-              <div onClick={() => setModalVisible(true)}>삭제</div>
-            </div>
-          )}
-        </div>
+<div className="more-btn" onClick={() => setShowMenu((p) => !p)}>
+  <MoreHorizontal size={20} />
+  {showMenu && (
+    <div className="menu-popup">
+      <div onClick={() => navigate(`/assignmentsmodify/${studyId}/${assignmentId}`)}>
+        수정
       </div>
+      <div onClick={() => setModalVisible(true)}>삭제</div>
+    </div>
+  )}
+</div>
+</div>
 
       <div className="scroll-container" style={{ paddingBottom: "70px" }}>
         {/* 제목 */}

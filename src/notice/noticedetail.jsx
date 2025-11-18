@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Send, Home, FileText, Heart, Users } from 'lucide-react';
-import './noticedetail.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ArrowLeft, Send, Home, FileText, Heart, Users } from "lucide-react";
+import "./noticedetailhost.css"; // host 기준 CSS를 그대로 사용
 
-export default function NoticeDetail() {
+export default function NoticeDetailMember() {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const { studyId, announcementId } = location.state || {};
+  const { studyId, noticeId } = useParams();
 
   const [noticeData, setNoticeData] = useState(null);
   const [comments, setComments] = useState([]);
@@ -18,20 +16,13 @@ export default function NoticeDetail() {
   ---------------------------- */
   async function getRefreshToken() {
     try {
-      const refreshToken = localStorage.getItem("refreshToken");
-      if (!refreshToken) return null;
-
       const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refreshToken }),
+        credentials: "include",
       });
-
       if (!res.ok) throw new Error("refresh 실패");
-
       const data = await res.json();
       localStorage.setItem("accessToken", data.accessToken);
-
       return data.accessToken;
     } catch (err) {
       console.error(err);
@@ -53,7 +44,6 @@ export default function NoticeDetail() {
     if (res.status === 401) {
       const newToken = await getRefreshToken();
       if (!newToken) return res;
-
       newOptions.headers.Authorization = `Bearer ${newToken}`;
       res = await fetch(url, newOptions);
     }
@@ -69,21 +59,19 @@ export default function NoticeDetail() {
       alert("로그인 후 이용해주세요.");
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
   /* ---------------------------
-      공지 상세 가져오기
+      공지 상세 조회
   ---------------------------- */
   const fetchNoticeDetail = async () => {
-    if (!studyId || !announcementId) return;
-
+    if (!studyId || !noticeId) return;
     try {
-      const res = await authFetch(`http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}`, {
-        method: "GET",
-      });
-
-      if (!res.ok) throw new Error(`공지 상세 불러오기 실패: ${res.status}`);
-
+      const res = await authFetch(
+        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${noticeId}`,
+        { method: "GET" }
+      );
+      if (!res.ok) throw new Error("공지 상세 불러오기 실패");
       const data = await res.json();
       setNoticeData(data);
       setComments(data.comments || []);
@@ -95,7 +83,7 @@ export default function NoticeDetail() {
 
   useEffect(() => {
     fetchNoticeDetail();
-  }, [studyId, announcementId]);
+  }, [studyId, noticeId]);
 
   /* ---------------------------
       댓글 작성
@@ -104,76 +92,49 @@ export default function NoticeDetail() {
     if (!commentInput.trim()) return;
     try {
       const res = await authFetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${announcementId}/comments`,
+        `http://3.39.81.234:8080/api/studies/${studyId}/announcements/${noticeId}/comments`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ content: commentInput }),
         }
       );
-      if (res.status !== 201) throw new Error(`댓글 작성 실패: ${res.status}`);
+      if (res.status !== 201) throw new Error("댓글 작성 실패");
       setCommentInput("");
-      fetchNoticeDetail(); // 댓글 리스트 갱신
+      fetchNoticeDetail();
     } catch (err) {
       console.error(err);
       alert("댓글 작성 실패!");
     }
   };
 
-  if (!noticeData) return <div style={{ textAlign: 'center', marginTop: 50 }}>로딩중...</div>;
+  if (!noticeData) return <div className="loading">로딩중...</div>;
 
+  // === 여기부터 Host와 동일한 DOM 구조 & 클래스명 ===
   return (
     <div className="notice-detail-container">
-
       {/* 상단 헤더 */}
       <div className="header">
-        <ArrowLeft size={24} className="icon" onClick={() => navigate(-1)} />
+        <ArrowLeft
+          size={24}
+          className="icon"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        />
         <h1 className="title">상세보기</h1>
-
-        <div className="menuWrapper" ref={menuRef}>
-          <MoreHorizontal
-            size={24}
-            className="icon"
-            onClick={() => setMenuOpen(!menuOpen)}
-          />
-
-          {/* 드롭다운 메뉴 */}
-          {menuOpen && (
-            <div className="dropdownMenu">
-              <button
-                className="menuItem"
-                onClick={() =>
-                  navigate(`/noticemodify/${studyId}/${noticeId}`, {
-                    state: {
-                      studyId,
-                      noticeId,
-                      currentTitle: noticeData.title,
-                      currentContent: noticeData.content,
-                      currentFiles: noticeData.files,
-                    },
-                  })
-                }
-              >
-                수정
-              </button>
-
-              <button className="menuItem" onClick={handleDelete}>삭제</button>
-            </div>
-          )}
-        </div>
+        {/* 일반 멤버라서 메뉴 없음 (host는 여기서 menuWrapper가 있음) */}
       </div>
 
-      {/* 본문 구조: ResourceDetail 스타일 */}
       <div className="content">
-
         {/* 제목 */}
         <h2 className="noticeTitle">{noticeData.title}</h2>
 
-        {/* 작성자 섹션 */}
+        {/* 작성자 섹션 (host와 동일 구조) */}
         <div className="author-info">
           <img
             src={noticeData.userProfileImageUrl || "/img/user/Group115.png"}
             className="profile-img"
+            alt="profile"
           />
           <div className="author-text">
             <p className="author-name">{noticeData.userName}</p>
@@ -207,12 +168,15 @@ export default function NoticeDetail() {
         <div className="divider" />
       </div>
 
-      {/* 댓글 리스트 */}
+      {/* 댓글 리스트 (host와 동일 structure & classnames) */}
       <div className="commentList">
         {comments.map((c) => (
           <div key={c.commentId} className="commentItem">
-            <img src={c.userProfileImageUrl} className="commentProfileImg" />
-
+            <img
+              src={c.userProfileImageUrl}
+              className="commentProfileImg"
+              alt="profile"
+            />
             <div className="commentBody">
               <div className="commentMeta">
                 <span className="commentName">{c.userName}</span>
@@ -236,11 +200,10 @@ export default function NoticeDetail() {
           onChange={(e) => setCommentInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleCommentSubmit()}
         />
-
         <Send size={20} className="sendIcon" onClick={handleCommentSubmit} />
       </div>
 
-      {/* 하단 탭바 */}
+      {/* 하단 탭바 (host와 동일) */}
       <div className="tab-bar">
         <div className="tab-item" onClick={() => navigate("/home")}>
           <Home size={22} />
@@ -259,7 +222,7 @@ export default function NoticeDetail() {
           <span>내 정보</span>
         </div>
       </div>
-
     </div>
   );
 }
+
