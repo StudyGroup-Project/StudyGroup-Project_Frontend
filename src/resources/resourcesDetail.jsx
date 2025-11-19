@@ -4,7 +4,9 @@ import { ArrowLeft, MoreHorizontal, Home, Users, Heart } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./resourcesDetail.css";
 
+// -------------------------
 // 토큰 갱신
+// -------------------------
 async function getRefreshToken() {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -28,9 +30,12 @@ async function getRefreshToken() {
   }
 }
 
-// 공통 fetch (토큰 자동 갱신)
+// -------------------------
+// fetch with token
+// -------------------------
 async function fetchWithToken(url, options = {}) {
   let token = localStorage.getItem("accessToken");
+
   let res = await fetch(url, {
     ...options,
     headers: {
@@ -51,6 +56,9 @@ async function fetchWithToken(url, options = {}) {
   return res;
 }
 
+// -------------------------
+// ResourceDetail 컴포넌트
+// -------------------------
 export default function ResourceDetail() {
   const navigate = useNavigate();
   const { studyId, resourceId } = useParams();
@@ -66,10 +74,12 @@ export default function ResourceDetail() {
   const [profileUrl, setProfileUrl] = useState("");
   const [createdAt, setCreatedAt] = useState("");
   const [files, setFiles] = useState([]);
-  const [newFile, setNewFile] = useState(null);
+  const [newFiles, setNewFiles] = useState([]);
   const [deleteFileIds, setDeleteFileIds] = useState([]);
 
+  // -------------------------
   // 자료 상세 GET
+  // -------------------------
   const fetchResource = async () => {
     setLoading(true);
     try {
@@ -85,6 +95,8 @@ export default function ResourceDetail() {
       setProfileUrl(data.profileUrl || "/img/user/Group115.png");
       setCreatedAt(data.createdAt || "");
       setFiles(Array.isArray(data.files) ? data.files : []);
+      setNewFiles([]);
+      setDeleteFileIds([]);
     } catch (err) {
       console.error(err);
       alert("자료를 불러오지 못했습니다.");
@@ -97,7 +109,9 @@ export default function ResourceDetail() {
     fetchResource();
   }, [studyId, resourceId]);
 
-  // 삭제
+  // -------------------------
+  // 자료 삭제
+  // -------------------------
   const handleDelete = async () => {
     try {
       const res = await fetchWithToken(
@@ -114,36 +128,73 @@ export default function ResourceDetail() {
     }
   };
 
+  // -------------------------
   // 수정 저장
-  const handleSaveClick = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("content", content);
-      if (newFile) formData.append("files", newFile);
-      deleteFileIds.forEach((id) => formData.append("deleteFileIds", id));
+  // -------------------------
+const handleSaveClick = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
 
-      const res = await fetchWithToken(
-        `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
-        { method: "PUT", body: formData }
-      );
+    // 새 파일 추가
+    newFiles.forEach((file) => formData.append("files", file));
 
-      if (!res || !res.ok) throw new Error("수정 실패");
+    // 삭제할 파일 ID
+    deleteFileIds.forEach((id) => formData.append("deleteFileIds", id));
 
-      alert("자료 수정 완료!");
-      setIsEditing(false);
-      setNewFile(null);
-      setDeleteFileIds([]);
-      await fetchResource(); 
-    } catch (err) {
-      console.error(err);
-      alert("자료 수정 실패!");
-    }
-  };
+    // PUT 요청
+    const res = await fetchWithToken(
+      `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}`,
+      {
+        method: "PUT",
+        body: formData,
+        headers: {}, // multipart/form-data는 headers 절대 직접 지정하면 안 됨
+      }
+    );
 
+    if (!res || !res.ok) throw new Error("자료 수정 실패");
+
+    // 최신 데이터 다시 가져오기 (캐시 방지)
+    const updatedRes = await fetchWithToken(
+      `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}?t=${Date.now()}`
+    );
+
+    if (!updatedRes || !updatedRes.ok) throw new Error("최신 자료 조회 실패");
+    const updatedData = await updatedRes.json();
+
+    // UI 최신 반영
+    setFiles(Array.isArray(updatedData.files) ? updatedData.files : []);
+    setTitle(updatedData.title || "");
+    setContent(updatedData.content || "");
+
+    // 상태 초기화
+    setNewFiles([]);
+    setDeleteFileIds([]);
+    setIsEditing(false);
+
+    alert("자료 수정 완료!");
+  } catch (err) {
+    console.error(err);
+    alert("자료 수정 실패!");
+  }
+};
+
+
+
+  // -------------------------
+  // 파일 삭제 버튼 클릭
+  // -------------------------
   const handleFileDelete = (fileId) => {
     setDeleteFileIds((prev) => [...prev, fileId]);
-    setFiles((prev) => prev.filter((f) => f.fileId !== fileId));
+    setFiles((prev) => prev.filter((f) => f.fileId !== fileId)); // UI에서 즉시 제거
+  };
+
+  // -------------------------
+  // 새 파일 선택
+  // -------------------------
+  const handleNewFilesChange = (e) => {
+    setNewFiles([...newFiles, ...Array.from(e.target.files)]);
   };
 
   if (loading) return <p>로딩 중...</p>;
@@ -206,7 +257,9 @@ export default function ResourceDetail() {
               onChange={(e) => setContent(e.target.value)}
               className="edit-content"
             />
-            <input type="file" onChange={(e) => setNewFile(e.target.files[0])} />
+            <input type="file" multiple onChange={handleNewFilesChange} />
+
+            {/* 기존 파일 */}
             <div className="file-list">
               <h4>기존 첨부파일</h4>
               {files.length === 0 && <p>없음</p>}
@@ -221,27 +274,45 @@ export default function ResourceDetail() {
                 ))}
               </ul>
             </div>
+
+            {/* 새 파일 */}
+            {newFiles.length > 0 && (
+              <div className="file-list">
+                <h4>추가 파일</h4>
+                <ul>
+                  {newFiles.map((f, idx) => (
+                    <li key={idx}>{f.name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <button className="save-btn" onClick={handleSaveClick}>
               저장
             </button>
           </div>
         )}
 
+        {/* 일반 모드 */}
         {!isEditing && (
           <>
             <p className="body-text">{content}</p>
+            <div className="divider" />
             <div className="file-list">
               <h4>첨부파일</h4>
-              {files.length === 0 && <p>없음</p>}
-              <ul>
-                {files.map((f) => (
-                  <li key={f.fileId}>
-                    <a href={f.fileUrl} target="_blank" rel="noreferrer">
-                      {f.fileName}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              {files.length === 0 ? (
+                <p>없음</p>
+              ) : (
+                <ul>
+                  {files.map((f) => (
+                    <li key={f.fileId}>
+                      <a href={f.fileUrl} target="_blank" rel="noreferrer">
+                        {f.fileName}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </>
         )}
@@ -284,4 +355,3 @@ export default function ResourceDetail() {
     </div>
   );
 }
-

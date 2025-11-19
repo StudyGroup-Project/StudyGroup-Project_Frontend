@@ -170,12 +170,16 @@ const AssignmentsDetail = () => {
         <div className="info-row">
           <p>• 첨부파일</p>
           <div className="file-section">
-            {assignment.files?.length > 0 ? (
-              assignment.files.map((file, i) => (
-                <a key={i} href={file.url} target="_blank" rel="noreferrer">
-                  📎 {file.originalName || file.url}
-                </a>
-              ))
+            {assignment?.files?.length > 0 ? (
+              <ul>
+                {assignment.files.map((file) => (
+                  <li key={file.fileId}>
+                    <a href={file.url} rel="noreferrer">
+                    📎 {file.fileName}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             ) : (
               "첨부파일 없음"
             )}
