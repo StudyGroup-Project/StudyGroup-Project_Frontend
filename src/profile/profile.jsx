@@ -56,10 +56,19 @@ function ProfileInput(props) {
     let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
         '기타'
     ]
+    
+    let EngCategory = {
+        IT: 'IT', 
+        사업: 'BUSINESS', 
+        디자인: 'DESIGN', 
+        언어: 'LANGUAGE', 
+        시험: 'EXAM', 
+        공부: 'ACADEMICS', 
+        일상: 'LIFESTYLE', 
+        기타: 'OTHER'}
 
     let navigate = useNavigate();
-    // let [cookies, setCookies] = useCookies(['refresh_token']);
-
+    
     async function getAccessToken() {
         try {
             let res = await axios.post('http://3.39.81.234:8080/api/auth/token', {
@@ -196,7 +205,7 @@ function ProfileInput(props) {
                 </>
                 <>
                     <h4 className='profile-info'>선호 카테고리</h4>
-                    <CustomSelect setUserData={props.setUserData} list={category}></CustomSelect>
+                    <CustomSelect EngCategory={EngCategory} setUserData={props.setUserData} list={category}></CustomSelect>
                 </>
             </div>
 
