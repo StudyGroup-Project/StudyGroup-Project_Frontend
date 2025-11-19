@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./AssignmentsCreate.css";
-import {
-  Home,
-  FileText,
-  Heart,
-  Users,
-  Plus,
-  Calendar,
-  ArrowLeft,
-} from "lucide-react";
+import { Home, FileText, Heart, Users, Plus, ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 /* --------------------------------------------------------------------
-   🔐 Access Token 갱신 함수
+   Access Token 갱신 함수
 -------------------------------------------------------------------- */
 async function getRefreshToken() {
   try {
@@ -34,23 +26,17 @@ async function getRefreshToken() {
   }
 }
 
-/* --------------------------------------------------------------------
-   📌 AssignmentsCreate Component
--------------------------------------------------------------------- */
 const AssignmentsCreate = () => {
   const navigate = useNavigate();
-  const { studyId } = useParams(); // URL에서 {studyId} 가져옴
+  const { studyId } = useParams();
 
   const [assignmentTitle, setAssignmentTitle] = useState("");
   const [assignmentContent, setAssignmentContent] = useState("");
-  const [attachedFile, setAttachedFile] = useState(null);
+  const [attachedFiles, setAttachedFiles] = useState([]);
 
-  const [startDate, setStartDate] = useState({ year: "", month: "", day: "" });
-  const [endDate, setEndDate] = useState({ year: "", month: "", day: "" });
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  /* --------------------------------------------------------------------
-     로그인 확인 + refreshToken 갱신
-  -------------------------------------------------------------------- */
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -61,30 +47,12 @@ const AssignmentsCreate = () => {
     getRefreshToken();
   }, [navigate]);
 
-  /* --------------------------------------------------------------------
-     파일 첨부 핸들러
-  -------------------------------------------------------------------- */
+  /* 파일 첨부 핸들러 (다중 첨부 가능) */
   const handleFileChange = (e) => {
-    setAttachedFile(e.target.files[0]);
+    setAttachedFiles([...attachedFiles, ...Array.from(e.target.files)]);
   };
 
-  /* --------------------------------------------------------------------
-     날짜 선택 시 YYYY-MM-DD 형태로 분해 저장
-  -------------------------------------------------------------------- */
-  const handleDateSelect = (type, value) => {
-    const d = new Date(value);
-    const formatted = {
-      year: d.getFullYear(),
-      month: String(d.getMonth() + 1).padStart(2, "0"),
-      day: String(d.getDate()).padStart(2, "0"),
-    };
-    if (type === "start") setStartDate(formatted);
-    else setEndDate(formatted);
-  };
-
-  /* --------------------------------------------------------------------
-     📌 과제 생성 함수 (multipart/form-data)
-  -------------------------------------------------------------------- */
+  /* 과제 생성 함수 */
   const handleCreateAssignment = async () => {
     try {
       const token = localStorage.getItem("accessToken");
@@ -94,42 +62,20 @@ const AssignmentsCreate = () => {
         return;
       }
 
-      /* 날짜 유효성 체크 */
-      if (!startDate.year || !startDate.month || !startDate.day) {
-        alert("시작 날짜를 입력해주세요.");
-        return;
-      }
-      if (!endDate.year || !endDate.month || !endDate.day) {
-        alert("마감 날짜를 입력해주세요.");
+      if (!startDate || !endDate) {
+        alert("시작일과 마감일을 모두 입력해주세요.");
         return;
       }
 
       const formData = new FormData();
-
-      // 📌 DTO의 필드명을 그대로 append (JSON이 아니라 문자열)
       formData.append("title", assignmentTitle);
       formData.append("description", assignmentContent);
 
-      formData.append(
-        "startAt",
-        `${startDate.year}-${startDate.month}-${startDate.day}T00:00:00`
-      );
+      // LocalDateTime 형식으로 변환 (T00:00:00 ~ T23:59:59)
+      formData.append("startAt", `${startDate}T00:00:00`);
+      formData.append("dueAt", `${endDate}T23:59:59`);
 
-      formData.append(
-        "dueAt",
-        `${endDate.year}-${endDate.month}-${endDate.day}T23:59:59`
-      );
-
-
-      // 📌 파일 첨부 — files key
-      if (attachedFile) {
-        formData.append("files", attachedFile);
-      }
-
-      console.log("📤 전송 FormData 내용:");
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ": ", pair[1]);
-      }
+      attachedFiles.forEach((file) => formData.append("files", file));
 
       const res = await fetch(
         `http://3.39.81.234:8080/api/studies/${studyId}/assignments`,
@@ -137,7 +83,6 @@ const AssignmentsCreate = () => {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
-            // ❗ 절대 Content-Type 넣으면 안 된다 (multipart boundary 깨짐)
           },
           body: formData,
         }
@@ -145,7 +90,7 @@ const AssignmentsCreate = () => {
 
       if (!res.ok) {
         const errText = await res.text();
-        console.error("❌ 서버 응답:", errText);
+        console.error("서버 응답:", errText);
         alert("과제 생성 실패: " + errText);
         return;
       }
@@ -158,9 +103,6 @@ const AssignmentsCreate = () => {
     }
   };
 
-  /* --------------------------------------------------------------------
-     📌 렌더링
-  -------------------------------------------------------------------- */
   return (
     <div className="assignments-detail">
       {/* 상단 */}
@@ -170,9 +112,7 @@ const AssignmentsCreate = () => {
         </div>
       </div>
 
-      {/* 입력 영역 */}
       <div className="scroll-container">
-
         {/* 과제 제목 */}
         <div className="info-row">
           <p>• 과제 제목</p>
@@ -185,22 +125,24 @@ const AssignmentsCreate = () => {
         </div>
         <hr />
 
-        {/* 시작 일시 */}
+        {/* 시작일 */}
         <div className="info-row date-section">
-          <p>• 시작 일시 설정</p>
+          <p>• 시작 일시</p>
           <input
             type="date"
-            onChange={(e) => handleDateSelect("start", e.target.value)}
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
           />
         </div>
         <hr />
 
-        {/* 마감 일시 */}
+        {/* 마감일 */}
         <div className="info-row date-section">
-          <p>• 마감 일시 설정</p>
+          <p>• 마감 일시</p>
           <input
             type="date"
-            onChange={(e) => handleDateSelect("end", e.target.value)}
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
         <hr />
@@ -219,8 +161,16 @@ const AssignmentsCreate = () => {
         {/* 파일 첨부 */}
         <div className="section">
           <p className="section-title">• 첨부 파일</p>
+          <input type="file" multiple onChange={handleFileChange} />
 
-          <input type="file" onChange={handleFileChange} />
+          {/* 선택한 파일 목록 */}
+          {attachedFiles.length > 0 && (
+            <ul>
+              {attachedFiles.map((file, idx) => (
+                <li key={idx}>{file.name}</li>
+              ))}
+            </ul>
+          )}
 
           <div className="submit-btn-wrapper">
             <button className="submit-btn" onClick={handleCreateAssignment}>

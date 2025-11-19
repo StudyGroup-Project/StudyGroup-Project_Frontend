@@ -79,12 +79,9 @@ export default function Assignments() {
           {groupInfo?.title || groupInfo?.name || "그룹명"}
         </span>
 
-        {/* 방장만 과제 추가 버튼 표시 */}
-        {currentUserRole === "LEADER" && (
           <button className="add-button" onClick={handleAddClick}>
             <PlusCircle size={20} />
           </button>
-        )}
       </div>
 
       {/* 과제 리스트 */}
