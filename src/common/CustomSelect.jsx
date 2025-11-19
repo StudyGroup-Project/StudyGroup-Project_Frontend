@@ -26,7 +26,7 @@ function CustomSelect(props){
                                     setSelected(copy);
                                     setUserData(prev=>({
                                         ...prev,
-                                        category : [...prev.category, list[i]]
+                                        category : [...prev.category, props.EngCategory[list[i]]]
                                     }))
                                 }
                                 setCurValue(list[i]);
