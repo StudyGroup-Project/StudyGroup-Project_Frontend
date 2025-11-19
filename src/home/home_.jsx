@@ -212,7 +212,7 @@ function Home() {
                         <button className={page === 'bookmarked' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/bookmarked')}>
                             <Heart size={24} /><h4>찜 목록</h4>
                         </button>
-                        <button className={page === 'profile' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/myprofile')}>
+                        <button className={page === 'myprofile' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/myprofile')}>
                             <Users size={24} /><h4>내 정보</h4>
                         </button>
                     </div>

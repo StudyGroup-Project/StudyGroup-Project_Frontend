@@ -202,45 +202,17 @@ function myProfile(props) {
             </div>
 
             <div className="under-bar-container">
-                <button className={
-                    page === 'home' ? 'under-bar-icon' : 'under-bar-icon-disabled'
-                }
-                    onClick={() => {
-                        navigate('/home');
-                    }}
-                >
-                    <HomeIcon size={24} />
-                    <h4>홈</h4>
+                <button className={page === 'home' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/home')}>
+                    <HomeIcon size={24} /><h4>홈</h4>
                 </button>
-                <button className={
-                    page === 'mygroup' ? 'under-bar-icon' : 'under-bar-icon-disabled'
-                }
-                    onClick={() => {
-                        navigate('/mygroup');
-                    }}
-                >
-                    <FileText size={24} />
-                    <h4>내 그룹</h4>
+                <button className={page === 'mygroup' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/mygroup')}>
+                    <FileText size={24} /><h4>내 그룹</h4>
                 </button>
-                <button className={
-                    page === 'bookmarked' ? 'under-bar-icon' : 'under-bar-icon-disabled'
-                }
-                    onClick={() => {
-                        navigate('/bookmarked');
-                    }}
-                >
-                    <Heart size={24} />
-                    <h4>찜 목록</h4>
+                <button className={page === 'bookmarked' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/bookmarked')}>
+                    <Heart size={24} /><h4>찜 목록</h4>
                 </button>
-                <button className={
-                    page === 'profile' ? 'under-bar-icon' : 'under-bar-icon-disabled'
-                }
-                    onClick={() => {
-                        navigate('/myprofile');
-                    }}
-                >
-                    <Users size={24} />
-                    <h4>내 정보</h4>
+                <button className={page === 'myprofile' ? 'under-bar-icon' : 'under-bar-icon-disabled'} onClick={() => navigate('/myprofile')}>
+                    <Users size={24} /><h4>내 정보</h4>
                 </button>
             </div>
         </div>

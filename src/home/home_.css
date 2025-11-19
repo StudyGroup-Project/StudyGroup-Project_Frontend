@@ -37,6 +37,7 @@
 
     left: 5px;
     top: 15px;
+    border-radius: 50%;
 }
 
 .user-text--nickname {
