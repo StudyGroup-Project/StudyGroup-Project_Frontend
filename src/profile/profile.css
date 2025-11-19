@@ -79,6 +79,20 @@
   font-size: clamp(14px, 3vw, 16px);
   line-height: 1.2;
   color: #000;
+
+}
+
+.profile-category-info {
+  position: static;
+  width: auto;
+  height: auto;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(14px, 3vw, 16px);
+  line-height: 1.2;
+  color: #000;
+  margin-top: 14px;
 }
 
 .profile-input-box {

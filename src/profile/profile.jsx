@@ -4,6 +4,7 @@ import axios from 'axios';
 import './profile.css';
 import { CustomSelect } from './../common/CustomSelect.jsx'
 import { useCookies } from 'react-cookie';
+import JobSelect from './JobList.jsx';
 
 function Profile() {
     let [userData, setUserData] = useState({
@@ -65,7 +66,17 @@ function ProfileInput(props) {
         시험: 'EXAM', 
         공부: 'ACADEMICS', 
         일상: 'LIFESTYLE', 
-        기타: 'OTHER'}
+        기타: 'OTHER'
+    }
+
+    let job = ['학생', '회사원', '프리랜서', '취업준비생', '기타']
+    let EngJob = {
+        학생: 'STUDENT',
+        회사원: 'OFFICE_WORKER',
+        프리랜서: 'FREELANCER',
+        취업준비생: 'JOB_SEEKER',
+        기타: 'OTHER'
+    }
 
     let navigate = useNavigate();
     
@@ -193,18 +204,11 @@ function ProfileInput(props) {
                 </>
                 <>
                     <h4 className='profile-info'>직업</h4>
-                    <input className='profile-input-box'
-                        type='text' placeholder='학생'
-                        onChange={(e) => {
-                            props.setUserData(prev => ({
-                                ...prev,
-                                job: `${e.target.value}`
-                            }))
-                        }}
-                    />
+                    <JobSelect EngJob={EngJob} setUserData={props.setUserData} list={job}/>
+                    
                 </>
                 <>
-                    <h4 className='profile-info'>선호 카테고리</h4>
+                    <h4 className='profile-category-info'>선호 카테고리</h4>
                     <CustomSelect EngCategory={EngCategory} setUserData={props.setUserData} list={category}></CustomSelect>
                 </>
             </div>
