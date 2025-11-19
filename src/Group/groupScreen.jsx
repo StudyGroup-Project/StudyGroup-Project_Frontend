@@ -93,6 +93,23 @@ export default function GroupScreen() {
           `http://3.39.81.234:8080/api/studies/${studyId}/home`,
           { method: "GET" }
         );
+
+        if (!groupHomeData.ok) {
+          const err = await groupHomeData.json();
+          
+          if (err.detail === "추방된 사용자입니다.") {
+            alert("강퇴당한 그룹입니다.");
+            navigate(-1);
+            return;
+          }
+
+          if (err.detail === "탈퇴한 사용자입니다.") {
+            alert("탈퇴한 그룹입니다.");
+            navigate(-1);
+            return;
+          }
+        }
+
         if (groupHomeData.ok) {
           setGroupHome(await groupHomeData.json());
         }
