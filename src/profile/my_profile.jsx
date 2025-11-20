@@ -102,6 +102,25 @@ function myProfile(props) {
         return 'gauge-low'; // 30점 미만: 빨간색
     }
 
+    async function handleLogout() {
+        const accessToken = localStorage.getItem('accessToken');
+        try {
+            const res = await axios.post('http://3.39.81.234:8080/api/auth/logout', {}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+                withCredentials: true
+            })
+        } catch (error) {
+
+        } finally {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            alert("로그아웃이 완료되었습니다.");
+            navigate("/");
+        }
+    }
+
     let navigate = useNavigate();
     let location = useLocation();
     let page = location.pathname.split('/')[1];
@@ -238,6 +257,12 @@ function myProfile(props) {
                             </div>
                         </div>
                     </div>
+                </>
+                <>
+                    <p className='logout-button'
+                        onClick={async () => {
+                            await handleLogout();
+                        }}>로그아웃</p>
                 </>
             </div>
 
