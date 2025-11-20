@@ -76,7 +76,6 @@ const AssignmentsTest = () => {
         }
 
         const data = await res.json();
-        console.log("assignmentData:", data);
         setAssignmentData(data);
       } catch (err) {
         console.error("fetchAssignmentData 에러:", err);
@@ -101,8 +100,6 @@ const AssignmentsTest = () => {
       score: Number(score),
     };
 
-    console.log("보내는 payload:", payload);
-
     try {
       const url = `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${assignmentData.id}/feedbacks`;
       const res = await fetchWithAuth(url, {
@@ -111,7 +108,6 @@ const AssignmentsTest = () => {
       });
 
       const resText = await res.text();
-      console.log("서버 응답:", resText);
 
       if (!res.ok) {
         throw new Error("피드백 전송 실패");

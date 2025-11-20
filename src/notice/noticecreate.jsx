@@ -62,7 +62,12 @@ export default function NoticeCreate() {
       파일 추가
   ---------------------------- */
   const handleFileChange = (e) => {
-    setFiles([...e.target.files]);
+    const selectedFiles = Array.from(e.target.files);
+    setFiles((prev) => [...prev, ...selectedFiles]);
+  };
+
+  const handleFileRemove = (idx) => {
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
   /* ---------------------------
@@ -89,8 +94,7 @@ export default function NoticeCreate() {
       if (!res.ok) throw new Error("공지 생성 실패: " + res.status);
 
       alert("공지 생성 완료!");
-
-      navigate(`/noticehost/${studyId}`); // 생성 후 공지 목록으로
+      navigate(`/noticehost/${studyId}`);
     } catch (err) {
       console.error(err);
       alert("공지 생성 실패!");
@@ -110,11 +114,16 @@ export default function NoticeCreate() {
 
   return (
     <div className="container">
+      {/* 상단 */}
       <div className="header">
-        <ArrowLeft size={24} className="icon" onClick={() => navigate(`/noticehost/${studyId}`)} />
-          </div>
-          
+        <ArrowLeft
+          size={24}
+          className="icon"
+          onClick={() => navigate(`/noticehost/${studyId}`)}
+        />
+      </div>
 
+      {/* 제목 */}
       <label className="label">• 공지 제목</label>
       <input
         className="inputField"
@@ -122,6 +131,7 @@ export default function NoticeCreate() {
         onChange={(e) => setTitle(e.target.value)}
       />
 
+      {/* 내용 */}
       <label className="label">• 공지 내용</label>
       <textarea
         className="textareaField"
@@ -129,8 +139,27 @@ export default function NoticeCreate() {
         onChange={(e) => setContent(e.target.value)}
       />
 
+      {/* 파일 첨부 */}
       <label className="label">• 첨부 파일</label>
       <input type="file" multiple onChange={handleFileChange} />
+
+      {/* 파일 리스트 + 삭제 버튼 */}
+      {files.length > 0 && (
+        <ul className="fileList">
+          {files.map((file, idx) => (
+            <li key={idx}>
+              {file.name}{" "}
+              <button
+                type="button"
+                className="fileRemoveBtn"
+                onClick={() => handleFileRemove(idx)}
+              >
+                x
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="submitButtonContainer">
         <button className="submitButton" onClick={handleSubmit}>
