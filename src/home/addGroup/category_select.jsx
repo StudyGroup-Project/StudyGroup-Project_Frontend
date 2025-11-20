@@ -28,13 +28,13 @@ function CustomSelect(props){
                     list.map(function(a, i){
                         return(
                             <Option key={i} onClick={(e)=>{
-                                let check = selected.findIndex((item)=>item==list[i])
+                                let check = selected.findIndex((item)=>item==props.EngCategory[list[i]])
                                 if(check==-1){
-                                    let copy = [...selected, list[i]];
+                                    let copy = [...selected, props.EngCategory[list[i]]];
                                     setSelected(copy);
                                     setUserData(prev=>({
                                         ...prev,
-                                        category : [...prev.category, list[i]]
+                                        category : [...prev.category, props.EngCategory[list[i]]]
                                     }))
                                 }
                                 setCurValue(list[i]);
@@ -59,13 +59,24 @@ function Category(props){
     let setSelected = props.setSelected;
     let setUserData = props.setUserData;
 
+    let CategoryEngToKor = {
+        IT: 'IT',
+        BUSINESS: '사업',
+        DESIGN: '디자인',
+        LANGUAGE: '언어',
+        EXAM: '시험',
+        ACADEMICS: '공부',
+        LIFESTYLE: '일상',
+        OTHER: '기타'
+    }
+
     return(
         <div className='addGroup-category-card'>
             {  
                 selected.map(function(a, i){
                     return(
                         <div key={i} className='addGroup-categories'>
-                            <span>{selected[i]}</span>
+                            <span>{CategoryEngToKor[selected[i]]}</span>
                             <span style={{cursor: 'pointer', color:'red'}}
                             onClick={()=>{
                                 let copy = [...selected];

@@ -106,9 +106,49 @@ function myProfile(props) {
     let location = useLocation();
     let page = location.pathname.split('/')[1];
 
-    let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
+    let category = ['IT', 'BUSINESS', '디자인', '언어', '시험', '공부', '일상',
         '기타'
     ]
+
+    let EngCategory = {
+        IT: 'IT',
+        사업: 'BUSINESS',
+        디자인: 'DESIGN',
+        언어: 'LANGUAGE',
+        시험: 'EXAM',
+        공부: 'ACADEMICS',
+        일상: 'LIFESTYLE',
+        기타: 'OTHER'
+    }
+
+    let CategoryEngToKor = {
+        IT: 'IT',
+        BUSINESS: '사업',
+        DESIGN: '디자인',
+        LANGUAGE: '언어',
+        EXAM: '시험',
+        ACADEMICS: '공부',
+        LIFESTYLE: '일상',
+        OTHER: '기타'
+    }
+
+    let job = ['학생', '회사원', '프리랜서', '취업준비생', '기타']
+
+    let EngJob = {
+        학생: 'STUDENT',
+        회사원: 'OFFICE_WORKER',
+        프리랜서: 'FREELANCER',
+        취업준비생: 'JOB_SEEKER',
+        기타: 'OTHER'
+    }
+
+    let JobEngToKor = {
+        STUDENT: '학생',
+        OFFICE_WORKER: '회사원',
+        FREELANCER: '프리랜서',
+        JOB_SEEKER: '취업준비생',
+        OTHER: '기타'
+    }
 
     return (
         <div className='home-background'>
@@ -136,7 +176,7 @@ function myProfile(props) {
                 <>
                     <h4 className='myprofile-info'>닉네임
                         <button onClick={() => {
-                            navigate('/newnickname', { state: { nickname: userData.nickname } })
+                            navigate('/newnickname', { state: { userData: userData } })
                         }}
                             className='myprofile-button'>
                         </button>
@@ -146,7 +186,7 @@ function myProfile(props) {
                     </div>
                     <h4 className='myprofile-info'>주소
                         <button onClick={() => {
-                            navigate('/newaddress', { state: { address: userData.province + ' ' + userData.district } })
+                            navigate('/newaddress', { state: { userData: userData } })
                         }}
                             className='myprofile-button'>
                         </button>
@@ -167,22 +207,22 @@ function myProfile(props) {
                 <>
                     <h4 className='myprofile-info'>직업
                         <button onClick={() => {
-                            navigate('/newjob', { state: { job: userData.job } })
+                            navigate('/newjob', { state: { userData: userData } })
                         }}
                             className='myprofile-button'></button>
                     </h4>
                     <div className='myprofile-box'>
-                        <h5>{userData.job}</h5>
+                        <h5>{JobEngToKor[userData.job]}</h5>
                     </div>
                 </>
                 <>
                     <h4 className='myprofile-info'>선호 카테고리
                         <button onClick={() => {
-                            navigate('/newcategory')
+                            navigate('/newcategory', { state: { userData: userData } })
                         }}
                             className='myprofile-button'></button>
                     </h4>
-                    <Category category={userData.preferredCategory || []}></Category>
+                    <Category category={userData.preferredCategory || []} CategoryEngToKor={CategoryEngToKor} ></Category>
                 </>
                 <>
                     <h4 className='myprofile-info' style={{ marginTop: '20px' }}>신뢰점수</h4>
@@ -221,6 +261,7 @@ function myProfile(props) {
 
 function Category(props) {
     let category = props.category;
+    let CategoryEngToKor = props.CategoryEngToKor;
 
     return (
         <div className='myprofile-category-card'>
@@ -228,7 +269,7 @@ function Category(props) {
                 category.map(function (a, i) {
                     return (
                         <div key={i} className='myprofile-categories'>
-                            <span>{a}</span>
+                            <span>{CategoryEngToKor[a]}</span>
                         </div>
                     )
                 })

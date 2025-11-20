@@ -6,7 +6,6 @@ function JobSelect(props) {
     let list = props.list;
     let setUserData = props.setUserData;
     let [open, setOpen] = useState(false);
-    let [selected, setSelected] = useState([]);
     let [curValue, setCurValue] = useState(list[0]);
 
     return (
@@ -20,15 +19,10 @@ function JobSelect(props) {
                         list.map(function (a, i) {
                             return (
                                 <Option key={i} onClick={(e) => {
-                                    let check = selected.findIndex((item) => item == list[i])
-                                    if (check == -1) {
-                                        let copy = [...selected, list[i]];
-                                        setSelected(copy);
-                                        props.setUserData(prev => ({
+                                    props.setUserData(prev => ({
                                             ...prev,
                                             job: props.EngJob[list[i]]
                                         }))
-                                    }
                                     setCurValue(list[i]);
                                 }}>{list[i]}</Option>
                             )

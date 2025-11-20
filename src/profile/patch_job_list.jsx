@@ -2,13 +2,19 @@ import styled from 'styled-components'
 import './category_list.css'
 import { useState } from 'react'
 
-function CategoryList(props) {
+function PatchJobList(props) {
     let list = props.list;
-    let EngCategory = props.EngCategory;
     let setUserData = props.setUserData;
     let [open, setOpen] = useState(false);
-    let [selected, setSelected] = useState([]);
     let [curValue, setCurValue] = useState(list[0]);
+
+    let EngJob = {
+        학생: 'STUDENT',
+        회사원: 'OFFICE_WORKER',
+        프리랜서: 'FREELANCER',
+        취업준비생: 'JOB_SEEKER',
+        기타: 'OTHER'
+    }
 
     return (
         <>
@@ -21,12 +27,7 @@ function CategoryList(props) {
                         list.map(function (a, i) {
                             return (
                                 <Option key={i} onClick={(e) => {
-                                    let check = selected.findIndex((item) => item == EngCategory[list[i]])
-                                    if (check == -1) {
-                                        let copy = [...selected, EngCategory[list[i]]];
-                                        setSelected(copy);
-                                        setUserData(copy);
-                                    }
+                                    setUserData(EngJob[list[i]]);
                                     setCurValue(list[i]);
                                 }}>{list[i]}</Option>
                             )
@@ -34,57 +35,7 @@ function CategoryList(props) {
                     }
                 </SelectOptions>
             </SelectBox>
-
-            <span className='change-category-line'></span>
-
-            <div className>
-                <Category selected={selected} setSelected={setSelected}
-                    setUserData={setUserData}
-                />
-            </div>
         </>
-    )
-}
-
-function Category(props) {
-    let selected = props.selected;
-    let setSelected = props.setSelected;
-    let setUserData = props.setUserData;
-
-    let CategoryEngToKor = {
-        IT: 'IT',
-        BUSINESS: '사업',
-        DESIGN: '디자인',
-        LANGUAGE: '언어',
-        EXAM: '시험',
-        ACADEMICS: '공부',
-        LIFESTYLE: '일상',
-        OTHER: '기타'
-    }
-
-    return (
-        <div className='category-card'>
-            {
-                selected.map(function (a, i) {
-                    return (
-                        <div key={i} className='categories'>
-                            <span>{CategoryEngToKor[selected[i]]}</span>
-                            <span style={{ cursor: 'pointer', color: 'red' }}
-                                onClick={() => {
-                                    let copy = [...selected];
-                                    let arr = copy.filter((item) => item != selected[i]);
-                                    setSelected(arr);
-                                    setUserData(prev => ({
-                                        ...prev,
-                                        category: [...arr]
-                                    }));
-                                }}
-                            >❌</span>
-                        </div>
-                    )
-                })
-            }
-        </div>
     )
 }
 
@@ -153,4 +104,4 @@ const Option = styled.li`
   }
 `;
 
-export { CategoryList, Category };
+export default PatchJobList;

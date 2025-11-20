@@ -15,6 +15,16 @@ function Home() {
     const [groupData, setGroupData] = useState([]);
     const [groupProfileData, setGroupProfileData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    let CategoryEngToKor = {
+        IT: 'IT',
+        BUSINESS: '사업',
+        DESIGN: '디자인',
+        LANGUAGE: '언어',
+        EXAM: '시험',
+        ACADEMICS: '공부',
+        LIFESTYLE: '일상',
+        OTHER: '기타'
+    }
 
     function getGaugeColorClass(score) {
         if (score >= 70) {
@@ -161,7 +171,7 @@ function Home() {
                             {/* ... (group.map 내부 코드는 동일) ... */}
                             <h4 className='active-group-title'>{group.title}</h4>
                             {group.category.map((cat, j) => (
-                                <div className='active-group-category' key={j}><h4># {cat}</h4></div>
+                                <div className='active-group-category' key={j}><h4># {CategoryEngToKor[cat]}</h4></div>
                             ))}
                             <h4 className='active-group-bio'>{group.bio}</h4>
                             <div className='active-group-Curmember-container'>

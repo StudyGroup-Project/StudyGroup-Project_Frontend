@@ -104,11 +104,10 @@ function ProfileInput(props) {
                 preferredCategory: props.userData.category
             },
                 {
-                    // 2. headers 객체에 Authorization 추가
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     },
-                    withCredentials: true // 기존 설정 유지
+                    withCredentials: true
                 });
 
             navigate('/profileImage');
@@ -205,7 +204,6 @@ function ProfileInput(props) {
                 <>
                     <h4 className='profile-info'>직업</h4>
                     <JobSelect EngJob={EngJob} setUserData={props.setUserData} list={job}/>
-                    
                 </>
                 <>
                     <h4 className='profile-category-info'>선호 카테고리</h4>

@@ -7,15 +7,57 @@ import { useState } from 'react';
 import { provinceList, districtList } from './../data.js';
 import SelectList from './select_list.jsx';
 import { CategoryList } from './category_list.jsx';
+import PatchJobList from './patch_job_list.jsx';
+import axios from 'axios';
 
 
-function ChangeNickname(){
+async function getAccessToken() {
+    try {
+        let res = await axios.post('http://3.39.81.234:8080/api/auth/token', {
+            refreshToken: localStorage.getItem("refreshToken")
+        }, { withCredentials: true });
+        localStorage.setItem('accessToken', res.data.accessToken);
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+
+
+function ChangeNickname() {
     let location = useLocation();
-    let nickname = location.state.nickname;
+    let userData = location.state.userData;
 
     let [newNickname, setNewNickname] = useState(' ');
 
-    return(
+    async function patchUserData() {
+        try {
+            let accessToken = localStorage.getItem("accessToken")
+            let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
+                nickname: newNickname,
+                province: userData.province,
+                district: userData.district,
+                birthDate: userData.birthDate,
+                job: userData.job,
+                preferredCategory: userData.preferredCategory
+            },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    withCredentials: true
+                });
+            if (res.status === 200) {
+                alert("변경이 완료 되었습니다");
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    return (
         <div className='home-background'>
             <div className='web-header'>
                 <button className='back-button' onClick={() => window.history.back()}>
@@ -30,21 +72,23 @@ function ChangeNickname(){
 
             <div className='change-nickname-input-container'>
                 <h4>닉네임</h4>
-                <input className='change-nickname-input-box' 
-                    type='text' placeholder={nickname}
-                    onChange={(e)=>{
+                <input className='change-nickname-input-box'
+                    type='text' placeholder={userData.nickname}
+                    onChange={(e) => {
                         setNewNickname(e.target.value);
                     }}
-                    />
+                />
                 <span className='change-nickname-input-line'></span>
             </div>
 
             <div className='change-nickname-button-container'>
                 <button className='change-nickname-button'
-                onClick={()=>{
-                    //서버에 다시 보내기.
-                }}
-                disabled={newNickname===nickname}
+                    onClick={async () => {
+                        console.log(userData);
+                        await getAccessToken();
+                        await patchUserData();
+                    }}
+                    disabled={newNickname === userData.nickname}
                 >
                     변경
                 </button>
@@ -53,16 +97,42 @@ function ChangeNickname(){
     )
 }
 
-function ChangeAddress(){
+function ChangeAddress() {
     let location = useLocation();
-    let address = location.state.address;
-    let province = address.split(' ')[0];
-    let district = address.split(' ')[1];
+    let userData = location.state.userData;
+    let province = userData.province;
+    let district = userData.district;
 
     let [newProvince, setNewProvince] = useState(' ');
     let [newDistrict, setNewDistrict] = useState(' ');
 
-    return(
+    async function patchUserData() {
+        try {
+            let accessToken = localStorage.getItem("accessToken")
+            let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
+                nickname: userData.nickname,
+                province: newProvince,
+                district: newDistrict,
+                birthDate: userData.birthDate,
+                job: userData.job,
+                preferredCategory: userData.preferredCategory
+            },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    withCredentials: true
+                });
+            if (res.status === 200) {
+                alert("변경이 완료 되었습니다");
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    return (
         <div className='home-background'>
             <div className='web-header'>
                 <button className='back-button' onClick={() => window.history.back()}>
@@ -79,9 +149,9 @@ function ChangeAddress(){
                 <h4>주소</h4>
                 <div className='change-address-container'>
                     <SelectList
-                    province={province} district={district} 
-                    provinceList={provinceList} districtList={districtList} 
-                    setProvince={setNewProvince} setDistrict={setNewDistrict}
+                        province={province} district={district}
+                        provinceList={provinceList} districtList={districtList}
+                        setProvince={setNewProvince} setDistrict={setNewDistrict}
                     ></SelectList>
                 </div>
                 <span className='change-nickname-input-line'></span>
@@ -89,10 +159,11 @@ function ChangeAddress(){
 
             <div className='change-nickname-button-container'>
                 <button className='change-nickname-button'
-                onClick={()=>{
-                    //서버에 다시 보내기.
-                }}
-                disabled={newProvince===province && newDistrict===district}>
+                    onClick={async () => {
+                        await getAccessToken();
+                        await patchUserData();
+                    }}
+                    disabled={newProvince === province && newDistrict === district}>
                     변경
                 </button>
             </div>
@@ -100,13 +171,40 @@ function ChangeAddress(){
     )
 }
 
-function ChangeJob(){
+function ChangeJob() {
     let location = useLocation();
-    let job = location.state.job;
+    let userData = location.state.userData;
 
     let [newJob, setNewJob] = useState(' ');
+    let job = ['학생', '회사원', '프리랜서', '취업준비생', '기타']
 
-    return(
+    async function patchUserData() {
+        try {
+            let accessToken = localStorage.getItem("accessToken")
+            let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
+                nickname: userData.nickname,
+                province: userData.province,
+                district: userData.district,
+                birthDate: userData.birthDate,
+                job: newJob,
+                preferredCategory: userData.preferredCategory
+            },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    withCredentials: true
+                });
+            if (res.status === 200) {
+                alert("변경이 완료 되었습니다");
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    return (
         <div className='home-background'>
             <div className='web-header'>
                 <button className='back-button' onClick={() => window.history.back()}>
@@ -121,21 +219,16 @@ function ChangeJob(){
 
             <div className='change-nickname-input-container'>
                 <h4>직업</h4>
-                <input className='change-nickname-input-box' 
-                    type='text' placeholder={job}
-                    onChange={(e)=>{
-                        setNewJob(e.target.value);
-                    }}
-                    />
+                <PatchJobList list={job} setUserData={setNewJob} />
                 <span className='change-nickname-input-line'></span>
             </div>
-
             <div className='change-nickname-button-container'>
                 <button className='change-nickname-button'
-                onClick={()=>{
-                    //서버에 다시 보내기.
-                }}
-                disabled={newJob===job}
+                    onClick={async () => {
+                        await getAccessToken();
+                        await patchUserData();
+                    }}
+                    disabled={newJob === job}
                 >
                     변경
                 </button>
@@ -144,18 +237,59 @@ function ChangeJob(){
     )
 }
 
-function ChangeCategory(){
+function ChangeCategory() {
     let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
         '기타'
     ]
-    let [ newCategory, setNewCategory] = useState(' ');
 
-    return(
+    let EngCategory = {
+        IT: 'IT',
+        사업: 'BUSINESS',
+        디자인: 'DESIGN',
+        언어: 'LANGUAGE',
+        시험: 'EXAM',
+        공부: 'ACADEMICS',
+        일상: 'LIFESTYLE',
+        기타: 'OTHER'
+    }
+
+    let location = useLocation();
+    let userData = location.state.userData;
+
+    let [newCategory, setNewCategory] = useState(' ');
+
+    async function patchUserData() {
+        try {
+            let accessToken = localStorage.getItem("accessToken")
+            let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
+                nickname: userData.nickname,
+                province: userData.province,
+                district: userData.district,
+                birthDate: userData.birthDate,
+                job: userData.job,
+                preferredCategory: newCategory
+            },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    withCredentials: true
+                });
+            if (res.status === 200) {
+                alert("변경이 완료 되었습니다");
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    return (
         <div className='home-background'>
             <div className='web-header'>
                 <button className='back-button' onClick={() => window.history.back()}>
                 </button>
-                <h1 className='bookmarked-title-text'>닉네임 변경</h1>
+                <h1 className='bookmarked-title-text'>카테고리 변경</h1>
             </div>
 
             <div className='change-your-nickname'>
@@ -165,14 +299,15 @@ function ChangeCategory(){
 
             <div className='change-nickname-input-container'>
                 <h4>선호 카테고리</h4>
-                <CategoryList list={category} setUserData={setNewCategory}></CategoryList>
+                <CategoryList EngCategory={EngCategory} list={category} setUserData={setNewCategory}></CategoryList>
             </div>
 
             <div className='change-nickname-button-container'>
                 <button className='change-nickname-button'
-                onClick={()=>{
-                    // newCategory 서버에 다시 보내기.
-                }}
+                    onClick={async () => {
+                        await getAccessToken();
+                        await patchUserData();
+                    }}
                 >
                     변경
                 </button>
