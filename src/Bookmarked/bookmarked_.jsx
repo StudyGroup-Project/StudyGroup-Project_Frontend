@@ -13,6 +13,16 @@ function Bookmarked() {
     let navigate = useNavigate();
     let [groupData, setGroupData] = useState([]);
     const [groupProfileData, setGroupProfileData] = useState({});
+    let CategoryEngToKor = {
+        IT: 'IT',
+        BUSINESS: '사업',
+        DESIGN: '디자인',
+        LANGUAGE: '언어',
+        EXAM: '시험',
+        ACADEMICS: '공부',
+        LIFESTYLE: '일상',
+        OTHER: '기타'
+    }
 
     function getGaugeColorClass(score) {
         if (score >= 70) {
@@ -118,7 +128,7 @@ function Bookmarked() {
                         <h4 className='bookmarked-group-title'>{group.title}</h4>
                         {group.category.map((cat, j) => (
                             <div className='bookmarked-group-category' key={j}>
-                                <h4># {cat}</h4>
+                                <h4># {CategoryEngToKor[cat]}</h4>
                             </div>
                         ))}
                         <h4 className='bookmarked-group-bio'>{group.bio}</h4>

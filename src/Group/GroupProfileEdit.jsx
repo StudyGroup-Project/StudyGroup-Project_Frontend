@@ -19,6 +19,17 @@ export default function GroupProfileEdit() {
     bio: "",
     description: "",
   });
+
+  let EngCategory = {
+        IT: 'IT', 
+        사업: 'BUSINESS', 
+        디자인: 'DESIGN', 
+        언어: 'LANGUAGE', 
+        시험: 'EXAM', 
+        공부: 'ACADEMICS', 
+        일상: 'LIFESTYLE', 
+        기타: 'OTHER'
+    }
   
   // addGroup_.jsx의 컴포넌트 호환을 위해 별도 state 유지
   const [province, setProvince] = useState(provinceList[0]);
@@ -123,7 +134,7 @@ export default function GroupProfileEdit() {
 
       if (res.ok) {
         alert("그룹 정보가 수정되었습니다.");
-        navigate(`/groupScreenhost/${studyId}`); // 수정 완료 후 그룹 홈으로 이동 (경로 확인 필요)
+        navigate(`/groupScreenhost/${studyId}`); 
       } else {
         const errData = await res.json();
         throw new Error(errData.message || "그룹 수정 실패");
@@ -196,6 +207,7 @@ export default function GroupProfileEdit() {
           list={["IT", "사업", "디자인", "언어", "시험", "공부", "일상", "기타"]}
           selectedCategories={groupData.category} // 👈 기존 카테고리 전달
           setGroupData={setGroupData}
+          EngCategory={EngCategory}
         />
 
         <h4 className="addGroup-info">위치</h4>
