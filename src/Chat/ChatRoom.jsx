@@ -319,7 +319,7 @@ export default function ChatRoom() {
       <div className="chat-header">
         <button
           type="button"
-          className="back-button"
+          className="chat-back-button"
           onClick={() => navigate(-1)}
         >
           ← 
