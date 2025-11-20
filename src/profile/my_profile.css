@@ -212,3 +212,9 @@
 .myprofile-gauge-box .score-value {
     font-weight: 800;
 }
+
+.logout-button {
+    text-decoration: underline;
+    color: #000000;
+    cursor: pointer;
+}
