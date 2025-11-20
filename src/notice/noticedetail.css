@@ -1,4 +1,4 @@
-/* 전체 컨테이너 */
+
 .container {
   display: flex;
   flex-direction: column;
@@ -7,9 +7,6 @@
   font-family: -apple-system, BlinkMacSystemFont, Inter, Arial, sans-serif;
 }
 
-/* ---------------------- */
-/* 헤더 */
-/* ---------------------- */
 .header {
   display: flex;
   align-items: center;
@@ -25,21 +22,19 @@
   font-weight: 600;
 }
 
-/* ArrowLeft 포함 헤더의 모든 lucide 아이콘 */
+
 .header svg,
 .header svg * {
   stroke: currentColor !important;
   fill: none !important;
 }
 
-/* 메뉴(… 버튼) 전용 */
+
 .menuWrapper {
   margin-left: auto;
   position: relative;
   display: flex;
   align-items: center;
-
-  /* … 버튼의 색 고정 */
   color: #222;
 }
 
@@ -73,9 +68,7 @@
   background: #f7f7f7;
 }
 
-/* ---------------------- */
-/* 본문(공지 내용) */
-/* ---------------------- */
+
 .noticeContent {
   padding: 14px 16px 0 16px;
 }
@@ -128,9 +121,7 @@
   margin: 16px 0;
 }
 
-/* ---------------------- */
-/* 댓글 리스트 */
-/* ---------------------- */
+
 .commentList {
   padding: 0 16px;
   flex: 1;
@@ -177,9 +168,7 @@
   line-height: 1.45;
 }
 
-/* ---------------------- */
-/* 댓글 입력창 */
-/* ---------------------- */
+
 .commentInputBox {
   position: fixed;
   bottom: 56px;
@@ -205,9 +194,7 @@
   color: #3d348b;
 }
 
-/* ---------------------- */
-/* 하단 탭 */
-/* ---------------------- */
+
 .tab-bar {
   position: fixed;
   bottom: 0;
@@ -226,4 +213,11 @@
   flex-direction: column;
   align-items: center;
   font-size: 12px;
+}
+
+.notice-body {
+  font-size: 15px;
+  line-height: 1.55;
+  margin-bottom: 18px;
+  white-space: pre-wrap; 
 }

@@ -13,7 +13,7 @@ async function getRefreshToken() {
     try {
       const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
         method: "POST",
-        credentials: "include",     // refreshToken은 cookie 기반!
+        credentials: "include",  
       });
 
       if (!res.ok) {
@@ -66,7 +66,6 @@ async function getRefreshToken() {
 
 
 async function fetchNotices() {
-  console.log("📌 studyId =", studyId);
     try {
       if (!studyId) {
         console.error("studyId 없음:", studyId);

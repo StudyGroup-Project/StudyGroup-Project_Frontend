@@ -137,10 +137,8 @@ const handleSaveClick = async () => {
     formData.append("title", title);
     formData.append("content", content);
 
-    // 새 파일 추가
     newFiles.forEach((file) => formData.append("files", file));
 
-    // 삭제할 파일 ID
     deleteFileIds.forEach((id) => formData.append("deleteFileIds", id));
 
     // PUT 요청
@@ -149,13 +147,12 @@ const handleSaveClick = async () => {
       {
         method: "PUT",
         body: formData,
-        headers: {}, // multipart/form-data는 headers 절대 직접 지정하면 안 됨
+        headers: {},
       }
     );
 
     if (!res || !res.ok) throw new Error("자료 수정 실패");
 
-    // 최신 데이터 다시 가져오기 (캐시 방지)
     const updatedRes = await fetchWithToken(
       `http://3.39.81.234:8080/api/studies/${studyId}/resources/${resourceId}?t=${Date.now()}`
     );
@@ -163,12 +160,11 @@ const handleSaveClick = async () => {
     if (!updatedRes || !updatedRes.ok) throw new Error("최신 자료 조회 실패");
     const updatedData = await updatedRes.json();
 
-    // UI 최신 반영
     setFiles(Array.isArray(updatedData.files) ? updatedData.files : []);
     setTitle(updatedData.title || "");
     setContent(updatedData.content || "");
 
-    // 상태 초기화
+
     setNewFiles([]);
     setDeleteFileIds([]);
     setIsEditing(false);
@@ -187,7 +183,7 @@ const handleSaveClick = async () => {
   // -------------------------
   const handleFileDelete = (fileId) => {
     setDeleteFileIds((prev) => [...prev, fileId]);
-    setFiles((prev) => prev.filter((f) => f.fileId !== fileId)); // UI에서 즉시 제거
+    setFiles((prev) => prev.filter((f) => f.fileId !== fileId)); 
   };
 
   // -------------------------

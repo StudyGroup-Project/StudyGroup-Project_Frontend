@@ -27,7 +27,6 @@ async function getRefreshToken() {
 
     const data = await res.json();
     localStorage.setItem("accessToken", data.accessToken);
-    console.log("Access token 갱신 완료");
   } catch (err) {
     console.error("토큰 갱신 오류:", err);
   }
@@ -77,7 +76,6 @@ const AssignmentsModify = () => {
         if (!res.ok) throw new Error("과제 상세 불러오기 실패");
 
         const data = await res.json();
-        console.log(data)
         setModifiedTitle(data.title || "");
         setModifiedContent(data.description || "");
 
@@ -337,21 +335,21 @@ const AssignmentsModify = () => {
       </div>
 
       {/* 하단 탭바 */}
-      <div className="tabbar">
-        <div className="tabItem">
-          <Home size={20} />
+      <div className="tab-bar">
+        <div className="tab-item" onClick={() => navigate("/home")}>
+          <Home size={24} />
           <span>홈</span>
         </div>
-        <div className="tabItem">
-          <FileText size={20} />
+        <div className="tab-item" onClick={() => navigate("/mygroup")}>
+          <FileText size={24} />
           <span>내 그룹</span>
         </div>
-        <div className="tabItem">
-          <Heart size={20} />
+        <div className="tab-item" onClick={() => navigate("/bookmarked")}>
+          <Heart size={24} />
           <span>찜 목록</span>
         </div>
-        <div className="tabItem">
-          <Users size={20} />
+        <div className="tab-item" onClick={() => navigate("/myprofile")}>
+          <Users size={24} />
           <span>내 정보</span>
         </div>
       </div>
