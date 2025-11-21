@@ -1,16 +1,14 @@
-html, body, #root {
-  height: 100%;
-  margin: 0;
-}
-
+/* 화면 전체 레이아웃 */
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* 화면 전체 높이 */
-  background: #fff;
+  height: 100vh;        /* 화면 전체 채우기 */
+  background-color: #fff;
+  overflow: hidden;     /* 하단 탭바 기준으로 내부 스크롤만 허용 */
   font-family: "Pretendard", sans-serif;
 }
 
+/* 상단 헤더 */
 .header {
   display: flex;
   align-items: center;
@@ -31,13 +29,14 @@ html, body, #root {
   font-size: 18px;
 }
 
+/* 리스트 영역 전체가 스크롤 */
 .resourceList {
-  flex-grow: 1;       /* 남은 공간 모두 채움 */
-  overflow-y: auto;   /* 내용 많으면 스크롤 */
-  padding: 0 16px;    /* 좌우 여백 */
-  margin-bottom: 10px;
+  flex: 1;              /* 남은 화면 모두 차지 */
+  overflow-y: auto;     /* 내부 스크롤 */
+  padding: 14px 16px 80px;   /* 탭바 영역 고려 */
 }
 
+/* 아이템 */
 .resourceItem {
   display: flex;
   justify-content: space-between;

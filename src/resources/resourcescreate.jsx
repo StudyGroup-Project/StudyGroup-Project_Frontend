@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Home, FileText, Heart, Users } from "lucide-react";
+import { ArrowLeft, Home, FileText, Heart, Users, Trash2 } from "lucide-react";
 import axios from "axios";
 import "./resourcescreate.css";
 
@@ -11,7 +11,7 @@ export default function ResourcesCreate() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [files, setFiles] = useState([]); // 선택된 파일 배열
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // access token 재발급
@@ -112,6 +112,8 @@ export default function ResourcesCreate() {
       />
 
       <label className="label">첨부 파일</label>
+
+      {/* 파일 선택 input */}
       <div className="fileInputContainer">
         <input
           type="file"
@@ -119,20 +121,24 @@ export default function ResourcesCreate() {
           onChange={handleFileChange}
           className="fileInput"
         />
-
-        {files.length > 0 && (
-          <ul className="fileList">
-            {files.map((file, idx) => (
-              <li key={idx}>
-                {file.name}{" "}
-                <button type="button" onClick={() => handleFileRemove(idx)}>
-                  x
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
+
+      {/* 파일 리스트 → input 아래로 분리 */}
+      {files.length > 0 && (
+        <ul className="fileList">
+          {files.map((file, idx) => (
+            <li key={idx} className="fileItem">
+              <span>{file.name}</span>
+
+              <Trash2
+                size={16}
+                style={{ cursor: "pointer", marginLeft: "8px" }}
+                onClick={() => handleFileRemove(idx)}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="submitButtonContainer">
         <button className="submitButton" onClick={handleSubmit}>

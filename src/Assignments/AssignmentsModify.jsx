@@ -8,6 +8,7 @@ import {
   Plus,
   Calendar,
   ArrowLeft,
+  Trash2,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -38,7 +39,9 @@ const AssignmentsModify = () => {
 
   const [modifiedTitle, setModifiedTitle] = useState("");
   const [modifiedContent, setModifiedContent] = useState("");
-  const [modifiedFile, setModifiedFile] = useState(null);
+  const [modifiedFiles, setModifiedFiles] = useState([]); // 새 첨부파일
+  const [existingFiles, setExistingFiles] = useState([]); // 기존 첨부파일
+  const [deleteFileIds, setDeleteFileIds] = useState([]); // 삭제할 기존 파일
 
   const [showStartCalendar, setShowStartCalendar] = useState(false);
   const [showEndCalendar, setShowEndCalendar] = useState(false);
@@ -78,6 +81,7 @@ const AssignmentsModify = () => {
         const data = await res.json();
         setModifiedTitle(data.title || "");
         setModifiedContent(data.description || "");
+        setExistingFiles(data.files || []);
 
         if (data.startAt) {
           const start = new Date(data.startAt);
@@ -104,8 +108,22 @@ const AssignmentsModify = () => {
     fetchAssignmentDetail();
   }, [studyId, assignmentId, navigate]);
 
+  /* 새 파일 선택 */
   const handleFileChange = (e) => {
-    setModifiedFile(e.target.files[0]);
+    setModifiedFiles([...modifiedFiles, ...Array.from(e.target.files)]);
+  };
+
+  /* 새 파일 삭제 */
+  const handleDeleteNewFile = (idx) => {
+    const updated = [...modifiedFiles];
+    updated.splice(idx, 1);
+    setModifiedFiles(updated);
+  };
+
+  /* 기존 파일 삭제 (쓰레기통 클릭) */
+  const handleDeleteExistingFile = (fileId) => {
+    setExistingFiles(existingFiles.filter((f) => f.fileId !== fileId));
+    setDeleteFileIds([...deleteFileIds, fileId]);
   };
 
   /* 과제 수정 (multipart) */
@@ -129,6 +147,12 @@ const AssignmentsModify = () => {
         "dueAt",
         `${modifiedEndDate.year}-${modifiedEndDate.month}-${modifiedEndDate.day}T23:59:59`
       );
+
+      // 새 파일 추가
+      modifiedFiles.forEach((file) => formData.append("files", file));
+
+      // 삭제할 파일 아이디
+      deleteFileIds.forEach((id) => formData.append("deleteFileIds", id));
 
       const res = await fetch(
         `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
@@ -160,7 +184,6 @@ const AssignmentsModify = () => {
     }
   };
 
-  /* 날짜 선택 */
   const handleDateSelect = (type, value) => {
     const d = new Date(value);
     const formatted = {
@@ -199,13 +222,12 @@ const AssignmentsModify = () => {
         </div>
         <hr />
 
-        {/* 시작 일시 */}
+        {/* 시작 / 마감 일시 */}
         <div className="info-row date-section">
-          <p>• 시작 일시 설정</p>
+          <p>• 시작 일시</p>
           <div className="date-inputs">
             <input
               type="text"
-              placeholder="YYYY"
               value={modifiedStartDate.year}
               onChange={(e) =>
                 setModifiedStartDate({ ...modifiedStartDate, year: e.target.value })
@@ -214,7 +236,6 @@ const AssignmentsModify = () => {
             <span>년</span>
             <input
               type="text"
-              placeholder="MM"
               value={modifiedStartDate.month}
               onChange={(e) =>
                 setModifiedStartDate({ ...modifiedStartDate, month: e.target.value })
@@ -223,7 +244,6 @@ const AssignmentsModify = () => {
             <span>월</span>
             <input
               type="text"
-              placeholder="DD"
               value={modifiedStartDate.day}
               onChange={(e) =>
                 setModifiedStartDate({ ...modifiedStartDate, day: e.target.value })
@@ -245,15 +265,11 @@ const AssignmentsModify = () => {
           )}
         </div>
 
-        <hr />
-
-        {/* 마감 일시 */}
         <div className="info-row date-section">
-          <p>• 마감 일시 설정</p>
+          <p>• 마감 일시</p>
           <div className="date-inputs">
             <input
               type="text"
-              placeholder="YYYY"
               value={modifiedEndDate.year}
               onChange={(e) =>
                 setModifiedEndDate({ ...modifiedEndDate, year: e.target.value })
@@ -262,7 +278,6 @@ const AssignmentsModify = () => {
             <span>년</span>
             <input
               type="text"
-              placeholder="MM"
               value={modifiedEndDate.month}
               onChange={(e) =>
                 setModifiedEndDate({ ...modifiedEndDate, month: e.target.value })
@@ -271,7 +286,6 @@ const AssignmentsModify = () => {
             <span>월</span>
             <input
               type="text"
-              placeholder="DD"
               value={modifiedEndDate.day}
               onChange={(e) =>
                 setModifiedEndDate({ ...modifiedEndDate, day: e.target.value })
@@ -305,15 +319,41 @@ const AssignmentsModify = () => {
           />
         </div>
 
-        {/* 파일 */}
+        <hr />
+
+        {/* 기존 첨부파일 */}
         <div className="section">
-          <p className="section-title">• 첨부 파일란</p>
+          <p className="section-title">• 기존 첨부파일</p>
+          {existingFiles.length > 0 ? (
+            <ul>
+              {existingFiles.map((file) => (
+                <li key={file.fileId}>
+                  📎 {file.fileName}{" "}
+                  <Trash2
+                    size={16}
+                    style={{ cursor: "pointer", marginLeft: "8px" }}
+                    onClick={() => handleDeleteExistingFile(file.fileId)}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>첨부파일 없음</p>
+          )}
+        </div>
+
+        <hr />
+
+        {/* 새 첨부파일 */}
+        <div className="section">
+          <p className="section-title">• 새 첨부파일 추가</p>
           <div className="file-input-wrapper">
             <input
               className="file-display"
               type="text"
               readOnly
-              value={modifiedFile ? modifiedFile.name : ""}
+              value={modifiedFiles.map((f) => f.name).join(", ")}
+              placeholder="선택된 파일 없음"
             />
             <label htmlFor="file-input" className="file-upload-btn" aria-hidden>
               <Plus size={18} strokeWidth={2} />
@@ -321,16 +361,33 @@ const AssignmentsModify = () => {
             <input
               id="file-input"
               type="file"
+              multiple
               onChange={handleFileChange}
               style={{ display: "none" }}
             />
           </div>
 
-          <div className="submit-btn-wrapper">
-            <button className="submit-btn" onClick={handleModifyAssignment}>
-              수정
-            </button>
-          </div>
+          {modifiedFiles.length > 0 && (
+            <ul className="file-list">
+              {modifiedFiles.map((file, idx) => (
+                <li key={idx}>
+                  {file.name}{" "}
+                  <Trash2
+                    size={16}
+                    style={{ cursor: "pointer", marginLeft: "8px" }}
+                    onClick={() => handleDeleteNewFile(idx)}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* 수정 버튼 */}
+        <div className="submit-btn-wrapper">
+          <button className="submit-btn" onClick={handleModifyAssignment}>
+            수정
+          </button>
         </div>
       </div>
 
@@ -358,4 +415,3 @@ const AssignmentsModify = () => {
 };
 
 export default AssignmentsModify;
-

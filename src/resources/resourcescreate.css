@@ -112,3 +112,17 @@
   gap: 2px;
 }
 
+.fileList {
+  margin-top: 10px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+}
+

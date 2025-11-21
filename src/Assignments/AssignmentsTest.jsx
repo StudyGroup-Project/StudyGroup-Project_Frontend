@@ -76,6 +76,7 @@ const AssignmentsTest = () => {
         }
 
         const data = await res.json();
+        console.log("assignmentData:", data);
         setAssignmentData(data);
       } catch (err) {
         console.error("fetchAssignmentData 에러:", err);
@@ -100,6 +101,8 @@ const AssignmentsTest = () => {
       score: Number(score),
     };
 
+    console.log("보내는 payload:", payload);
+
     try {
       const url = `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions/${assignmentData.id}/feedbacks`;
       const res = await fetchWithAuth(url, {
@@ -108,13 +111,14 @@ const AssignmentsTest = () => {
       });
 
       const resText = await res.text();
+      console.log("서버 응답:", resText);
 
       if (!res.ok) {
         throw new Error("피드백 전송 실패");
       }
 
       alert("피드백이 성공적으로 등록되었습니다!");
-       navigate(`/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`);
+      navigate(`/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`);
     } catch (err) {
       console.error("handleSubmit 에러:", err);
       alert("피드백 전송 중 오류가 발생했습니다.");
@@ -143,7 +147,7 @@ const AssignmentsTest = () => {
           <div className="profile-info">
             <div className="name">{assignmentData.submitterName || "이름 없음"}</div>
             <div className="time">
-              {assignmentData.createdAt ? new Date(assignmentData.createdAt).toLocaleString() : "-"}
+              {assignmentData.createAt ? new Date(assignmentData.createAt).toLocaleString() : "-"}
             </div>
           </div>
         </div>
@@ -155,12 +159,12 @@ const AssignmentsTest = () => {
             assignmentData.files.map((file, idx) => (
               <a
                 key={idx}
-                href={file.url}
-                target="_blank"
+                href={file.url}         // 실제 파일 URL
+                target="_blank"         // 새 탭에서 열기
                 rel="noreferrer"
-                style={{ display: "block", marginTop: "5px" }}
+                style={{ display: "block", marginTop: "5px", color: "#007bff", textDecoration: "underline" }}
               >
-                📎 {file.originalName || file.url || "파일"}
+                📎 {file.fileName || "파일"}
               </a>
             ))
           ) : (
@@ -173,7 +177,7 @@ const AssignmentsTest = () => {
         {/* 과제 내용 */}
         <div className="info-row">
           <p>• 과제 내용</p>
-          <textarea className="input-box" value={assignmentData.content || "내용 없음"} readOnly />
+          <textarea className="input-box" value={assignmentData.description || "내용 없음"} readOnly />
         </div>
 
         <hr />
