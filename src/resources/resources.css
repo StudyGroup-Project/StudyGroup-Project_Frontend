@@ -1,20 +1,36 @@
-/* 화면 전체 레이아웃 */
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;        /* 화면 전체 채우기 */
+  height: 100vh;      
   background-color: #fff;
-  overflow: hidden;     /* 하단 탭바 기준으로 내부 스크롤만 허용 */
+  overflow: hidden;     
   font-family: "Pretendard", sans-serif;
 }
 
-/* 상단 헤더 */
 .header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: center; 
+  justify-content: space-between; 
   padding: 14px 20px;
   border-bottom: 2px solid #3d348b;
+  min-height: 48px; 
+}
+
+
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center; 
+}
+
+.header-center {
+  flex: 1;
+  justify-content: center; 
+}
+
+.header-right {
+  min-width: 24px; 
 }
 
 .headerButton,
@@ -29,14 +45,14 @@
   font-size: 18px;
 }
 
-/* 리스트 영역 전체가 스크롤 */
+
 .resourceList {
-  flex: 1;              /* 남은 화면 모두 차지 */
-  overflow-y: auto;     /* 내부 스크롤 */
-  padding: 14px 16px 80px;   /* 탭바 영역 고려 */
+  flex: 1;             
+  overflow-y: auto;     
+  padding: 14px 16px 80px;  
 }
 
-/* 아이템 */
+
 .resourceItem {
   display: flex;
   justify-content: space-between;
@@ -58,7 +74,7 @@
   font-size: 14px;
 }
 
-/* 하단 탭바 */
+
 .tabbar {
   display: flex;
   justify-content: space-around;

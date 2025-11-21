@@ -6,8 +6,9 @@ import { ArrowLeft, PlusCircle, Home, FileText, Heart, Users, User } from "lucid
 
 export default function Resources() {
   const [resources, setResources] = useState([]);
-  const [groupInfo, setGroupInfo] = useState(null); // 그룹 정보
+  const [groupInfo, setGroupInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isLeader, setIsLeader] = useState(false); // 방장 여부
 
   const navigate = useNavigate();
   const { studyId } = useParams();
@@ -35,7 +36,7 @@ export default function Resources() {
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
+        let token = localStorage.getItem("accessToken");
         if (!token) {
           alert("로그인이 필요합니다.");
           navigate("/login");
@@ -50,8 +51,8 @@ export default function Resources() {
 
         if (groupRes.ok) {
           const groupData = await groupRes.json();
-
           setGroupInfo(groupData);
+          setIsLeader(groupData.leaderCheck); 
         }
 
         // 자료 목록 가져오기
@@ -62,7 +63,6 @@ export default function Resources() {
 
         if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
         const data = await res.json();
-
         if (Array.isArray(data)) setResources(data);
         else console.warn("⚠️ 예상과 다른 응답 형식:", data);
       } catch (error) {
@@ -82,20 +82,32 @@ export default function Resources() {
     <div className="container">
       {/* Header */}
       <div className="header">
-        <button className="headerButton" onClick={() => navigate(`/groupScreenhost/${studyId}`)}>
-          <ArrowLeft size={20} />
-        </button>
-
-        <span className="headerTitle">
-          {groupInfo?.title || "그룹명"}
-        </span>
-
+        <div className="header-left">
         <button
-          className="addButton"
-          onClick={() => navigate(`/resourcescreate/${studyId}`)}
+          className="headerButton"
+          onClick={() =>
+            navigate(isLeader ? `/groupScreenhost/${studyId}` : `/groupScreen/${studyId}`)
+          }
         >
-          <PlusCircle size={20} />
-        </button>
+  <ArrowLeft size={20} />
+</button>
+
+        </div>
+
+        <div className="header-center">
+          <span className="headerTitle">{groupInfo?.title || "그룹명"}</span>
+        </div>
+
+        <div className="header-right">
+          {isLeader && (
+            <button
+              className="addButton"
+              onClick={() => navigate(`/resourcescreate/${studyId}`)}
+            >
+              <PlusCircle size={20} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 자료 리스트 */}
@@ -119,9 +131,7 @@ export default function Resources() {
               <span className="resourceTitle">{res.title || "제목 없음"}</span>
               <div className="resourceAuthor">
                 <User size={16} />
-                <span>
-                  {res.userName || "작성자 미상"}
-                </span>
+                <span>{res.userName || "작성자 미상"}</span>
               </div>
             </div>
           ))
@@ -150,6 +160,3 @@ export default function Resources() {
     </div>
   );
 }
-
-
-
