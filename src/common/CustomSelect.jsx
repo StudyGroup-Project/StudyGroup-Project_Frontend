@@ -1,73 +1,84 @@
 import styled from 'styled-components'
 import './CustomSelect.css'
-import {useState} from 'react'
+import { useState } from 'react'
 
-function CustomSelect(props){
+function CustomSelect(props) {
     let list = props.list;
     let setUserData = props.setUserData;
     let [open, setOpen] = useState(false);
     let [selected, setSelected] = useState([]);
     let [curValue, setCurValue] = useState(list[0]);
 
-    return(
+    return (
         <>
-            <SelectBox onClick={()=>{
+            <SelectBox onClick={() => {
                 setOpen(!open)
             }}>
                 <Label>{curValue}</Label>
                 <SelectOptions show={open}>
-                {
-                    list.map(function(a, i){
-                        return(
-                            <Option key={i} onClick={(e)=>{
-                                let check = selected.findIndex((item)=>item==list[i])
-                                if(check==-1){
-                                    let copy = [...selected, list[i]];
-                                    setSelected(copy);
-                                    setUserData(prev=>({
-                                        ...prev,
-                                        category : [...prev.category, props.EngCategory[list[i]]]
-                                    }))
-                                }
-                                setCurValue(list[i]);
-                            }}>{list[i]}</Option>
-                        )
-                    })
-                }
+                    {
+                        list.map(function (a, i) {
+                            return (
+                                <Option key={i} onClick={(e) => {
+                                    let check = selected.findIndex((item) => item == props.EngCategory[list[i]])
+                                    if (check == -1) {
+                                        let copy = [...selected, props.EngCategory[list[i]]];
+                                        setSelected(copy);
+                                        setUserData(prev => ({
+                                            ...prev,
+                                            category: [...prev.category, props.EngCategory[list[i]]]
+                                        }))
+                                    }
+                                    setCurValue(list[i]);
+                                }}>{list[i]}</Option>
+                            )
+                        })
+                    }
                 </SelectOptions>
             </SelectBox>
 
             <div className>
                 <Category selected={selected} setSelected={setSelected}
-                        setUserData={setUserData}
+                    setUserData={setUserData}
                 />
             </div>
         </>
     )
 }
 
-function Category(props){
+function Category(props) {
     let selected = props.selected;
     let setSelected = props.setSelected;
     let setUserData = props.setUserData;
 
-    return(
+    let CategoryEngToKor = {
+        IT: 'IT',
+        BUSINESS: '사업',
+        DESIGN: '디자인',
+        LANGUAGE: '언어',
+        EXAM: '시험',
+        ACADEMICS: '공부',
+        LIFESTYLE: '일상',
+        OTHER: '기타'
+    }
+
+    return (
         <div className='category-card'>
-            {  
-                selected.map(function(a, i){
-                    return(
+            {
+                selected.map(function (a, i) {
+                    return (
                         <div key={i} className='categories'>
-                            <span>{selected[i]}</span>
-                            <span style={{cursor: 'pointer', color:'red'}}
-                            onClick={()=>{
-                                let copy = [...selected];
-                                let arr = copy.filter((item)=>item!=selected[i]);
-                                setSelected(arr);
-                                setUserData(prev=>({
-                                   ...prev,
-                                   category : [...arr] 
-                                }));
-                            }}
+                            <span>{CategoryEngToKor[selected[i]]}</span>
+                            <span style={{ cursor: 'pointer', color: 'red' }}
+                                onClick={() => {
+                                    let copy = [...selected];
+                                    let arr = copy.filter((item) => item != selected[i]);
+                                    setSelected(arr);
+                                    setUserData(prev => ({
+                                        ...prev,
+                                        category: [...arr]
+                                    }));
+                                }}
                             >❌</span>
                         </div>
                     )
@@ -77,7 +88,7 @@ function Category(props){
     )
 }
 
-  const SelectBox = styled.div`
+const SelectBox = styled.div`
     position: relative;
     display:flex;
     align-items:center;

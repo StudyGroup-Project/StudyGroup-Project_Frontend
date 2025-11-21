@@ -66,6 +66,8 @@
   font-size: 15px;
   color: #333;
   margin-bottom: 200px;
+  white-space: pre-wrap;
+  word-break: break-word; 
 }
 
 

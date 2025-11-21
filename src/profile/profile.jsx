@@ -5,6 +5,8 @@ import './profile.css';
 import { CustomSelect } from './../common/CustomSelect.jsx'
 import { useCookies } from 'react-cookie';
 import JobSelect from './JobList.jsx';
+import ProfileAddressList from './profile_address_list.jsx';
+import { provinceList, districtList } from './../data.js';
 
 function Profile() {
     let [userData, setUserData] = useState({
@@ -57,15 +59,15 @@ function ProfileInput(props) {
     let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
         '기타'
     ]
-    
+
     let EngCategory = {
-        IT: 'IT', 
-        사업: 'BUSINESS', 
-        디자인: 'DESIGN', 
-        언어: 'LANGUAGE', 
-        시험: 'EXAM', 
-        공부: 'ACADEMICS', 
-        일상: 'LIFESTYLE', 
+        IT: 'IT',
+        사업: 'BUSINESS',
+        디자인: 'DESIGN',
+        언어: 'LANGUAGE',
+        시험: 'EXAM',
+        공부: 'ACADEMICS',
+        일상: 'LIFESTYLE',
         기타: 'OTHER'
     }
 
@@ -79,7 +81,7 @@ function ProfileInput(props) {
     }
 
     let navigate = useNavigate();
-    
+
     async function getAccessToken() {
         try {
             let res = await axios.post('http://3.39.81.234:8080/api/auth/token', {
@@ -104,11 +106,10 @@ function ProfileInput(props) {
                 preferredCategory: props.userData.category
             },
                 {
-                    // 2. headers 객체에 Authorization 추가
                     headers: {
                         'Authorization': `Bearer ${accessToken}`
                     },
-                    withCredentials: true // 기존 설정 유지
+                    withCredentials: true
                 });
 
             navigate('/profileImage');
@@ -139,7 +140,7 @@ function ProfileInput(props) {
                 </>
                 <>
                     <h4 className='profile-info'>주소 </h4>
-                    <div className='address-input-container'>
+                    {/* <div className='address-input-container'>
                         <input className='address-input-box'
                             type='text' placeholder='경상북도'
                             onChange={(e) => {
@@ -164,6 +165,12 @@ function ProfileInput(props) {
                                 }))
                             }}
                         />
+                    </div> */}
+                    <div className='address-input-container'>
+                        <ProfileAddressList
+                            setUserData={props.setUserData}
+                            provinceList={provinceList}
+                            districtList={districtList} />
                     </div>
                 </>
                 <>
@@ -184,7 +191,7 @@ function ProfileInput(props) {
                             onChange={(e) => {
                                 props.setUserBirth(prev => ({
                                     ...prev,
-                                    month: `${e.target.value}`
+                                    month: `${e.target.value.padStart(2, "0")}`
                                 }))
                             }}
                         />
@@ -195,7 +202,7 @@ function ProfileInput(props) {
                             onChange={(e) => {
                                 props.setUserBirth(prev => ({
                                     ...prev,
-                                    date: `${e.target.value}`
+                                    date: `${e.target.value.padStart(2, "0")}`
                                 }))
                             }}
                         />
@@ -204,8 +211,7 @@ function ProfileInput(props) {
                 </>
                 <>
                     <h4 className='profile-info'>직업</h4>
-                    <JobSelect EngJob={EngJob} setUserData={props.setUserData} list={job}/>
-                    
+                    <JobSelect EngJob={EngJob} setUserData={props.setUserData} list={job} />
                 </>
                 <>
                     <h4 className='profile-category-info'>선호 카테고리</h4>
@@ -221,7 +227,6 @@ function ProfileInput(props) {
                     className='next-button'
                     disabled={props.checkEmpty()}
                     onClick={async () => {
-                        console.log(props.userData);
                         await getAccessToken();
                         await postUserData();
                     }}

@@ -35,7 +35,6 @@ import NoticeDetail from './notice/noticedetail.jsx';
 import NoticeDetailHost from './notice/noticedetailhost.jsx';
 import NoticeHost from './notice/noticehost.jsx';
 import NoticeCreate from './notice/noticecreate.jsx';
-import NoticeModify from './notice/noticemodify.jsx';
 import ApplicationList from './ApplicationList/ApplicationList.jsx';
 import ChatRoom from './Chat/ChatRoom.jsx';
 import GroupProfileEdit from './Group/GroupProfileEdit.jsx';
@@ -115,7 +114,6 @@ function App() {
         <Route path="noticedetail/:studyId/:noticeId" element={<NoticeDetail/>}/>
         <Route path='noticehost/:studyId' element={<NoticeHost/>}/>
         <Route path='noticecreate/:studyId' element={<NoticeCreate/>}/>
-        <Route path='noticemodify/:studyId/:noticeId' element={<NoticeModify/>}/>
         <Route path="/studies/:studyId/applications" element={<ApplicationList />} />
         <Route path="/studies/:studyId/applications/:applicationId" element={<ApplicationList />} />
         <Route path="/chat/:studyId" element={<ChatRoom />} />

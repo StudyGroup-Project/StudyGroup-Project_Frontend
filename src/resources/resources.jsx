@@ -42,7 +42,7 @@ export default function Resources() {
           return;
         }
 
-        // 🔹 1. 그룹 정보 가져오기
+        // 그룹 정보 가져오기
         const groupRes = await fetch(`${baseUrl}/${studyId}`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
@@ -54,7 +54,7 @@ export default function Resources() {
           setGroupInfo(groupData);
         }
 
-        // 🔹 2. 자료 목록 가져오기
+        // 자료 목록 가져오기
         const res = await fetch(`${baseUrl}/${studyId}/resources`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },

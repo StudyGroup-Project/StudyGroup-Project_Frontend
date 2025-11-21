@@ -172,7 +172,7 @@
     gap: 8px;
     flex-wrap: wrap;
     width: 380px;
-    margin-top: -5px;
+    margin-top: -18px;
 
 }
 
@@ -211,4 +211,10 @@
 
 .myprofile-gauge-box .score-value {
     font-weight: 800;
+}
+
+.logout-button {
+    text-decoration: underline;
+    color: #000000;
+    cursor: pointer;
 }

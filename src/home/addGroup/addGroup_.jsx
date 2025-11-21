@@ -13,7 +13,17 @@ function addGroup() {
     let navigate = useNavigate();
     let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
         '기타'
-    ]
+    ];
+    let EngCategory = {
+        IT: 'IT',
+        사업: 'BUSINESS',
+        디자인: 'DESIGN',
+        언어: 'LANGUAGE',
+        시험: 'EXAM',
+        공부: 'ACADEMICS',
+        일상: 'LIFESTYLE',
+        기타: 'OTHER'
+    };
     let [groupData, setGroupData] = useState({
         title: '',
         maxMemberCount: 0,
@@ -61,7 +71,6 @@ function addGroup() {
                     withCredentials: true, // 쿠키 인증을 쓴다면 유지
                 }
             );
-            console.log(data);
             return res.data;
         } catch (err) {
             console.error('그룹 생성 실패:', err.response?.data || err.message);
@@ -101,7 +110,7 @@ function addGroup() {
                 </div>
 
                 <h4 className='addGroup-info'>카테고리</h4>
-                <CustomSelect list={category} setGroupData={setGroupData} />
+                <CustomSelect EngCategory={EngCategory} list={category} setGroupData={setGroupData} />
 
                 <h4 className='addGroup-info'>위치</h4>
                 <div className='addGroup-address-container'>
@@ -138,6 +147,7 @@ function addGroup() {
                 <div className='addGroup-button-container'>
                     <button className='addGroup-button'
                         onClick={async () => {
+                            // console.log(groupData);
                             await getAccessToken();
                             await createGroup(groupData);
                             navigate('/home');

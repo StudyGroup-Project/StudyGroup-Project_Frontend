@@ -26,13 +26,23 @@ function Search() {
     let [sortType, setSortType] = useState('');
     let sortList = ['최신순', '신뢰도순'];
 
+    let CategoryEngToKor = {
+        IT: 'IT',
+        BUSINESS: '사업',
+        DESIGN: '디자인',
+        LANGUAGE: '언어',
+        EXAM: '시험',
+        ACADEMICS: '공부',
+        LIFESTYLE: '일상',
+        OTHER: '기타'
+    }
+
     const [groupProfileData, setGroupProfileData] = useState({});
 
     let navigate = useNavigate();
 
     async function handleSearch() {
         try {
-            // 검색어 없으면 결과 숨김
             if (!searchText.trim()) {
                 setIsSuccess(null);
                 setSearchResult([]);
@@ -201,7 +211,7 @@ function Search() {
 
                                 {/* category는 문자열 */}
                                 <div className='active-group-category'>
-                                    <h4># {group.category}</h4>
+                                    <h4># {CategoryEngToKor[group.category]}</h4>
                                 </div>
 
                                 <h4 className='active-group-bio'>{group.bio}</h4>

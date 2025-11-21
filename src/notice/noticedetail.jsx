@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Send, Home, FileText, Heart, Users } from "lucide-react";
-import "./noticedetailhost.css"; // host 기준 CSS를 그대로 사용
+import "./noticedetail.css"; 
 
 export default function NoticeDetailMember() {
   const navigate = useNavigate();
@@ -110,7 +110,6 @@ export default function NoticeDetailMember() {
 
   if (!noticeData) return <div className="loading">로딩중...</div>;
 
-  // === 여기부터 Host와 동일한 DOM 구조 & 클래스명 ===
   return (
     <div className="notice-detail-container">
       {/* 상단 헤더 */}
@@ -122,14 +121,13 @@ export default function NoticeDetailMember() {
           style={{ cursor: "pointer" }}
         />
         <h1 className="title">상세보기</h1>
-        {/* 일반 멤버라서 메뉴 없음 (host는 여기서 menuWrapper가 있음) */}
       </div>
 
       <div className="content">
         {/* 제목 */}
         <h2 className="noticeTitle">{noticeData.title}</h2>
 
-        {/* 작성자 섹션 (host와 동일 구조) */}
+        {/* 작성자 섹션 */}
         <div className="author-info">
           <img
             src={noticeData.userProfileImageUrl || "/img/user/Group115.png"}
@@ -146,8 +144,10 @@ export default function NoticeDetailMember() {
 
         <div className="divider" />
 
-        {/* 내용 */}
-        <p className="noticeText">{noticeData.content}</p>
+        {/* 본문 내용 (줄바꿈 유지) */}
+        <div className="noticeText" style={{ whiteSpace: "pre-wrap" }}>
+          {noticeData.content}
+        </div>
 
         {/* 첨부파일 */}
         {noticeData.files && noticeData.files.length > 0 && (
@@ -168,12 +168,12 @@ export default function NoticeDetailMember() {
         <div className="divider" />
       </div>
 
-      {/* 댓글 리스트 (host와 동일 structure & classnames) */}
+      {/* 댓글 리스트 */}
       <div className="commentList">
         {comments.map((c) => (
           <div key={c.commentId} className="commentItem">
             <img
-              src={c.userProfileImageUrl}
+              src={c.userProfileImageUrl || "/img/user/Group115.png"}
               className="commentProfileImg"
               alt="profile"
             />
@@ -203,7 +203,7 @@ export default function NoticeDetailMember() {
         <Send size={20} className="sendIcon" onClick={handleCommentSubmit} />
       </div>
 
-      {/* 하단 탭바 (host와 동일) */}
+      {/* 하단 탭바 */}
       <div className="tab-bar">
         <div className="tab-item" onClick={() => navigate("/home")}>
           <Home size={22} />
@@ -225,4 +225,3 @@ export default function NoticeDetailMember() {
     </div>
   );
 }
-

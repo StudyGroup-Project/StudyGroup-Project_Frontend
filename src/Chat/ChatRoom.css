@@ -37,7 +37,7 @@
 }
 
 /* 뒤로가기 버튼 (세로 여유 조금 늘림) */
-.back-button {
+.chat-back-button {
   padding: 9px 12px; /* 🔼 Y축 살짝 증가 */
   border-radius: 999px;
   border: none;
@@ -58,13 +58,13 @@
     box-shadow 0.12s ease-out;
 }
 
-.back-button:hover {
+.chat-back-button:hover {
   background-color: #e5e7eb;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(148, 163, 184, 0.8);
 }
 
-.back-button:active {
+.chat-back-button:active {
   transform: translateY(0);
   box-shadow: 0 2px 5px rgba(107, 114, 128, 0.9);
 }
