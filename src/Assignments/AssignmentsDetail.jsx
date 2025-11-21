@@ -32,9 +32,7 @@ async function fetchAssignmentDetail(studyId, assignmentId) {
     `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
     {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     }
   );
 
@@ -48,7 +46,7 @@ const AssignmentsDetail = () => {
 
   const [assignment, setAssignment] = useState(null);
   const [submissionText, setSubmissionText] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]); // ✅ 다중첨부용 배열
 
   useEffect(() => {
     const load = async () => {
@@ -67,26 +65,22 @@ const AssignmentsDetail = () => {
         console.error("데이터 로딩 실패:", err);
       }
     };
-
     load();
   }, [studyId, assignmentId, navigate]);
 
   /* 제출하기 */
   const handleSubmit = async () => {
-    const token = localStorage.getItem("accessToken");
-
-    if (!submissionText && !file) {
+    if (!submissionText && files.length === 0) {
       alert("내용 또는 파일 중 하나는 입력해야 합니다.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("description", submissionText);
-    if (file) {
-      formData.append("files", file);
-    }
+    formData.append("description", submissionText || "");
+    files.forEach((file) => formData.append("files", file)); // 다중 첨부
 
     try {
+      const token = localStorage.getItem("accessToken");
       const res = await fetch(
         `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}/submissions`,
         {
@@ -101,23 +95,17 @@ const AssignmentsDetail = () => {
       alert("제출이 완료되었습니다.");
       window.location.reload();
     } catch (err) {
-      console.error("제출 실패:", err);
+      console.error(err);
       alert("제출 중 오류가 발생했습니다.");
     }
   };
 
-  const f = (dateString) => {
-    if (!dateString) return "-";
-    return new Date(dateString).toLocaleString();
-  };
+  const f = (dateString) => (dateString ? new Date(dateString).toLocaleString() : "-");
 
-  if (!assignment) {
-    return <div className="assignments-detail">불러오는 중...</div>;
-  }
+  if (!assignment) return <div className="assignments-detail">불러오는 중...</div>;
 
   return (
     <div className="assignments-detail">
-
       {/* 상단바 */}
       <div className="top-bar">
         <div className="back-btn" onClick={() => navigate(-1)}>
@@ -175,7 +163,7 @@ const AssignmentsDetail = () => {
                 {assignment.files.map((file) => (
                   <li key={file.fileId}>
                     <a href={file.url} rel="noreferrer">
-                    📎 {file.fileName}
+                      📎 {file.fileName}
                     </a>
                   </li>
                 ))}
@@ -188,7 +176,7 @@ const AssignmentsDetail = () => {
 
         <hr />
 
-        {/* 제출란 */}
+        {/* 제출란 (다중첨부) */}
         <div className="submission-section">
           <p>• 제출란</p>
 
@@ -201,9 +189,9 @@ const AssignmentsDetail = () => {
           <div className="file-input-wrapper">
             <input
               type="text"
-              readOnly
               className="file-display"
-              value={file ? file.name : ""}
+              readOnly
+              value={files.map((f) => f.name).join(", ")} // 선택한 파일 표시
             />
             <label htmlFor="file-input" className="file-upload-btn">
               <Plus size={22} />
@@ -212,7 +200,8 @@ const AssignmentsDetail = () => {
               id="file-input"
               type="file"
               style={{ display: "none" }}
-              onChange={(e) => setFile(e.target.files[0])}
+              multiple
+              onChange={(e) => setFiles([...files, ...Array.from(e.target.files)])} // ✅ 기존 파일 유지하며 추가
             />
           </div>
 
@@ -225,58 +214,58 @@ const AssignmentsDetail = () => {
 
         <hr />
 
-{/* 제출 현황 */}
-<div className="section">
-  <p className="section-title">• 제출 현황</p>
+        {/* 제출 현황 */}
+        <div className="section">
+          <p className="section-title">• 제출 현황</p>
 
-  {assignment?.submissions?.length > 0 ? (
-    assignment.submissions.map((submission) => {
-      const profile = assignment.profileUrls?.find(
-        (p) => p.id === submission.submitterId
-      );
-      const submissionId = submission.id;
+          {assignment?.submissions?.length > 0 ? (
+            assignment.submissions.map((submission) => {
+              const profile = assignment.profileUrls?.find(
+                (p) => p.id === submission.submitterId
+              );
+              const submissionId = submission.id;
 
-      return (
-        <div className="submission-item" key={submissionId}>
-          <div className="profile">
-            <img
-              src={
-                profile?.profileImageUrl && profile.profileImageUrl.trim() !== ""
-                  ? profile.profileImageUrl
-                  : "/img/Group 115.png"
-              }
-              alt="profile"
-            />
-            <div>
-              <div>{profile?.nickname || submission.nickname || "이름 없음"}</div>
-              <div className="time">{f(submission.createdAt)}</div>
-            </div>
-          </div>
+              return (
+                <div className="submission-item" key={submissionId}>
+                  <div className="profile">
+                    <img
+                      src={
+                        profile?.profileImageUrl && profile.profileImageUrl.trim() !== ""
+                          ? profile.profileImageUrl
+                          : "/img/Group 115.png"
+                      }
+                      alt="profile"
+                    />
+                    <div>
+                      <div>{profile?.nickname || submission.nickname || "이름 없음"}</div>
+                      <div className="time">{f(submission.createdAt)}</div>
+                    </div>
+                  </div>
 
-          <div className="actions">
-            <button
-              onClick={() =>
-                navigate(`/assignments/${studyId}/${assignmentId}/submissions/${submissionId}`)
-              }
-            >
-              평가하기
-            </button>
+                  <div className="actions">
+                    <button
+                      onClick={() =>
+                        navigate(`/assignments/${studyId}/${assignmentId}/submissions/${submissionId}`)
+                      }
+                    >
+                      평가하기
+                    </button>
 
-            <button
-              onClick={() =>
-                navigate(`/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`)
-              }
-            >
-              평가목록
-            </button>
-          </div>
+                    <button
+                      onClick={() =>
+                        navigate(`/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`)
+                      }
+                    >
+                      평가목록
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <p style={{ marginLeft: 10 }}>제출한 사람이 없습니다.</p>
+          )}
         </div>
-      );
-    })
-  ) : (
-    <p style={{ marginLeft: 10 }}>제출한 사람이 없습니다.</p>
-  )}
-</div>
       </div>
 
       {/* 하단 탭바 */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./noticecreate.css";
-import { Home, FileText, Heart, Users, ArrowLeft } from "lucide-react";
+import { Home, FileText, Heart, Users, ArrowLeft, Trash2 } from "lucide-react";
 
 export default function NoticeCreate() {
   const navigate = useNavigate();
@@ -11,9 +11,6 @@ export default function NoticeCreate() {
   const [content, setContent] = useState("");
   const [files, setFiles] = useState([]);
 
-  /* ---------------------------
-      Refresh Token 자동 갱신
-  ---------------------------- */
   async function getRefreshToken() {
     try {
       const res = await fetch("http://3.39.81.234:8080/api/auth/refresh", {
@@ -58,9 +55,6 @@ export default function NoticeCreate() {
     return res;
   }
 
-  /* ---------------------------
-      파일 추가
-  ---------------------------- */
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setFiles((prev) => [...prev, ...selectedFiles]);
@@ -70,9 +64,6 @@ export default function NoticeCreate() {
     setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  /* ---------------------------
-      공지 생성 제출
-  ---------------------------- */
   const handleSubmit = async () => {
     if (!studyId) return alert("스터디 ID가 없습니다.");
     if (!title || !content) return alert("제목과 내용을 입력해주세요.");
@@ -101,9 +92,6 @@ export default function NoticeCreate() {
     }
   };
 
-  /* ---------------------------
-      로그인 체크
-  ---------------------------- */
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -141,24 +129,32 @@ export default function NoticeCreate() {
 
       {/* 파일 첨부 */}
       <label className="label">• 첨부 파일</label>
-      <input type="file" multiple onChange={handleFileChange} />
 
-      {/* 파일 리스트 + 삭제 버튼 */}
+      <div className="fileUploadBox">
+        <input
+          type="file"
+          multiple
+          onChange={handleFileChange}
+          className="fileInput"
+        />
+      </div>
+
+      {/* 파일 리스트 + 구분선 */}
       {files.length > 0 && (
-        <ul className="fileList">
-          {files.map((file, idx) => (
-            <li key={idx}>
-              {file.name}{" "}
-              <button
-                type="button"
-                className="fileRemoveBtn"
-                onClick={() => handleFileRemove(idx)}
-              >
-                x
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="fileListWrapper">
+          <ul className="fileList">
+            {files.map((file, idx) => (
+              <li key={idx} className="fileItem">
+                <span>{file.name}</span>
+                <Trash2
+                  size={16}
+                  style={{ cursor: "pointer", marginLeft: "8px" }}
+                  onClick={() => handleFileRemove(idx)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       <div className="submitButtonContainer">

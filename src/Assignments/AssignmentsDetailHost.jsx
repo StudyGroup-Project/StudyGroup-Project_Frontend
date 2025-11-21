@@ -26,16 +26,12 @@ async function getRefreshToken() {
 }
 
 /* 과제 상세 데이터 가져오기 */
-async function fetchAssignmentDetail(studyId, assignmentId, token) {
+async function fetchAssignmentDetail(studyId, assignmentId) {
+  const token = localStorage.getItem("accessToken");
+
   const res = await fetch(
     `http://3.39.81.234:8080/api/studies/${studyId}/assignments/${assignmentId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
+    { headers: { Authorization: `Bearer ${token}` } }
   );
 
   if (!res.ok) throw new Error("과제 상세 내용 가져오기 실패");
@@ -50,11 +46,11 @@ const AssignmentDetailHost = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [submissionText, setSubmissionText] = useState("");
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState([]); // 다중 첨부용
 
   useEffect(() => {
     const load = async () => {
-      let token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
       if (!token) {
         alert("로그인이 필요합니다.");
         navigate("/login");
@@ -63,14 +59,12 @@ const AssignmentDetailHost = () => {
 
       try {
         await getRefreshToken();
-        token = localStorage.getItem("accessToken");
-        const data = await fetchAssignmentDetail(studyId, assignmentId, token);
+        const data = await fetchAssignmentDetail(studyId, assignmentId);
         setAssignment(data);
       } catch (err) {
         console.error("데이터 로딩 실패:", err);
       }
     };
-
     load();
   }, [studyId, assignmentId, navigate]);
 
@@ -85,16 +79,17 @@ const AssignmentDetailHost = () => {
 
       if (res.ok) {
         alert("삭제되었습니다.");
-        navigate(`/assignments/${studyId}`);
+        navigate(`/assignmentshost/${studyId}`);
       } else alert("삭제 실패");
     } catch (e) {
       console.error("삭제 오류:", e);
     }
   };
 
-  /* 제출하기 (여러 파일 지원 + 현황 갱신) */
+  /* 제출하기 (회원용 방식) */
   const handleSubmit = async () => {
     const token = localStorage.getItem("accessToken");
+
     if (!submissionText && files.length === 0) {
       alert("내용 또는 파일 중 하나는 입력해야 합니다.");
       return;
@@ -102,7 +97,7 @@ const AssignmentDetailHost = () => {
 
     const formData = new FormData();
     formData.append("description", submissionText || "");
-    files.forEach((f) => formData.append("files", f));
+    files.forEach((file) => formData.append("files", file));
 
     try {
       const res = await fetch(
@@ -115,30 +110,24 @@ const AssignmentDetailHost = () => {
       );
 
       if (!res.ok) throw new Error("제출 실패");
-      const newSubmission = await res.json();
 
       alert("제출 완료!");
-      setAssignment((prev) => ({
-        ...prev,
-        submissions: [...(prev.submissions || []), newSubmission],
-      }));
-
-      setSubmissionText("");
-      setFiles([]);
+      window.location.reload();
     } catch (err) {
       console.error("제출 실패:", err);
       alert("제출 중 오류가 발생했습니다.");
     }
   };
 
-  /* 날짜 포맷 */
   const f = (dateString) => (dateString ? new Date(dateString).toLocaleString() : "-");
+
+  if (!assignment) return <div className="assignments-detail">불러오는 중...</div>;
 
   return (
     <div className="assignments-detail">
       {/* 상단바 */}
       <div className="top-bar">
-        <div className="back-btn" onClick={() => window.history.back()}>
+        <div className="back-btn" onClick={() => navigate(-1)}>
           <ArrowLeft size={24} />
         </div>
 
@@ -157,14 +146,35 @@ const AssignmentDetailHost = () => {
         {/* 제목 */}
         <div className="info-row">
           <p>• 과제 제목</p>
-          <p>{assignment?.title}</p>
+          <p>{assignment.title}</p>
         </div>
         <hr />
 
         {/* 내용 */}
         <div className="info-row">
           <p>• 내용</p>
-          <p>{assignment?.description}</p>
+          <p>{assignment.description}</p>
+        </div>
+        <hr />
+
+        {/* 시작일 */}
+        <div className="info-row">
+          <p>• 시작 일시</p>
+          <p>{f(assignment.startAt)}</p>
+        </div>
+        <hr />
+
+        {/* 마감일 */}
+        <div className="info-row">
+          <p>• 마감 일시</p>
+          <p>{f(assignment.dueAt)}</p>
+        </div>
+        <hr />
+
+        {/* 생성일 */}
+        <div className="info-row">
+          <p>• 생성 일시</p>
+          <p>{f(assignment.createAt)}</p>
         </div>
         <hr />
 
@@ -177,7 +187,7 @@ const AssignmentDetailHost = () => {
                 {assignment.files.map((file) => (
                   <li key={file.fileId}>
                     <a href={file.url} rel="noreferrer">
-                    📎 {file.fileName}
+                      📎 {file.fileName}
                     </a>
                   </li>
                 ))}
@@ -187,7 +197,6 @@ const AssignmentDetailHost = () => {
             )}
           </div>
         </div>
-
         <hr />
 
         {/* 제출란 */}
@@ -213,8 +222,8 @@ const AssignmentDetailHost = () => {
             <input
               id="file-input"
               type="file"
-              multiple
               style={{ display: "none" }}
+              multiple
               onChange={(e) => setFiles([...files, ...Array.from(e.target.files)])}
             />
           </div>
@@ -228,59 +237,61 @@ const AssignmentDetailHost = () => {
 
         <hr />
 
-          {/* 제출 현황 */}
-          <div className="section">
-            <p className="section-title">• 제출 현황</p>
+        {/* 제출 현황 */}
+        <div className="section">
+          <p className="section-title">• 제출 현황</p>
 
-            {assignment?.submissions?.length > 0 ? (
-              assignment.submissions.map((submission) => {
-                const profile = assignment.profileUrls?.find(
-                  (p) => p.id === submission.submitterId
-                );
-                const submissionId = submission.id;
+          {assignment?.submissions?.length > 0 ? (
+            assignment.submissions.map((submission) => {
+              const profile = assignment.profileUrls?.find(
+                (p) => p.id === submission.submitterId
+              );
+              const submissionId = submission.id;
 
-                return (
-                  <div className="submission-item" key={submissionId}>
-                    <div className="profile">
-                      <img
-                        src={
-                          profile?.profileImageUrl && profile.profileImageUrl.trim() !== ""
-                            ? profile.profileImageUrl
-                            : "/img/Group 115.png"
-                        }
-                        alt="profile"
-                      />
-                      <div>
-                        <div>{profile?.nickname || submission.nickname || "이름 없음"}</div>
-                        <div className="time">{f(submission.createdAt)}</div>
-                      </div>
-                    </div>
-
-                    <div className="actions">
-                      <button
-                        onClick={() =>
-                          navigate(`/assignments/${studyId}/${assignmentId}/submissions/${submissionId}`)
-                        }
-                      >
-                        평가하기
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          navigate(`/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`)
-                        }
-                      >
-                        평가목록
-                      </button>
+              return (
+                <div className="submission-item" key={submissionId}>
+                  <div className="profile">
+                    <img
+                      src={
+                        profile?.profileImageUrl && profile.profileImageUrl.trim() !== ""
+                          ? profile.profileImageUrl
+                          : "/img/Group 115.png"
+                      }
+                      alt="profile"
+                    />
+                    <div>
+                      <div>{profile?.nickname || submission.nickname || "이름 없음"}</div>
+                      <div className="time">{f(submission.createdAt)}</div>
                     </div>
                   </div>
-                );
-              })
-            ) : (
-              <p style={{ marginLeft: 10 }}>제출한 사람이 없습니다.</p>
-            )}
-          </div>
+
+                  <div className="actions">
+                    <button
+                      onClick={() =>
+                        navigate(`/assignments/${studyId}/${assignmentId}/submissions/${submissionId}`)
+                      }
+                    >
+                      평가하기
+                    </button>
+
+                    <button
+                      onClick={() =>
+                        navigate(
+                          `/assignmentslist/${studyId}/${assignmentId}/submissions/${submissionId}/feedbacks`
+                        )
+                      }
+                    >
+                      평가목록
+                    </button>
+                  </div>
                 </div>
+              );
+            })
+          ) : (
+            <p style={{ marginLeft: 10 }}>제출한 사람이 없습니다.</p>
+          )}
+        </div>
+      </div>
 
       {/* 하단 탭바 */}
       <div className="tab-bar">
