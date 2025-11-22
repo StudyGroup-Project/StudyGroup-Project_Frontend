@@ -23,10 +23,10 @@ function HeadCount(props){
                         return(
                             <Option key={i} onClick={(e)=>{
                                 e.stopPropagation();
-                                setCurValue(i);
-                                setHeadCount(i);
+                                setCurValue(i+1);
+                                setHeadCount(i+1);
                                 setOpen(false);
-                            }}>{i}</Option>
+                            }}>{i+1}</Option>
                         )
                     })
                 }   
