@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import "./resources.css";
-import { ArrowLeft, PlusCircle, Home, FileText, Heart, Users, User } from "lucide-react";
+import { ArrowLeft, Home, FileText, Heart, Users, User } from "lucide-react";
 
 export default function Resources() {
   const [resources, setResources] = useState([]);
   const [groupInfo, setGroupInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isLeader, setIsLeader] = useState(false); // 방장 여부
 
   const navigate = useNavigate();
   const { studyId } = useParams();
@@ -52,7 +51,6 @@ export default function Resources() {
         if (groupRes.ok) {
           const groupData = await groupRes.json();
           setGroupInfo(groupData);
-          setIsLeader(groupData.leaderCheck); 
         }
 
         // 자료 목록 가져오기
@@ -83,15 +81,12 @@ export default function Resources() {
       {/* Header */}
       <div className="header">
         <div className="header-left">
-        <button
-          className="headerButton"
-          onClick={() =>
-            navigate(isLeader ? `/groupScreenhost/${studyId}` : `/groupScreen/${studyId}`)
-          }
-        >
-  <ArrowLeft size={20} />
-</button>
-
+          <button
+            className="headerButton"
+            onClick={() => navigate(`/groupScreen/${studyId}`)}
+          >
+            <ArrowLeft size={20} />
+          </button>
         </div>
 
         <div className="header-center">
@@ -99,14 +94,7 @@ export default function Resources() {
         </div>
 
         <div className="header-right">
-          {isLeader && (
-            <button
-              className="addButton"
-              onClick={() => navigate(`/resourcescreate/${studyId}`)}
-            >
-              <PlusCircle size={20} />
-            </button>
-          )}
+          {/* 리더 관련 버튼 제거 */}
         </div>
       </div>
 
