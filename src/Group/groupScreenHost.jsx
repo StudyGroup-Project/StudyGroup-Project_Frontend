@@ -280,7 +280,7 @@ export default function GroupScreenHost() {
           <div
             className="overlay-content"
             ref={overlayRef}
-            onClick={(e) => e.stopPropagation()} // 안쪽 클릭시 닫기 방지
+            onClick={(e) => e.stopPropagation()} 
           >
             <div className="overlay-header">
               <h2>그룹원</h2>
