@@ -1,5 +1,5 @@
 import  React, { useState, useEffect }  from 'react';
-import { ArrowLeft, Plus, Megaphone, Home, FileText, Heart, Users } from 'lucide-react';
+import { ArrowLeft, PlusCircle, Megaphone, Home, FileText, Heart, Users } from 'lucide-react';
 import { useNavigate, useParams } from "react-router-dom";
 import './notice.css';
 
@@ -103,8 +103,7 @@ async function fetchNotices() {
 
         <h1 className='noticeTitle'>공지</h1>
 
-        {/* 플러스 버튼 클릭 시 공지 생성 페이지로 이동 */}
-        <Plus
+        <PlusCircle
           size={24}
           className='noticeIcon'
           onClick={() => navigate(`/noticecreate/${studyId}`)}

@@ -109,3 +109,43 @@
   font-size: 12px;
   gap: 2px;
 }
+
+/* textarea, 상세보기 공통 */
+.textareaField, .body-text {
+  white-space: pre-wrap; /* 엔터 줄바꿈 유지 */
+  line-height: 1.6;
+}
+
+/* 점 두 줄 표시 */
+.notice-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 4px; /* 점 사이 간격 */
+}
+
+.notice-content ul li {
+  width: 6px;
+  height: 6px;
+  background-color: black;
+  border-radius: 50%;
+}
+
+.fileUploadBox {
+  display: flex;
+  align-items: center;
+  border: 2px solid #3d348b;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.fileInput {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
