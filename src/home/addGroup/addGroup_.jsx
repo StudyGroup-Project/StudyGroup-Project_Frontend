@@ -89,6 +89,7 @@ function addGroup() {
                 <div className='addGroup-box' >
                     <input className='addGroup-input'
                         type='text'
+                        maxLength={20}
                         placeholder='그룹명을 입력해 주세요'
                         onChange={(e) => {
                             setGroupData(prev => ({
@@ -147,7 +148,6 @@ function addGroup() {
                 <div className='addGroup-button-container'>
                     <button className='addGroup-button'
                         onClick={async () => {
-                            // console.log(groupData);
                             await getAccessToken();
                             await createGroup(groupData);
                             navigate('/home');
