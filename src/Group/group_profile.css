@@ -40,12 +40,14 @@
 .group-profile-title-text {
     position: absolute;
     left: 20px;
+    width: 140px;
+    text-align: left;
+    word-break: break-word;
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
     line-height: 23px;
-    text-align: center;
 
     color: #fff;
 }
