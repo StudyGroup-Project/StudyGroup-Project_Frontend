@@ -66,29 +66,41 @@
     left: 220px;
     top: 2px;
     height: 76px;
-    width: 80px;
+    width: 60px;
 }
 
 .group-profile-host-name-text {
     position: absolute;
     top: 14px;
+    left: 0;
+    width: 100%;
+    
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 300;
     font-size: 15px;
     line-height: 23px;
     color: #fff;
+    text-align: left; 
 }
 
 .group-profile-host-name {
     position: absolute;
-    top: 34px;
+    top: 34px; 
+    left: 0;   
+    width: 100%; 
+
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 450;
     font-size: 15px;
     line-height: 23px;
     color: #fff;
+
+    display: block;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .group-profile-Curmember-container {
@@ -154,8 +166,8 @@
     padding-bottom: 20px;
     background: var(--purple);
     border-radius: 15px;
-    
-}   
+
+}
 
 .group-profile-catalog-introduction {
     font-size: 20px;
