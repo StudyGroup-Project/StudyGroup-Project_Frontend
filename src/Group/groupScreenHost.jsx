@@ -121,28 +121,36 @@ export default function GroupScreenHost() {
     loadData();
   }, [studyId, navigate]);
 
-  /* ---------------------------
-      그룹 삭제
-  ---------------------------- */
-  async function deleteGroup() {
-    if (!window.confirm("정말 그룹을 삭제하시겠습니까?")) return;
-
-    try {
-      const res = await authFetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}`,
-        { method: "DELETE" }
-      );
-
-      if (res.status === 204) {
-        alert("그룹이 삭제되었습니다.");
-        navigate("/home");
-      } else {
-        alert("삭제 실패");
+    /* ---------------------------
+          그룹 삭제
+    ---------------------------- */
+    async function deleteGroup() {
+      // 그룹장 외 멤버가 존재하는지 확인
+      const nonLeaderMembers = members.filter(m => m.role !== "LEADER");
+      if (nonLeaderMembers.length > 0) {
+        alert("그룹장 외 다른 멤버가 있어 그룹을 삭제할 수 없습니다.");
+        return;
       }
-    } catch (err) {
-      console.error(err);
+
+      if (!window.confirm("정말 그룹을 삭제하시겠습니까?")) return;
+
+      try {
+        const res = await authFetch(
+          `http://3.39.81.234:8080/api/studies/${studyId}`,
+          { method: "DELETE" }
+        );
+
+        if (res.status === 204) {
+          alert("그룹이 삭제되었습니다.");
+          navigate("/home");
+        } else {
+          alert("삭제 실패");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("그룹 삭제 중 오류가 발생했습니다.");
+      }
     }
-  }
 
   /* ---------------------------
       멤버 추방
