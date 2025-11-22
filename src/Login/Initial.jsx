@@ -74,8 +74,10 @@ function Initial() {
 
 function LoginButton(props) {
     let kakao = () => {
-        let link = "http://3.39.81.234:8080/oauth2/authorization/kakao";
-        window.location.href = link;
+        const backend = "http://3.39.81.234:8080";
+        const origin = window.location.origin;
+        window.location.href =
+            `${backend}/oauth2/authorization/kakao?origin=${encodeURIComponent(origin)}`;
     }
 
     let font_style = {
