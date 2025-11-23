@@ -138,28 +138,6 @@ export default function GroupScreen() {
     loadData();
   }, [studyId, navigate]);
 
-  /* ---------------------------
-      그룹 삭제
-  ---------------------------- */
-  async function deleteGroup() {
-    if (!window.confirm("정말 그룹을 삭제하시겠습니까?")) return;
-
-    try {
-      const res = await authFetch(
-        `http://3.39.81.234:8080/api/studies/${studyId}`,
-        { method: "DELETE" }
-      );
-
-      if (res.status === 204) {
-        alert("그룹이 삭제되었습니다.");
-        navigate("/home");
-      } else {
-        alert("삭제 실패");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
 
   /* ---------------------------
       그룹 탈퇴 (일반 유저)
