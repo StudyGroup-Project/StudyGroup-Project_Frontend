@@ -318,7 +318,7 @@ const AssignmentDetailHost = () => {
         createPortal(
           <div className="modal-overlay">
             <div className="modal">
-              <p>⚠ 정말 삭제하시겠습니까?</p>
+              <p>⚠️ 정말 삭제하시겠습니까?</p>
               <div className="modal-buttons">
                 <button onClick={() => setModalVisible(false)}>취소</button>
                 <button onClick={deleteAssignment}>삭제</button>

@@ -98,7 +98,6 @@ export default function Resources() {
         </div>
 
         <div className="header-right">
-          {/* 누구나 자료 생성 가능하도록 isLeader 조건 제거 */}
           <button
             className="addButton"
             onClick={() => navigate(`/resourcescreate/${studyId}`)}

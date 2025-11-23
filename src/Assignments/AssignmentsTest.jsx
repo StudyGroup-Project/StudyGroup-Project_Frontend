@@ -91,7 +91,7 @@ const AssignmentsTest = () => {
   const handleSubmit = async () => {
     const numScore = Number(score);
 
-    if (isNaN(numScore) || numScore < 0) {
+    if (isNaN(numScore)|| numScore < -5 || numScore > 5) {
       alert("점수를 올바르게 선택해주세요!");
       return;
     }
@@ -192,6 +192,12 @@ const AssignmentsTest = () => {
             <option value="3">3</option>
             <option value="2">2</option>
             <option value="1">1</option>
+            <option value="0">0</option>
+            <option value="-1">-1</option>
+            <option value="-2">-2</option>
+            <option value="-3">-3</option>
+            <option value="-4">-4</option>
+            <option value="-5">-5</option>
           </select>
         </div>
 
