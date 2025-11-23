@@ -128,7 +128,7 @@ const AssignmentsTestList = () => {
                   <div className="comment">{item.feedback || "-"}</div>
                 </div>
               </div>
-              <div className="score">{item.score >= 0 ? item.score : 0}점</div>
+              <div className="score">{item.score}점</div>
             </div>
           ))
         )}
