@@ -58,6 +58,7 @@ function Home() {
             setUserData(res.data.user);
             setGroupData(res.data.topStudies);
         } catch (err) {
+            alert("사용자님의 정보를 가져오는 데에 실패하였습니다.");
             console.log(err);
         }
     }
@@ -70,11 +71,13 @@ function Home() {
                     headers: { Authorization: `Bearer ${accessToken}` },
                     withCredentials: true,
                 });
+                alert("찜이 해제되었습니다.");
             } else {
                 await axios.post(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {}, {
                     headers: { Authorization: `Bearer ${accessToken}` },
                     withCredentials: true,
                 });
+                alert("찜 목록에 추가되었습니다.");
             }
         } catch (err) {
             console.error('북마크 토글 실패:', err.response?.data || err.message);
@@ -100,6 +103,7 @@ function Home() {
             }
 
         } catch (err) {
+            alert("그룹 상세 데이터를 가져오는 데에 실패하였습니다.");
             console.error('그룹 상세 데이터 가져오기 실패:', err.response?.data || err.message);
         }
     }

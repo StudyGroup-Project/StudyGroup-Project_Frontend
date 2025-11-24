@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import './category_list.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function PatchJobList(props) {
     let list = props.list;
@@ -9,12 +9,17 @@ function PatchJobList(props) {
     let [curValue, setCurValue] = useState(list[0]);
 
     let EngJob = {
+        선택안함: '선택안함',
         학생: 'STUDENT',
         회사원: 'OFFICE_WORKER',
         프리랜서: 'FREELANCER',
         취업준비생: 'JOB_SEEKER',
         기타: 'OTHER'
     }
+
+    useEffect(() => {
+        setUserData(EngJob[curValue]);
+      }, [curValue, setUserData]);
 
     return (
         <>
@@ -27,7 +32,6 @@ function PatchJobList(props) {
                         list.map(function (a, i) {
                             return (
                                 <Option key={i} onClick={(e) => {
-                                    setUserData(EngJob[list[i]]);
                                     setCurValue(list[i]);
                                 }}>{list[i]}</Option>
                             )
