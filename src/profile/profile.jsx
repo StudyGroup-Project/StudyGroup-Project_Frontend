@@ -37,11 +37,11 @@ function Profile() {
     let checkEmpty = () => {
         return (
             !userData.nickName ||
-            !userData.address ||
+            userData.address.province === '선택안함' ||
             !userBirth.month ||
             !userBirth.date ||
             !userBirth.year ||
-            !userData.job ||
+            userData.job === '선택안함' ||
             userData.category.length === 0
         )
     }
@@ -56,11 +56,12 @@ function Profile() {
 }
 
 function ProfileInput(props) {
-    let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
+    let category = ['선택안함', 'IT', '사업', '디자인', '언어', '시험', '공부', '일상',
         '기타'
     ]
 
     let EngCategory = {
+        선택안함: "선택안함",
         IT: 'IT',
         사업: 'BUSINESS',
         디자인: 'DESIGN',
@@ -71,8 +72,9 @@ function ProfileInput(props) {
         기타: 'OTHER'
     }
 
-    let job = ['학생', '회사원', '프리랜서', '취업준비생', '기타']
+    let job = ['선택안함', '학생', '회사원', '프리랜서', '취업준비생', '기타']
     let EngJob = {
+        선택안함: '선택안함',
         학생: 'STUDENT',
         회사원: 'OFFICE_WORKER',
         프리랜서: 'FREELANCER',
@@ -140,32 +142,6 @@ function ProfileInput(props) {
                 </>
                 <>
                     <h4 className='profile-info'>주소 </h4>
-                    {/* <div className='address-input-container'>
-                        <input className='address-input-box'
-                            type='text' placeholder='경상북도'
-                            onChange={(e) => {
-                                props.setUserData(prev => ({
-                                    ...prev,
-                                    address: {
-                                        ...prev.address,
-                                        province: `${e.target.value}`
-                                    }
-                                }))
-                            }}
-                        />
-                        <input className='address-input-box'
-                            type='text' placeholder='경산시'
-                            onChange={(e) => {
-                                props.setUserData(prev => ({
-                                    ...prev,
-                                    address: {
-                                        ...prev.address,
-                                        district: `${e.target.value}`
-                                    }
-                                }))
-                            }}
-                        />
-                    </div> */}
                     <div className='address-input-container'>
                         <ProfileAddressList
                             setUserData={props.setUserData}

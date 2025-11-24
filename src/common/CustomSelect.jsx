@@ -21,7 +21,7 @@ function CustomSelect(props) {
                             return (
                                 <Option key={i} onClick={(e) => {
                                     let check = selected.findIndex((item) => item == props.EngCategory[list[i]])
-                                    if (check == -1) {
+                                    if (check == -1 && props.EngCategory[list[i]] !== '선택안함') {
                                         let copy = [...selected, props.EngCategory[list[i]]];
                                         setSelected(copy);
                                         setUserData(prev => ({

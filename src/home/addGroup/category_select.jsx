@@ -11,7 +11,6 @@ function CustomSelect(props){
     let [curValue, setCurValue] = useState(list[0]);
 
     useEffect(() => {
-        // selectedCategories가 존재하고, 내부 state와 다를 때만 업데이트
         if (selectedCategories) {
             setSelected(selectedCategories);
         }
@@ -29,7 +28,7 @@ function CustomSelect(props){
                         return(
                             <Option key={i} onClick={(e)=>{
                                 let check = selected.findIndex((item)=>item==props.EngCategory[list[i]])
-                                if(check==-1){
+                                if(check==-1 && props.EngCategory[list[i]]!=="선택안함"){
                                     let copy = [...selected, props.EngCategory[list[i]]];
                                     setSelected(copy);
                                     setUserData(prev=>({
