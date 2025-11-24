@@ -1,4 +1,5 @@
 let provinceList = [    
+    "선택안함",
     "서울특별시",
     "인천광역시",
     "대전광역시",
@@ -18,6 +19,7 @@ let provinceList = [
 ]
 
 let districtList = {
+    "선택안함" : ["선택안함"],
     "서울특별시" : [
         "강남구",
         "강동구",

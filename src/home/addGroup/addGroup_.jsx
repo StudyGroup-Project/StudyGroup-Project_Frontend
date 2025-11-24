@@ -11,10 +11,11 @@ import { provinceList, districtList } from './../../data.js';
 
 function addGroup() {
     let navigate = useNavigate();
-    let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
+    let category = ['선택안함', 'IT', '사업', '디자인', '언어', '시험', '공부', '일상',
         '기타'
     ];
     let EngCategory = {
+        선택안함: "선택안함",
         IT: 'IT',
         사업: 'BUSINESS',
         디자인: 'DESIGN',
@@ -77,6 +78,24 @@ function addGroup() {
         }
     }
 
+    let checkEmpty = () => {
+        return (
+            !groupData.title ||
+            !groupData.maxMemberCount === 0 ||
+            groupData.category.length === 0 ||
+            groupData.province === "선택안함" ||
+            !groupData.bio ||
+            !groupData.description 
+        )
+    }
+
+    let [isFull, setIsFull] = useState(false);
+
+    useEffect(() => {
+        let check = checkEmpty();
+        if(check) setIsFull(true);
+        else setIsFull(false);
+    }, [groupData]);
 
     return (
         <div className="home-background">
@@ -147,6 +166,7 @@ function addGroup() {
 
                 <div className='addGroup-button-container'>
                     <button className='addGroup-button'
+                        disabled={isFull}
                         onClick={async () => {
                             await getAccessToken();
                             await createGroup(groupData);

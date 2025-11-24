@@ -136,10 +136,12 @@
 .addGroup-input-large::-webkit-scrollbar {
     width: 8px;
 }
+
 .addGroup-input-large::-webkit-scrollbar-thumb {
     background: #000;
     border-radius: 8px;
 }
+
 .addGroup-input-large::-webkit-scrollbar-track {
     background: #E6E6E6;
     border-radius: 8px;
@@ -165,7 +167,7 @@
     font-size: clamp(14px, 3vw, 16px);
     line-height: 1.2;
     color: #000;
-}   
+}
 
 .addGroup-address-container {
     display: flex;
@@ -195,6 +197,17 @@
     border-radius: 15px;
     background: var(--purple);
     color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.addGroup-button:disabled {
+    width: 100px;
+    height: 50px;
+    border: none;
+    border-radius: 15px;
+    background: #e2e2e2;
+    color: #ffffff;
     font-size: 16px;
     cursor: pointer;
 }
