@@ -32,6 +32,12 @@ function ChangeNickname() {
     let [newNickname, setNewNickname] = useState(' ');
 
     async function patchUserData() {
+
+        if(newNickname === userData.nickname){
+            alert("기존 닉네임과 동일합니다.")
+            return ;
+        }
+
         try {
             let accessToken = localStorage.getItem("accessToken")
             let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
@@ -49,10 +55,11 @@ function ChangeNickname() {
                     withCredentials: true
                 });
             if (res.status === 200) {
-                alert("변경이 완료 되었습니다");
+                alert("변경이 완료되었습니다");
             }
         }
         catch (err) {
+            alert("변경에 실패하였습니다. 다시 시도해 주세요.");
             console.log(err);
         }
     }
@@ -84,11 +91,10 @@ function ChangeNickname() {
             <div className='change-nickname-button-container'>
                 <button className='change-nickname-button'
                     onClick={async () => {
-                        console.log(userData);
                         await getAccessToken();
                         await patchUserData();
                     }}
-                    disabled={newNickname === userData.nickname}
+                    // disabled={newNickname === userData.nickname}
                 >
                     변경
                 </button>
@@ -107,6 +113,14 @@ function ChangeAddress() {
     let [newDistrict, setNewDistrict] = useState(' ');
 
     async function patchUserData() {
+
+        if(userData.province === newProvince && 
+            userData.district === newDistrict
+        ){
+            alert("기존 주소와 동일합니다.");
+            return ;
+        }
+
         try {
             let accessToken = localStorage.getItem("accessToken")
             let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
@@ -124,10 +138,11 @@ function ChangeAddress() {
                     withCredentials: true
                 });
             if (res.status === 200) {
-                alert("변경이 완료 되었습니다");
+                alert("변경이 완료되었습니다");
             }
         }
         catch (err) {
+            alert("변경에 실패하였습니다. 다시 시도해 주세요.");
             console.log(err);
         }
     }
@@ -163,7 +178,7 @@ function ChangeAddress() {
                         await getAccessToken();
                         await patchUserData();
                     }}
-                    disabled={newProvince === province && newDistrict === district}>
+                    disabled={newProvince === '선택안함'}>
                     변경
                 </button>
             </div>
@@ -176,9 +191,15 @@ function ChangeJob() {
     let userData = location.state.userData;
 
     let [newJob, setNewJob] = useState(' ');
-    let job = ['학생', '회사원', '프리랜서', '취업준비생', '기타']
+    let job = ['선택안함', '학생', '회사원', '프리랜서', '취업준비생', '기타']
 
     async function patchUserData() {
+
+        if(userData.job === newJob) {
+            alert("기존 직업과 동일합니다.");
+            return ;
+        }
+
         try {
             let accessToken = localStorage.getItem("accessToken")
             let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
@@ -196,10 +217,11 @@ function ChangeJob() {
                     withCredentials: true
                 });
             if (res.status === 200) {
-                alert("변경이 완료 되었습니다");
+                alert("변경이 완료되었습니다");
             }
         }
         catch (err) {
+            alert("변경에 실패하였습니다. 다시 시도해 주세요.");
             console.log(err);
         }
     }
@@ -228,7 +250,7 @@ function ChangeJob() {
                         await getAccessToken();
                         await patchUserData();
                     }}
-                    disabled={newJob === job}
+                    disabled={newJob === '선택안함'}
                 >
                     변경
                 </button>
@@ -238,11 +260,12 @@ function ChangeJob() {
 }
 
 function ChangeCategory() {
-    let category = ['IT', '사업', '디자인', '언어', '시험', '공부', '일상',
+    let category = ['선택안함', 'IT', '사업', '디자인', '언어', '시험', '공부', '일상',
         '기타'
     ]
 
     let EngCategory = {
+        선택안함: '선택안함',
         IT: 'IT',
         사업: 'BUSINESS',
         디자인: 'DESIGN',
@@ -256,9 +279,21 @@ function ChangeCategory() {
     let location = useLocation();
     let userData = location.state.userData;
 
-    let [newCategory, setNewCategory] = useState(' ');
+    let [newCategory, setNewCategory] = useState([]);
 
     async function patchUserData() {
+
+        let currentCategory = userData.preferredCategory;
+        let sortedCurrent = [...currentCategory].sort();
+        let sortedNew = [...newCategory].sort();
+        const isSame = (sortedCurrent.length === sortedNew.length) && 
+                   sortedCurrent.every((value, index) => value === sortedNew[index]);
+        if(isSame) {
+            alert("기존 카테고리와 동일합니다.");
+            return ;
+        }
+
+
         try {
             let accessToken = localStorage.getItem("accessToken")
             let res = await axios.patch('http://3.39.81.234:8080/api/users/me/profile', {
@@ -276,10 +311,11 @@ function ChangeCategory() {
                     withCredentials: true
                 });
             if (res.status === 200) {
-                alert("변경이 완료 되었습니다");
+                alert("변경이 완료되었습니다");
             }
         }
         catch (err) {
+            alert("변경에 실패하였습니다. 다시 시도해 주세요.");
             console.log(err);
         }
     }
@@ -308,7 +344,7 @@ function ChangeCategory() {
                         await getAccessToken();
                         await patchUserData();
                     }}
-                >
+                    disabled={newCategory.length===0}>
                     변경
                 </button>
             </div>

@@ -72,8 +72,13 @@ function addGroup() {
                     withCredentials: true, // 쿠키 인증을 쓴다면 유지
                 }
             );
-            return res.data;
+            
+            if(res.status === 200 || res.status === 201) {
+                alert("그룹이 생성되었습니다.");
+            }
+            
         } catch (err) {
+            alert("그룹 생성에 실패하였습니다.");
             console.error('그룹 생성 실패:', err.response?.data || err.message);
         }
     }

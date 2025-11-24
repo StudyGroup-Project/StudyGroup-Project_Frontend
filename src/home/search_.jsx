@@ -145,11 +145,13 @@ function Search() {
                     headers: { Authorization: `Bearer ${accessToken}` },
                     withCredentials: true,
                 });
+                alert("찜이 해제되었습니다.");
             } else {
                 await axios.post(`http://3.39.81.234:8080/api/studies/${studyId}/bookmark`, {}, {
                     headers: { Authorization: `Bearer ${accessToken}` },
                     withCredentials: true,
                 });
+                alert("찜 목록에 추가되었습니다.");
             }
         } catch (err) {
             console.error('북마크 토글 실패:', err.response?.data || err.message);

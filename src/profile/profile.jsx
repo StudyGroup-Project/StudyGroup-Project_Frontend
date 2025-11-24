@@ -113,10 +113,13 @@ function ProfileInput(props) {
                     },
                     withCredentials: true
                 });
-
-            navigate('/profileImage');
+            if (res.status === 200 || res.status === 201) {
+                alert("프로필 설정이 완료되었습니다.")
+                navigate('/profileImage');
+            }
         }
         catch (err) {
+            alert("프로필 설정을 다시 시도해주세요.")
             console.log(err);
         }
     }

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import {useState} from 'react'
+import { useState, useEffect } from 'react'
 
-function SelectList(props){
+function SelectList(props) {
     let province = props.province;
     let district = props.district;
     let provinceList = props.provinceList;
@@ -11,51 +11,56 @@ function SelectList(props){
 
     let [open, setOpen] = useState(false);
     let [secOpen, setSecOpen] = useState(false);
-    let [curValue, setCurValue] = useState(province);
-    let [secCurValue, setSecCurValue] = useState(district);
+    let [curValue, setCurValue] = useState(provinceList[0]);
+    let [secCurValue, setSecCurValue] = useState(districtList[curValue][0]);
     let [specList, setSpecList] = useState(districtList[province]);
 
-    return(
+    useEffect(() => {
+        setProvince(curValue);
+        setDistrict(secCurValue);
+    }, [curValue, secCurValue, setProvince, setDistrict]);
+
+    return (
         <>
-            <SelectBox onClick={()=>{
+            <SelectBox onClick={() => {
                 setOpen(!open)
             }}>
                 <Label>{curValue}</Label>
                 <SelectOptions show={open}>
-                {
-                    provinceList.map(function(a, i){
-                        return(
-                            <Option key={i} onClick={(e)=>{
-                                e.stopPropagation();
-                                setCurValue(provinceList[i]);
-                                setProvince(provinceList[i]);
-                                setSpecList(districtList[provinceList[i]]);
-                                setSecCurValue(districtList[provinceList[i]][0]);
-                                setDistrict(districtList[provinceList[i]][0]);
-                                setOpen(false);
-                            }}>{provinceList[i]}</Option>
-                        )
-                    })
-                }   
+                    {
+                        provinceList.map(function (a, i) {
+                            return (
+                                <Option key={i} onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCurValue(provinceList[i]);
+                                    setProvince(provinceList[i]);
+                                    setSpecList(districtList[provinceList[i]]);
+                                    setSecCurValue(districtList[provinceList[i]][0]);
+                                    setDistrict(districtList[provinceList[i]][0]);
+                                    setOpen(false);
+                                }}>{provinceList[i]}</Option>
+                            )
+                        })
+                    }
                 </SelectOptions>
             </SelectBox>
-            <SelectBox onClick={()=>{
+            <SelectBox onClick={() => {
                 setSecOpen(!secOpen)
             }}>
                 <Label>{secCurValue}</Label>
                 <SelectOptions show={secOpen}>
-                {
-                    specList.map(function(a, i){
-                        return(
-                            <Option key={i} onClick={(e)=>{
-                                e.stopPropagation();
-                                setSecCurValue(specList[i]);
-                                setDistrict(specList[i]);
-                                setSecOpen(false);
-                            }}>{specList[i]}</Option>
-                        )
-                    })
-                }   
+                    {
+                        specList.map(function (a, i) {
+                            return (
+                                <Option key={i} onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSecCurValue(specList[i]);
+                                    setDistrict(specList[i]);
+                                    setSecOpen(false);
+                                }}>{specList[i]}</Option>
+                            )
+                        })
+                    }
                 </SelectOptions>
             </SelectBox>
         </>

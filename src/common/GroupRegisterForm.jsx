@@ -12,7 +12,7 @@ function ApplicationModal({ studyId, onClose, onSubmitSuccess }) {
             return;
         }
         const accessToken = localStorage.getItem('accessToken');
-        await axios.post(
+        let res = await axios.post(
             `http://3.39.81.234:8080/api/studies/${studyId}/applications`,
             { content: text }, 
             {
@@ -20,8 +20,13 @@ function ApplicationModal({ studyId, onClose, onSubmitSuccess }) {
                 withCredentials: true
             }
         );
-
-        onSubmitSuccess(); 
+        if(res.status === 200 || res.status === 201){
+            alert("지원서를 전송하였습니다.");
+            onSubmitSuccess(); 
+        }
+        else {
+            alert("지원서 전송에 실패하였습니다.");
+        }
     };
 
     return (

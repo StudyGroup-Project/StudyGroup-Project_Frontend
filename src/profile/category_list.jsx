@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import './category_list.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function CategoryList(props) {
     let list = props.list;
@@ -9,6 +9,16 @@ function CategoryList(props) {
     let [open, setOpen] = useState(false);
     let [selected, setSelected] = useState([]);
     let [curValue, setCurValue] = useState(list[0]);
+
+    useEffect(() => {
+        let engValue = EngCategory[curValue];
+        if(engValue==='선택안함') return ;
+        if(!selected.includes(engValue)){
+            let copy = [...selected, engValue];
+            setSelected(copy);
+            setUserData(copy);
+        }
+    }, [curValue]);
 
     return (
         <>
@@ -21,12 +31,6 @@ function CategoryList(props) {
                         list.map(function (a, i) {
                             return (
                                 <Option key={i} onClick={(e) => {
-                                    let check = selected.findIndex((item) => item == EngCategory[list[i]])
-                                    if (check == -1) {
-                                        let copy = [...selected, EngCategory[list[i]]];
-                                        setSelected(copy);
-                                        setUserData(copy);
-                                    }
                                     setCurValue(list[i]);
                                 }}>{list[i]}</Option>
                             )
