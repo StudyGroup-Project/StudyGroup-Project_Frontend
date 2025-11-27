@@ -22,7 +22,6 @@ export default function Assignments() {
           return;
         }
 
-        // 🔹 (1) 그룹 정보 가져오기
         const resGroup = await fetch(`${baseUrl}/${studyId}`, {
           method: "GET",
           headers: {
@@ -36,7 +35,6 @@ export default function Assignments() {
           setGroupInfo(groupData);
         }
 
-        // 🔹 (2) 과제 목록 가져오기
         const resAssignments = await fetch(`${baseUrl}/${studyId}/assignments`, {
           method: "GET",
           headers: {

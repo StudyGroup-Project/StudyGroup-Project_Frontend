@@ -7,7 +7,7 @@ export default function Assignments() {
   const [assignments, setAssignments] = useState([]);
   const [groupInfo, setGroupInfo] = useState(null); 
   const [loading, setLoading] = useState(true);
-  const [currentUserRole, setCurrentUserRole] = useState("MEMBER"); // 기본 MEMBER
+  const [currentUserRole, setCurrentUserRole] = useState("MEMBER"); 
 
   const navigate = useNavigate();
   const { studyId } = useParams();

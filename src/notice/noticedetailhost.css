@@ -278,19 +278,19 @@
   background-color: #c0392b;
 }
 
-/* textarea, 상세보기 공통 */
+
 .textareaField, .body-text {
-  white-space: pre-wrap; /* 엔터 줄바꿈 유지 */
+  white-space: pre-wrap; 
   line-height: 1.6;
 }
 
-/* 점 두 줄 표시 */
+
 .notice-content ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 4px; /* 점 사이 간격 */
+  gap: 4px; 
 }
 
 .notice-content ul li {

@@ -46,7 +46,7 @@ const AssignmentDetailHost = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [submissionText, setSubmissionText] = useState("");
-  const [files, setFiles] = useState([]); // 다중 첨부용
+  const [files, setFiles] = useState([]); 
 
   useEffect(() => {
     const load = async () => {
