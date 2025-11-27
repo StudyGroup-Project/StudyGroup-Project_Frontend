@@ -311,7 +311,7 @@ export default function GroupScreen() {
                 </div>
 
                 <div className="member-meta">
-                  <span>마지막 접속 {member.lastLoginAt}</span>
+                  <span>마지막 접속 {member.lastLoginAt.split("T")[0]}</span>
                 </div>
               </div>
             ))}
