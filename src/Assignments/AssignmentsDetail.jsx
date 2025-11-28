@@ -46,7 +46,7 @@ const AssignmentsDetail = () => {
 
   const [assignment, setAssignment] = useState(null);
   const [submissionText, setSubmissionText] = useState("");
-  const [files, setFiles] = useState([]); // ✅ 다중첨부용 배열
+  const [files, setFiles] = useState([]); 
 
   useEffect(() => {
     const load = async () => {
@@ -77,7 +77,7 @@ const AssignmentsDetail = () => {
 
     const formData = new FormData();
     formData.append("description", submissionText || "");
-    files.forEach((file) => formData.append("files", file)); // 다중 첨부
+    files.forEach((file) => formData.append("files", file)); 
 
     try {
       const token = localStorage.getItem("accessToken");
@@ -191,7 +191,7 @@ const AssignmentsDetail = () => {
               type="text"
               className="file-display"
               readOnly
-              value={files.map((f) => f.name).join(", ")} // 선택한 파일 표시
+              value={files.map((f) => f.name).join(", ")} 
             />
             <label htmlFor="file-input" className="file-upload-btn">
               <Plus size={22} />
@@ -201,7 +201,7 @@ const AssignmentsDetail = () => {
               type="file"
               style={{ display: "none" }}
               multiple
-              onChange={(e) => setFiles([...files, ...Array.from(e.target.files)])} // ✅ 기존 파일 유지하며 추가
+              onChange={(e) => setFiles([...files, ...Array.from(e.target.files)])}
             />
           </div>
 

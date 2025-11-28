@@ -159,8 +159,8 @@ const AssignmentsTest = () => {
             assignmentData.files.map((file, idx) => (
               <a
                 key={idx}
-                href={file.url}         // 실제 파일 URL
-                target="_blank"         // 새 탭에서 열기
+                href={file.url}         
+                target="_blank"         
                 rel="noreferrer"
                 style={{ display: "block", marginTop: "5px", color: "#007bff", textDecoration: "underline" }}
               >
