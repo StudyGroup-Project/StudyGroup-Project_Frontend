@@ -89,6 +89,11 @@ const AssignmentsTest = () => {
 
   // 평가 제출
   const handleSubmit = async () => {
+      if (score === "") {
+    alert("점수를 선택해주세요!");
+    return;
+  }
+
     const numScore = Number(score);
 
     if (isNaN(numScore)|| numScore < -5 || numScore > 5) {

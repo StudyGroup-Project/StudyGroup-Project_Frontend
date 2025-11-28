@@ -135,6 +135,34 @@ const AssignmentsModify = () => {
         navigate("/login");
         return;
       }
+  
+    if (!modifiedTitle.trim()) {
+      alert("과제 제목이 비어 있습니다.");
+      return;
+    }
+
+    if (!modifiedContent.trim()) {
+      alert("과제 내용이 비어 있습니다.");
+      return;
+    }
+
+    if (
+      !modifiedStartDate.year ||
+      !modifiedStartDate.month ||
+      !modifiedStartDate.day
+    ) {
+      alert("시작 일시가 설정되지 않았습니다.");
+      return;
+    }
+    
+    if (
+      !modifiedEndDate.year ||
+      !modifiedEndDate.month ||
+      !modifiedEndDate.day
+    ) {
+      alert("마감 일시가 설정되지 않았습니다.");
+      return;
+    }
 
       const formData = new FormData();
       formData.append("title", modifiedTitle);
@@ -148,10 +176,9 @@ const AssignmentsModify = () => {
         `${modifiedEndDate.year}-${modifiedEndDate.month}-${modifiedEndDate.day}T23:59:59`
       );
 
-      // 새 파일 추가
+    
       modifiedFiles.forEach((file) => formData.append("files", file));
 
-      // 삭제할 파일 아이디
       deleteFileIds.forEach((id) => formData.append("deleteFileIds", id));
 
       const res = await fetch(
@@ -167,7 +194,7 @@ const AssignmentsModify = () => {
 
       if (res.status === 401) {
         await getRefreshToken();
-        return handleModifyAssignment(); // 재시도
+        return handleModifyAssignment(); 
       }
 
       if (res.status === 201 || res.status === 200) {
