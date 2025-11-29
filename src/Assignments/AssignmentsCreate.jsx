@@ -62,16 +62,31 @@ const AssignmentsCreate = () => {
         return;
       }
 
+        if (!assignmentTitle.trim()) {
+        alert("과제 제목을 입력해주세요.");
+        return;
+      }
+
+        if (!assignmentContent.trim()) {
+      alert("과제 내용을 입력해주세요.");
+      return;
+    }
+
       if (!startDate || !endDate) {
         alert("시작일과 마감일을 모두 입력해주세요.");
         return;
       }
 
+        if (new Date(startDate) > new Date(endDate)) {
+      alert("마감일은 시작일보다 이후여야 합니다.");
+      return;
+    }
+
+
+
       const formData = new FormData();
       formData.append("title", assignmentTitle);
       formData.append("description", assignmentContent);
-
-      // LocalDateTime 형식으로 변환 (T00:00:00 ~ T23:59:59)
       formData.append("startAt", `${startDate}T00:00:00`);
       formData.append("dueAt", `${endDate}T23:59:59`);
 
@@ -91,7 +106,7 @@ const AssignmentsCreate = () => {
       if (!res.ok) {
         const errText = await res.text();
         console.error("서버 응답:", errText);
-        alert("과제 생성 실패: " + errText);
+        alert("과제 생성에 실패하였습니다.");
         return;
       }
 
